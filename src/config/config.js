@@ -8,6 +8,6 @@ export const PROFESSIONALS_DB_COLUMNS = [
   "phone",
   "web",
   "email",
-  "tags"
+  "cities"
 ];
 export const PROFESSIONALS_DB_CACHE_VALIDITY = 5 * 60; // 5 minutes

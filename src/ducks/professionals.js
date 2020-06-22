@@ -9,6 +9,14 @@ import {
 } from "../config/config";
 
 const DEFAULT_STATE = {
+  filterTypes: PROFESSIONALS_DB_TYPES,
+  activeFilters: PROFESSIONALS_DB_TYPES.reduce(
+    (allFilters, filter) => ({
+      ...allFilters,
+      [filter]: {}
+    }),
+    {}
+  ),
   city: "",
   results: [],
   lastSync: undefined,
@@ -25,7 +33,7 @@ function processData(data, id) {
   return new Promise((res) => {
     csvtojson({
       colParser: {
-        tags: function (_item, _head, _resultRow, row) {
+        cities: function (_item, _head, _resultRow, row) {
           // return only tags (the unnamed columns)
           return row.slice(PROFESSIONALS_DB_COLUMNS.length - 1);
         }
@@ -68,17 +76,28 @@ async function getDBs() {
   const data = await Promise.all(
     PROFESSIONALS_DB_TYPES.map(
       async (typeName, typeIndex) =>
-        await processData(await requestDB(typeName), typeIndex)
+        await processData(await requestDB(typeName), `${typeIndex}`)
     )
   );
   return [].concat(...data);
 }
 
 function setResults(state) {
-  const { rawData = [], city } = state;
+  const { rawData = [], city, activeFilters } = state;
+  const noop = (data) => data;
+  const filterCity = city
+    ? (data) => data.filter((record) => record.cities.includes(city))
+    : noop;
+  const filterType = activeFilters
+    ? (data) =>
+        data.filter((record) =>
+          Object.keys(activeFilters).includes(record.type)
+        )
+    : noop;
+
   return {
     ...state,
-    results: rawData.filter((record) => record.city === city)
+    results: filterType(filterCity(rawData))
   };
 }
 
@@ -97,6 +116,24 @@ export const actions = {
       withLoading(dispatch, {
         type: types.SET_CITY,
         payload: city
+      });
+    };
+  },
+
+  addFilter(filter) {
+    return (dispatch) => {
+      withLoading(dispatch, {
+        type: types.ADD_FILTERS,
+        payload: filter
+      });
+    };
+  },
+
+  removeFilter(filter) {
+    return (dispatch) => {
+      withLoading(dispatch, {
+        type: types.REMOVE_FILTERS,
+        payload: filter
       });
     };
   },
@@ -128,6 +165,23 @@ export default function reducer(state = DEFAULT_STATE, action) {
   switch (action.type) {
     case types.SET_CITY:
       return { ...state, city: action.payload };
+    case types.ADD_FILTERS: {
+      const activeFilters = { ...state.activeFilters, [action.payload]: {} };
+      return {
+        ...state,
+        activeFilters
+      };
+    }
+    case types.REMOVE_FILTERS: {
+      const {
+        [action.payload]: _toRemove,
+        ...activeFilters
+      } = state.activeFilters;
+      return {
+        ...state,
+        activeFilters
+      };
+    }
     case types.SYNCHRONIZE:
       return { ...state, loading: true };
     case types.SYNCHRONIZE_DONE:
