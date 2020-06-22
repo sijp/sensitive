@@ -19,7 +19,9 @@ describe("professionals", () => {
   describe("ADD/REMOVE_FILTER", () => {
     it("should start with all filters enabled", () => {
       const result = reducer(undefined, {});
-      expect(result.filterTypes).toEqual(Object.keys(result.activeFilters));
+      expect(Object.keys(result.filterTypes)).toEqual(
+        Object.keys(result.activeFilters)
+      );
     });
 
     it("should add filter", () => {
