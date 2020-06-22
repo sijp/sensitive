@@ -17,11 +17,13 @@ describe("professionals", () => {
   });
 
   describe("ADD/REMOVE_FILTER", () => {
-    it("should start with all filters enabled", () => {
+    it("should start with default filters enabled", () => {
       const result = reducer(undefined, {});
-      expect(Object.keys(result.filterTypes)).toEqual(
-        Object.keys(result.activeFilters)
-      );
+      expect(
+        Object.entries(result.filterTypes)
+          .filter(([_key, filter]) => filter.default)
+          .map(([key]) => key)
+      ).toEqual(Object.keys(result.activeFilters));
     });
 
     it("should add filter", () => {

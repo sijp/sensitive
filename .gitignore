@@ -24,4 +24,7 @@ yarn-error.log*
 
 pipeline/token.json
 pipeline/credentials.json
+pipeline/secrets.json
 data/node_modules
+
+tmp/

@@ -1,9 +1,7 @@
 import axios from "axios";
-import csvtojson from "csvtojson";
 
 import {
   PROFESSIONALS_DB_URL,
-  PROFESSIONALS_DB_COLUMNS,
   PROFESSIONALS_DB_TYPES,
   PROFESSIONALS_DB_CACHE_VALIDITY,
   PROFESSIONALS_CITY_LIST
@@ -33,44 +31,6 @@ function withLoading(dispatch, action) {
   dispatch(actions.synchronize());
 }
 
-function processData(data) {
-  let citiesIndex, servicesIndex, cities, services;
-  return csvtojson({
-    colParser: {
-      cities: function (_item, _head, _resultRow, row) {
-        const cityFlags = row.slice(citiesIndex + 1, servicesIndex);
-        return cities.filter((_city, index) => cityFlags[index] === "TRUE");
-      },
-      services: function (_item, _head, _resultRow, row) {
-        const serviceFlags = row.slice(servicesIndex + 1);
-        return services.filter(
-          (_service, index) => serviceFlags[index] === "TRUE"
-        );
-      }
-    }
-  })
-    .on("header", (header) => {
-      citiesIndex = header.indexOf("cities");
-      servicesIndex = header.indexOf("services");
-      cities = header.slice(citiesIndex + 1, servicesIndex);
-      services = header.slice(servicesIndex + 1);
-    })
-    .fromString(data)
-    .then((jsonArray) => {
-      return jsonArray.map((json) => {
-        return {
-          ...PROFESSIONALS_DB_COLUMNS.reduce(
-            (relevantJson, key) => ({
-              ...relevantJson,
-              [key]: json[key]
-            }),
-            {}
-          )
-        };
-      });
-    });
-}
-
 async function requestDB() {
   try {
     const response = await axios.get(`${PROFESSIONALS_DB_URL}`);
@@ -89,7 +49,7 @@ function isCacheValid(lastSync) {
 }
 
 async function getDB() {
-  return await processData(await requestDB());
+  return await requestDB();
 }
 
 function setResults(state) {
@@ -185,6 +145,7 @@ export const actions = {
         });
         return flattenData;
       } catch (e) {
+        console.log(e);
         return [];
       }
     };

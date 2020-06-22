@@ -24,10 +24,8 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.secondary.light
   },
   chipShowMore: {
-    flip: false,
-    direction: "ltr",
     padding: `${theme.spacing(1)}px ${theme.spacing(1.5)}px`,
-    marginRight: theme.spacing(1),
+
     marginBottom: theme.spacing(1)
   },
   HiddenFiltersIcon: {
@@ -100,24 +98,18 @@ function ProfessionalFilters({
           }}
         ></Chip>
       ))}
-      <Chip
-        className={classes.chipShowMore}
-        color="secondary"
-        label={limitFilters ? "עוד" : "פחות"}
-        classes={{ avatar: classes.HiddenFiltersIcon }}
-        avatar={
-          numberOfHiddenEnabledFilters ? (
-            <Avatar color="primary">{numberOfHiddenEnabledFilters}</Avatar>
-          ) : null
-        }
-        deleteIcon={<FontAwesomeIcon icon={limitFilters ? faPlus : faMinus} />}
-        onClick={() => {
-          setLimitFilters(limitFilters ? undefined : defaultLimit);
-        }}
-        onDelete={() => {
-          setLimitFilters(limitFilters ? undefined : defaultLimit);
-        }}
-      ></Chip>{" "}
+      <Badge badgeContent={numberOfHiddenEnabledFilters} color="primary">
+        <Chip
+          className={classes.chipShowMore}
+          color="secondary"
+          label={limitFilters ? "עוד" : "פחות"}
+          classes={{ avatar: classes.HiddenFiltersIcon }}
+          icon={<FontAwesomeIcon icon={limitFilters ? faPlus : faMinus} />}
+          onClick={() => {
+            setLimitFilters(limitFilters ? undefined : defaultLimit);
+          }}
+        ></Chip>
+      </Badge>
       {moreChips.map(({ className, ...chipProps }, index) => (
         <Chip
           key={index}

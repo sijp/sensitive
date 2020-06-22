@@ -82,7 +82,6 @@ function ResponsiveDrawer(props) {
 
 function NavDrawer({ onChange = () => {}, opened = false, links = [] }) {
   const classes = useStyles();
-  console.log(links);
 
   const handleClose = () => {
     onChange(false);
