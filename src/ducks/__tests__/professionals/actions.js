@@ -68,6 +68,40 @@ describe("setCity()", () => {
   });
 });
 
+describe("addType", () => {
+  it("should add the type of the professional and start loading", () => {
+    mockDBServer();
+    const action = actions.addFilter("T1");
+    const {
+      length,
+      calls: [params, syncDBParams]
+    } = asyncDispatch(action);
+
+    expect(length).toEqual(2);
+    expect(params[0].payload).toEqual("T1");
+    expect(params[0].type).toEqual(types.ADD_FILTERS);
+    const syncAction = syncDBParams[0];
+    assertSync(syncAction);
+  });
+});
+
+describe("removeType", () => {
+  it("should add the type of the professional and start loading", () => {
+    mockDBServer();
+    const action = actions.removeFilter("T1");
+    const {
+      length,
+      calls: [params, syncDBParams]
+    } = asyncDispatch(action);
+
+    expect(length).toEqual(2);
+    expect(params[0].payload).toEqual("T1");
+    expect(params[0].type).toEqual(types.REMOVE_FILTERS);
+    const syncAction = syncDBParams[0];
+    assertSync(syncAction);
+  });
+});
+
 describe("synchronize()", () => {
   mockDBServer();
   it("should dispatch SYNCHRONIZE and later SYNCHRONIZE_DONE", async () => {
