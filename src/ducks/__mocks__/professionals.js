@@ -1,3 +1,8 @@
+export const MOCK_PROFESSIONALS_DB_TYPES = {
+  0: { label: "אימון כלבים" },
+  1: { label: "הולכת כלבים" }
+};
+
 export const MOCK_SIMPLE_TRAINERS = {
   csv: `id,name,facebookPage,phone,web,email,cities
 1,t1,fb.com,111,www,a@b.com,a,b,c`,

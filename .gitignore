@@ -21,3 +21,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+pipeline/token.json
+pipeline/credentials.json
+data/node_modules

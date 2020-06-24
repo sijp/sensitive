@@ -3,27 +3,37 @@ import MockAdapter from "axios-mock-adapter";
 
 import { actions, types } from "../../professionals";
 
-import { MOCK_SIMPLE_TRAINERS } from "../../__mocks__/professionals";
+import {
+  MOCK_SIMPLE_TRAINERS,
+  MOCK_PROFESSIONALS_DB_TYPES
+} from "../../__mocks__/professionals";
 
 import {
   PROFESSIONALS_DB_URL,
-  PROFESSIONALS_DB_TYPES,
   PROFESSIONALS_DB_CACHE_VALIDITY
 } from "../../../config/config";
 
 const mockAxios = new MockAdapter(axios);
 
+function mockState(state) {
+  return {
+    ...state,
+    filterTypes: MOCK_PROFESSIONALS_DB_TYPES
+  };
+}
+
 function mockDBServer(responses = []) {
+  const dbTypes = Object.keys(MOCK_PROFESSIONALS_DB_TYPES);
   mockAxios.reset();
   responses.forEach((response, i) =>
     mockAxios
-      .onGet(`${PROFESSIONALS_DB_URL}/${PROFESSIONALS_DB_TYPES[i]}.csv`)
+      .onGet(`${PROFESSIONALS_DB_URL}/${dbTypes[i]}.csv`)
       .reply(200, response)
   );
   mockAxios.onGet(new RegExp(`${PROFESSIONALS_DB_URL}/*`)).reply(200, "");
 }
 
-function asyncDispatch(action, state = {}) {
+function asyncDispatch(action, state = mockState({})) {
   const spy = jest.fn();
   const actionResult = action(spy, () => state);
   return {
@@ -125,9 +135,9 @@ describe("synchronize()", () => {
     mockDBServer([fakeData]);
 
     const action = actions.synchronize();
-    const state = {
+    const state = mockState({
       lastSync: Date.now() - PROFESSIONALS_DB_CACHE_VALIDITY
-    };
+    });
 
     const { calls, actionResult } = asyncDispatch(action, state);
 
@@ -142,10 +152,10 @@ describe("synchronize()", () => {
   it("should use cache if it is valid", async () => {
     const action = actions.synchronize();
     const rawData = "RAW_DATA";
-    const state = {
+    const state = mockState({
       lastSync: Date.now(),
       rawData
-    };
+    });
     const { actionResult } = asyncDispatch(action, state);
     const result = await actionResult;
     expect(result).toEqual(rawData);

@@ -5,21 +5,17 @@ import {
   PROFESSIONALS_DB_URL,
   PROFESSIONALS_DB_COLUMNS,
   PROFESSIONALS_DB_TYPES,
-  PROFESSIONALS_DB_CACHE_VALIDITY
+  PROFESSIONALS_DB_CACHE_VALIDITY,
+  PROFESSIONALS_CITY_LIST
 } from "../config/config";
 
 const DEFAULT_STATE = {
   filterTypes: PROFESSIONALS_DB_TYPES,
-  activeFilters: PROFESSIONALS_DB_TYPES.reduce(
-    (allFilters, filter) => ({
-      ...allFilters,
-      [filter]: {}
-    }),
-    {}
-  ),
+  activeFilters: PROFESSIONALS_DB_TYPES,
   city: "",
   results: [],
   lastSync: undefined,
+  cityList: PROFESSIONALS_CITY_LIST,
   rawData: localStorage.getItem("PROFESSIONALS_RAW_DATA") || []
 };
 
@@ -72,11 +68,10 @@ function isCacheValid(lastSync) {
   return lastSync && Date.now() - lastSync < PROFESSIONALS_DB_CACHE_VALIDITY;
 }
 
-async function getDBs() {
+async function getDBs(filterTypes) {
   const data = await Promise.all(
-    PROFESSIONALS_DB_TYPES.map(
-      async (typeName, typeIndex) =>
-        await processData(await requestDB(typeName), `${typeIndex}`)
+    Object.keys(filterTypes).map(
+      async (typeName) => await processData(await requestDB(typeName), typeName)
     )
   );
   return [].concat(...data);
@@ -139,15 +134,20 @@ export const actions = {
   },
 
   synchronize() {
+    const fakeTime = () =>
+      new Promise((res) => setTimeout(() => res(true), 500));
     return async (dispatch, getState) => {
-      const { lastSync, rawData = [] } = getState();
+      const { lastSync, rawData = [], filterTypes } = getState();
       dispatch({
         type: types.SYNCHRONIZE
       });
       try {
-        const flattenData = await (isCacheValid(lastSync)
-          ? Promise.resolve(rawData)
-          : getDBs());
+        const [flattenData] = await Promise.all([
+          isCacheValid(lastSync)
+            ? Promise.resolve(rawData)
+            : getDBs(filterTypes),
+          fakeTime()
+        ]);
 
         dispatch({
           type: types.SYNCHRONIZE_DONE,
