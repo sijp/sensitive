@@ -24,34 +24,42 @@ function withLoading(dispatch, action) {
   dispatch(actions.synchronize());
 }
 
-function processData(data, id) {
-  const results = [];
-  return new Promise((res) => {
-    csvtojson({
-      colParser: {
-        cities: function (_item, _head, _resultRow, row) {
-          // return only tags (the unnamed columns)
-          return row.slice(PROFESSIONALS_DB_COLUMNS.length - 1);
-        }
+function processData(data) {
+  let citiesIndex, servicesIndex, cities, services;
+  return csvtojson({
+    colParser: {
+      cities: function (_item, _head, _resultRow, row) {
+        const cityFlags = row.slice(citiesIndex + 1, servicesIndex);
+        return cities.filter((_city, index) => cityFlags[index] === "TRUE");
+      },
+      services: function (_item, _head, _resultRow, row) {
+        const serviceFlags = row.slice(servicesIndex + 1);
+        return services.filter(
+          (_service, index) => serviceFlags[index] === "TRUE"
+        );
       }
+    }
+  })
+    .on("header", (header) => {
+      citiesIndex = header.indexOf("cities");
+      servicesIndex = header.indexOf("services");
+      cities = header.slice(citiesIndex + 1, servicesIndex);
+      services = header.slice(servicesIndex + 1);
     })
-      .fromString(data)
-      .subscribe((json) => {
-        results.push({
+    .fromString(data)
+    .then((jsonArray) => {
+      return jsonArray.map((json) => {
+        return {
           ...PROFESSIONALS_DB_COLUMNS.reduce(
             (relevantJson, key) => ({
               ...relevantJson,
               [key]: json[key]
             }),
             {}
-          ),
-          type: id
-        });
-      })
-      .on("done", (_error) => {
-        res(results);
+          )
+        };
       });
-  });
+    });
 }
 
 async function requestDB(dbName) {
@@ -68,13 +76,8 @@ function isCacheValid(lastSync) {
   return lastSync && Date.now() - lastSync < PROFESSIONALS_DB_CACHE_VALIDITY;
 }
 
-async function getDBs(filterTypes) {
-  const data = await Promise.all(
-    Object.keys(filterTypes).map(
-      async (typeName) => await processData(await requestDB(typeName), typeName)
-    )
-  );
-  return [].concat(...data);
+async function getDB(typeName) {
+  return await processData(await requestDB(typeName));
 }
 
 function setResults(state) {
@@ -85,9 +88,15 @@ function setResults(state) {
     : noop;
   const filterType = activeFilters
     ? (data) =>
-        data.filter((record) =>
-          Object.keys(activeFilters).includes(record.type)
-        )
+        data.filter((record) => {
+          const servicesToFilter = Object.keys(activeFilters);
+          const recordServices = record.services;
+
+          return (
+            servicesToFilter.filter((filter) => recordServices.includes(filter))
+              .length > 0
+          );
+        })
     : noop;
 
   return {
@@ -137,15 +146,13 @@ export const actions = {
     const fakeTime = () =>
       new Promise((res) => setTimeout(() => res(true), 500));
     return async (dispatch, getState) => {
-      const { lastSync, rawData = [], filterTypes } = getState();
+      const { lastSync, rawData = [] } = getState();
       dispatch({
         type: types.SYNCHRONIZE
       });
       try {
         const [flattenData] = await Promise.all([
-          isCacheValid(lastSync)
-            ? Promise.resolve(rawData)
-            : getDBs(filterTypes),
+          isCacheValid(lastSync) ? Promise.resolve(rawData) : getDB(),
           fakeTime()
         ]);
 
