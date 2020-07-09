@@ -1,4 +1,5 @@
 import React from "react";
+import { BrowserRouter as Router } from "react-router-dom";
 import { Provider } from "react-redux";
 import { create } from "jss";
 import rtl from "jss-rtl";
@@ -8,6 +9,8 @@ import {
   ThemeProvider,
   createMuiTheme
 } from "@material-ui/core/styles";
+import { Box } from "@material-ui/core";
+
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import "./App.css";
@@ -16,6 +19,8 @@ import "./App.css";
 // import { AppBar } from "./components";
 import store from "./store";
 import ProfessionalsPage from "./pages/professionals-page";
+import NavBar from "./components/nav-bar";
+import { NAVIGATION_LINKS } from "./config/config";
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -35,14 +40,18 @@ const theme = createMuiTheme({
 });
 function App() {
   return (
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <StylesProvider jss={jss}>
-          <div className="App">קבוצת רגישים</div>
-          <ProfessionalsPage />
-        </StylesProvider>
-      </ThemeProvider>
-    </Provider>
+    <Router>
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <StylesProvider jss={jss}>
+            <NavBar links={NAVIGATION_LINKS} />
+            <Box>
+              <ProfessionalsPage />
+            </Box>
+          </StylesProvider>
+        </ThemeProvider>
+      </Provider>
+    </Router>
   );
 }
 

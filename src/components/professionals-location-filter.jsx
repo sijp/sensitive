@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 
 import { Map, TileLayer, Marker, Tooltip } from "react-leaflet";
 
 import { actions } from "../ducks/professionals";
+
+import { v4 as uuidv4 } from "uuid";
 
 function DynamicMarker({ permanent, cityData, onclick }) {
   return (
@@ -18,11 +20,15 @@ function DynamicMarker({ permanent, cityData, onclick }) {
 }
 
 function ProfessionalsMap({ setCity, cityList, city }) {
+  const [key] = useState(uuidv4());
   return (
     <Map
+      key={
+        city ? `professional-map-set-${key}` : `professional-map-unset-${key}`
+      }
       style={{ height: "100%", width: "100%", direction: "ltr" }}
       zoom={10}
-      center={[32, 34.9]}
+      center={city ? cityList[city].position : [32, 34.9]}
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

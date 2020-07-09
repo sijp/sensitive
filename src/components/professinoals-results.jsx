@@ -64,9 +64,12 @@ function ProfessionalsResults({ style, results, synchronize, loading }) {
         </Card>
       ));
 
-  useEffect(function () {
-    synchronize();
-  }, []);
+  useEffect(
+    function () {
+      synchronize();
+    },
+    [synchronize]
+  );
 
   return (
     <Box className={classes.root} style={style}>
