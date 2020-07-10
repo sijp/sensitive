@@ -120,7 +120,7 @@ describe("professionals", () => {
       ];
       const state = {
         activeFilters: {
-          [payload[1].type]: {}
+          walkers: {}
         }
       };
       const result = reducer(state, {

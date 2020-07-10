@@ -22,15 +22,9 @@ function mockState(state) {
   };
 }
 
-function mockDBServer(responses = []) {
-  const dbTypes = Object.keys(MOCK_PROFESSIONALS_DB_TYPES);
+function mockDBServer(response = "") {
   mockAxios.reset();
-  responses.forEach((response, i) =>
-    mockAxios
-      .onGet(`${PROFESSIONALS_DB_URL}/${dbTypes[i]}.csv`)
-      .reply(200, response)
-  );
-  mockAxios.onGet(new RegExp(`${PROFESSIONALS_DB_URL}/*`)).reply(200, "");
+  mockAxios.onGet(new RegExp(`${PROFESSIONALS_DB_URL}/*`)).reply(200, response);
 }
 
 function asyncDispatch(action, state = mockState({})) {
@@ -132,7 +126,7 @@ describe("synchronize()", () => {
 
   it("should send ajax request cache is old", async () => {
     const { csv: fakeData, json: processedFakeData } = MOCK_SIMPLE_TRAINERS;
-    mockDBServer([fakeData]);
+    mockDBServer(fakeData);
 
     const action = actions.synchronize();
     const state = mockState({
@@ -142,7 +136,6 @@ describe("synchronize()", () => {
     const { calls, actionResult } = asyncDispatch(action, state);
 
     const resolvedActionResult = await actionResult;
-
     expect(resolvedActionResult).toEqual(processedFakeData);
     const syncDoneParams = calls[1];
 

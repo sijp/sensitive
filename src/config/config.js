@@ -12,9 +12,9 @@ export const PROFESSIONALS_DB_URL =
   process.env.PROFESSIONALS_DB_URL || "http://localhost:5000";
 export const PROFESSIONALS_DB_TYPES = {
   trainers: { label: "אימון כלבים", icon: faDog },
-  walker: { label: "הולכת כלבים", icon: faWalking },
-  sitter: { label: "פנסיון ודוג סיטינג", icon: faHome },
-  groomer: { label: "טיפוח כלבים", icon: faCut }
+  walkers: { label: "הולכת כלבים", icon: faWalking },
+  sitters: { label: "פנסיון ודוג סיטינג", icon: faHome },
+  groomers: { label: "טיפוח כלבים", icon: faCut }
 };
 export const PROFESSIONALS_DB_COLUMNS = [
   "id",
@@ -23,13 +23,20 @@ export const PROFESSIONALS_DB_COLUMNS = [
   "phone",
   "web",
   "email",
-  "cities"
+  "cities",
+  "services"
 ];
 export const PROFESSIONALS_DB_CACHE_VALIDITY = 5 * 60; // 5 minutes
 export const PROFESSIONALS_CITY_LIST = {
   "Tel Aviv": { position: [32.06, 34.77], label: "תל אביב" },
   HaShfela: { position: [31.9, 34.88], label: "השפלה" },
-  Jerusalem: { position: [31.76, 35.2], label: "ירושלים" }
+  Jerusalem: { position: [31.76, 35.2], label: "ירושלים" },
+  Haifa: { position: [32.8, 34.98], label: "חיפה" },
+  "Rishon Lezion": { position: [31.9, 34.8], label: "ראשון לציון" },
+  "Beer Sheva": { position: [31.25, 34.8], label: "באר שבע" },
+  "Gush Dan": { position: [32.01, 34.8], label: "גוש דן" },
+  Ashdod: { position: [31.8, 34.65], label: "אשדוד" },
+  Ashkelon: { position: [31.65, 34.56], label: "אשקלון" }
 };
 export const NAVIGATION_LINKS = [
   {

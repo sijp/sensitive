@@ -22,7 +22,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function FancyIcon({ bgClassName, ...props }) {
-  console.log(props);
   return (
     <span className="fa-layers">
       <FontAwesomeIcon
