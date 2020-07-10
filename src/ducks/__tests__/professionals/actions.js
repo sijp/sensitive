@@ -130,7 +130,7 @@ describe("synchronize()", () => {
 
     const action = actions.synchronize();
     const state = mockState({
-      lastSync: Date.now() - PROFESSIONALS_DB_CACHE_VALIDITY
+      lastSync: new Date(Date.now() - PROFESSIONALS_DB_CACHE_VALIDITY * 1001)
     });
 
     const { calls, actionResult } = asyncDispatch(action, state);
@@ -146,7 +146,7 @@ describe("synchronize()", () => {
     const action = actions.synchronize();
     const rawData = "RAW_DATA";
     const state = mockState({
-      lastSync: Date.now(),
+      lastSync: new Date(),
       rawData
     });
     const { actionResult } = asyncDispatch(action, state);

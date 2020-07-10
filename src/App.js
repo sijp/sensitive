@@ -18,7 +18,7 @@ import "./App.css";
 // import { SearchPage } from "./pages";
 // import { AppBar } from "./components";
 import store from "./store";
-import ProfessionalsPage from "./pages/professionals-page";
+import AppRouter from "./app-router";
 import NavBar from "./components/nav-bar";
 import { NAVIGATION_LINKS } from "./config/config";
 
@@ -44,10 +44,11 @@ function App() {
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <StylesProvider jss={jss}>
-            <NavBar links={NAVIGATION_LINKS} />
-            <Box>
-              <ProfessionalsPage />
-            </Box>
+            <NavBar links={NAVIGATION_LINKS}>
+              <Box style={{ flexGrow: 1 }}>
+                <AppRouter />
+              </Box>
+            </NavBar>
           </StylesProvider>
         </ThemeProvider>
       </Provider>
