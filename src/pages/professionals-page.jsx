@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation, useHistory } from "react-router-dom";
 
 import { connect } from "react-redux";
 
@@ -7,7 +8,8 @@ import {
   Container,
   Snackbar,
   Slide,
-  makeStyles
+  makeStyles,
+  CircularProgress
 } from "@material-ui/core";
 
 import ProfessionalsMap from "../components/professionals-location-filter";
@@ -17,7 +19,13 @@ import ProfessionalsResults from "../components/professinoals-results";
 import { faSearchLocation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const useStyles = makeStyles(() => ({
+import { actions } from "../ducks/professionals";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    backgroundColor: theme.palette.grey[50],
+    height: "80vh"
+  },
   message: {
     flex: 1,
     textAlign: "center"
@@ -30,34 +38,122 @@ const useStyles = makeStyles(() => ({
     height: "80vh"
   },
   filters: {
-    height: "10vh"
+    minHeight: "5vh"
+  },
+  filtersInMap: {
+    paddingBottom: theme.spacing(3),
+    textAlign: "center"
   },
   results: {
-    height: "70vh"
+    height: "100%",
+    overflowY: "auto",
+    overflowX: "hidden"
   }
 }));
 
-function ProfessionalsPage({ city }) {
+function useQuery() {
+  const location = useLocation();
+  const history = useHistory();
+  return [
+    location.search,
+    (search) => history.replace({ ...location, search: search.toString() })
+  ];
+}
+
+function ProfessionalsPage({
+  city,
+  activeFilters,
+  setCity,
+  setFilters,
+  synchronize
+}) {
   const classes = useStyles();
+  const [queryString, setQueryString] = useQuery();
+  const queryParams = new URLSearchParams(queryString);
+  const [mounted, setMounted] = useState(false);
+
+  const qsCity = queryParams.get("city") || city;
+  const qsFilters =
+    queryParams.get("filters") || Object.keys(activeFilters).join(",") || "";
+
+  const handleCityChange = (city) => {
+    const newParams = new URLSearchParams(queryString);
+    newParams.set("city", city);
+    setQueryString(newParams);
+  };
+
+  const handleFiltersChange = (filter, enabled) => {
+    const newParams = new URLSearchParams(queryString);
+    const currentFilters = Object.keys(activeFilters) || [];
+    console.log(currentFilters);
+    const newFilters = enabled
+      ? [...currentFilters, filter]
+      : currentFilters.filter((f) => f !== filter);
+    newParams.set("filters", newFilters.join(","));
+    setQueryString(newParams);
+  };
+
+  useEffect(
+    function () {
+      if (qsCity) setCity(qsCity);
+      if (qsFilters) setFilters(qsFilters.split(","));
+    },
+    // eslint-disable-next-line
+    [qsCity, qsFilters]
+  );
+
+  useEffect(function () {
+    const newParams = new URLSearchParams(queryString);
+    newParams.set("city", qsCity);
+    newParams.set("filters", qsFilters);
+    setQueryString(newParams);
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(
+    function () {
+      synchronize();
+    },
+    [synchronize]
+  );
+  useEffect(function () {
+    setTimeout(() => setMounted(true), 500);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div style={{ textAlign: "center" }}>
+        <CircularProgress color="secondary" size={120} />
+      </div>
+    );
+  }
   return (
     <>
       <Container maxWidth="xl">
-        <Grid container spacing={1} className={classes.map}>
-          <Grid item xs={city ? 4 : 12}>
-            <ProfessionalsMap />
-          </Grid>
+        <Grid container spacing={1} className={classes.root}>
           {city && (
-            <Grid item xs={8}>
-              <ProfessionalsFilters className={classes.filters} />
-              <ProfessionalsResults className={classes.results} />
+            <Grid item xs={8} className={classes.results}>
+              <div className={classes.filters}>
+                <ProfessionalsFilters onChange={handleFiltersChange} />
+              </div>
+
+              <ProfessionalsResults />
             </Grid>
           )}
+          <Grid item xs={city ? 4 : 12} className={classes.map}>
+            {!city && (
+              <div className={classes.filtersInMap}>
+                <ProfessionalsFilters />
+              </div>
+            )}
+            <ProfessionalsMap onChange={handleCityChange} />
+          </Grid>
         </Grid>
       </Container>
       <Snackbar
-        TransitionComponent={(props) => <Slide {...props} direction="down" />}
+        TransitionComponent={(props) => <Slide {...props} direction="right" />}
         open={!city}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
         ContentProps={{ classes: { message: classes.message } }}
         message={
           <>
@@ -65,7 +161,7 @@ function ProfessionalsPage({ city }) {
               icon={faSearchLocation}
               className={classes.snackIcon}
             />{" "}
-            איפה אתם מחפשים?
+            כדי להתחיל, יש לסמן את סוג השירות המבוקש, ואת איזור המגורים
           </>
         }
       />
@@ -74,7 +170,15 @@ function ProfessionalsPage({ city }) {
 }
 
 function mapStateToProps(state) {
-  return { cityList: state.cityList, city: state.city };
+  return {
+    cityList: state.cityList,
+    city: state.city,
+    activeFilters: state.activeFilters
+  };
 }
 
-export default connect(mapStateToProps)(ProfessionalsPage);
+export default connect(mapStateToProps, {
+  setFilters: actions.setFilters,
+  setCity: actions.setCity,
+  synchronize: actions.synchronize
+})(ProfessionalsPage);

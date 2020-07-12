@@ -1,20 +1,30 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Card, Typography, Box } from "@material-ui/core";
+import {
+  Card,
+  Typography,
+  Box,
+  List,
+  ListItemText,
+  Link,
+  Tooltip
+} from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 import { connect } from "react-redux";
 
-import { actions } from "../ducks/professionals";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPhoneSquare,
+  faGlobe,
+  faAt,
+  faSadTear
+} from "@fortawesome/free-solid-svg-icons";
+import { faFacebookF } from "@fortawesome/free-brands-svg-icons";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flexFlow: "row wrap",
-    padding: theme.spacing(1),
-    width: "100%",
-    height: "100%",
-    overflowY: "auto",
-    backgroundColor: theme.palette.grey[50]
+    padding: theme.spacing(1)
   },
 
   card: {
@@ -25,32 +35,109 @@ const useStyles = makeStyles((theme) => ({
     height: 250,
     minWidth: 350,
     maxWidth: 350
+  },
+
+  cardContent: {
+    color: theme.palette.secondary.dark
+  },
+
+  noResults: {
+    color: theme.palette.secondary.light,
+    width: "100%",
+    textAlign: "center"
   }
 }));
 
-function Result({ result }) {
+function Result({ result, cardContentClass, filterTypes, cityList }) {
   return (
     <>
-      <Typography variant="h4">{result.name}</Typography>
+      <Typography variant="h3">{result.name}</Typography>
+
+      <List className={cardContentClass}>
+        <ListItemText>
+          <Typography variant="h5">
+            <FontAwesomeIcon icon={faPhoneSquare} /> {"  "} {result.phone}
+          </Typography>
+        </ListItemText>
+        <ListItemText>
+          <Typography variant="h5">
+            <Link href={result.facebookPage} color="inherit" target="_blank">
+              <FontAwesomeIcon icon={faFacebookF} />
+            </Link>{" "}
+            {"  "}
+            <Link href={result.web} color="inherit" target="_blank">
+              <FontAwesomeIcon icon={faGlobe} />
+            </Link>{" "}
+            {"  "}
+            <Link
+              href={`mailto:${result.email}`}
+              color="inherit"
+              target="_blank"
+            >
+              <FontAwesomeIcon icon={faAt} />
+            </Link>
+          </Typography>
+        </ListItemText>
+        <ListItemText>
+          שירותים:{"  "}
+          {result.services.map((service) => (
+            <Tooltip
+              key={`service-${result.id}-${service}-tooltip`}
+              title={filterTypes[service]?.label}
+              arrow
+              placement="top"
+            >
+              <span>
+                <FontAwesomeIcon
+                  key={`service-${result.id}-${service}`}
+                  icon={filterTypes[service]?.icon}
+                  style={{ marginRight: 5 }}
+                />
+              </span>
+            </Tooltip>
+          ))}
+        </ListItemText>
+        <ListItemText>
+          איזורים: {"  "}
+          {result.cities.map((city) => cityList[city].label).join(", ")}
+        </ListItemText>
+      </List>
     </>
   );
 }
 
-function ProfessionalsResults({ style, results, synchronize, loading }) {
+function ProfessionalsResults({
+  style,
+  results,
+  loading,
+  filterTypes,
+  cityList
+}) {
   const classes = useStyles();
 
   const renderResults = () =>
-    results.map((result) => (
-      <Card
-        variant="outlined"
-        className={classes.card}
-        key={`${result.type}-${result.id}`}
-      >
-        <Result result={result} />
-      </Card>
-    ));
+    results.length > 0 ? (
+      results.map((result) => (
+        <Card
+          variant="outlined"
+          className={classes.card}
+          key={`${result.type}-${result.id}`}
+        >
+          <Result
+            result={result}
+            cardContentClass={classes.cardContent}
+            filterTypes={filterTypes}
+            cityList={cityList}
+          />
+        </Card>
+      ))
+    ) : (
+      <Typography variant="h2" className={classes.noResults}>
+        לא נמצאו תוצאות <FontAwesomeIcon icon={faSadTear} />
+      </Typography>
+    );
   const renderSkeletons = () =>
-    Array(5)
+    Array(2)
       .fill()
       .map((_, i) => (
         <Card
@@ -64,13 +151,6 @@ function ProfessionalsResults({ style, results, synchronize, loading }) {
         </Card>
       ));
 
-  useEffect(
-    function () {
-      synchronize();
-    },
-    [synchronize]
-  );
-
   return (
     <Box className={classes.root} style={style}>
       {loading ? renderSkeletons() : renderResults()}
@@ -81,10 +161,10 @@ function ProfessionalsResults({ style, results, synchronize, loading }) {
 function mapStateToProps(state) {
   return {
     results: state.results,
-    loading: state.loading
+    loading: state.loading,
+    filterTypes: state.filterTypes,
+    cityList: state.cityList
   };
 }
 
-export default connect(mapStateToProps, { synchronize: actions.synchronize })(
-  ProfessionalsResults
-);
+export default connect(mapStateToProps)(ProfessionalsResults);

@@ -16,7 +16,8 @@ const DEFAULT_STATE = {
   results: [],
   lastSync: undefined,
   cityList: PROFESSIONALS_CITY_LIST,
-  rawData: localStorage.getItem("PROFESSIONALS_RAW_DATA") || []
+  rawData: localStorage.getItem("PROFESSIONALS_RAW_DATA") || [],
+  loading: false
 };
 
 function withLoading(dispatch, action) {
@@ -62,22 +63,26 @@ function processData(data) {
     });
 }
 
-async function requestDB(dbName) {
+async function requestDB() {
   try {
-    const response = await axios.get(`${PROFESSIONALS_DB_URL}/${dbName}.csv`);
+    const response = await axios.get(`${PROFESSIONALS_DB_URL}`);
     return response.data;
   } catch (e) {
-    console.error(e.message, `${PROFESSIONALS_DB_URL}/${dbName}.csv`);
+    console.error(e.message, `${PROFESSIONALS_DB_URL}`);
     return "";
   }
 }
 
 function isCacheValid(lastSync) {
-  return lastSync && Date.now() - lastSync < PROFESSIONALS_DB_CACHE_VALIDITY;
+  console.log(lastSync);
+  return (
+    lastSync &&
+    Date.now() - lastSync.getTime() < PROFESSIONALS_DB_CACHE_VALIDITY * 1000
+  );
 }
 
-async function getDB(typeName) {
-  return await processData(await requestDB(typeName));
+async function getDB() {
+  return await processData(await requestDB());
 }
 
 function setResults(state) {
@@ -110,6 +115,7 @@ export const types = {
   SET_CITY_DONE: "SET_CITY_DONE",
   ADD_FILTERS: "ADD_FILTERS",
   REMOVE_FILTERS: "REMOVE_FILTERS",
+  SET_FILTERS: "SET_FILTERS",
   SYNCHRONIZE: "SYNCHRONIZE",
   SYNCHRONIZE_DONE: "SYNCHRONIZE_DONE"
 };
@@ -142,11 +148,21 @@ export const actions = {
     };
   },
 
+  setFilters(filterNames) {
+    return (dispatch) => {
+      withLoading(dispatch, {
+        type: types.SET_FILTERS,
+        payload: filterNames
+      });
+    };
+  },
+
   synchronize() {
     const fakeTime = () =>
       new Promise((res) => setTimeout(() => res(true), 500));
     return async (dispatch, getState) => {
-      const { lastSync, rawData = [] } = getState();
+      const { lastSync, rawData = [], loading } = getState();
+      if (loading) return rawData;
       dispatch({
         type: types.SYNCHRONIZE
       });
@@ -173,7 +189,10 @@ export default function reducer(state = DEFAULT_STATE, action) {
     case types.SET_CITY:
       return { ...state, city: action.payload };
     case types.ADD_FILTERS: {
-      const activeFilters = { ...state.activeFilters, [action.payload]: {} };
+      const activeFilters = {
+        ...state.activeFilters,
+        [action.payload]: state.filterTypes[action.payload]
+      };
       return {
         ...state,
         activeFilters
@@ -189,10 +208,26 @@ export default function reducer(state = DEFAULT_STATE, action) {
         activeFilters
       };
     }
+    case types.SET_FILTERS:
+      return {
+        ...state,
+        activeFilters: action.payload.reduce(
+          (filters, filterName) => ({
+            ...filters,
+            [filterName]: state.filterTypes[filterName]
+          }),
+          {}
+        )
+      };
     case types.SYNCHRONIZE:
       return { ...state, loading: true };
     case types.SYNCHRONIZE_DONE:
-      return setResults({ ...state, rawData: action.payload, loading: false });
+      return setResults({
+        ...state,
+        rawData: action.payload,
+        loading: false,
+        lastSync: new Date()
+      });
     default:
       return state;
   }

@@ -14,7 +14,7 @@ import {
   Link as ExternalLink
 } from "@material-ui/core";
 
-import { Link as InternalLink } from "react-router-dom";
+import { NavLink as InternalLink, useRouteMatch } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -23,7 +23,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    flexGrow: 1,
+    flexGrow: 1
+  },
+  navbar: {
     marginBottom: theme.spacing(2)
   },
   menuButton: {
@@ -49,31 +51,65 @@ const useStyles = makeStyles((theme) => ({
   },
   drawerLink: {
     color: theme.palette.text.primary
+  },
+  contentBig: {
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen
+    })
+  },
+  contentSmall: {
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen
+    }),
+    marginLeft: 240
   }
 }));
 
-export default function ({ links = [] }) {
+function MixedListItem({ icon, text, url, external, ...props }) {
+  const match = useRouteMatch(url);
+
+  const internalProps = external
+    ? {
+        component: ExternalLink,
+        href: url,
+        target: "_blank"
+      }
+    : {
+        component: InternalLink,
+        disabled: match && match.isExact,
+        to: url,
+        exact: true
+      };
+  return <ListItem {...props} {...internalProps}></ListItem>;
+}
+
+export default function ({ links = [], children }) {
   const classes = useStyles();
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  console.log("render", isDrawerOpen);
+
   return (
     <div className={classes.root}>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-            onClick={() => setDrawerOpen(!isDrawerOpen)}
-          >
-            <FontAwesomeIcon icon={faBars} />
-          </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            קבוצת התמיכה לבעלי כלבים רגישים
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <div className={isDrawerOpen ? classes.contentSmall : classes.contentBig}>
+        <AppBar position="static" className={classes.navbar}>
+          <Toolbar>
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="menu"
+              onClick={() => setDrawerOpen(!isDrawerOpen)}
+            >
+              <FontAwesomeIcon icon={faBars} />
+            </IconButton>
+            <Typography variant="h6" className={classes.title}>
+              קבוצת התמיכה לבעלי כלבים רגישים
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <div>{children}</div>
+      </div>
       <Drawer
         variant="persistent"
         anchor="left"
@@ -90,20 +126,13 @@ export default function ({ links = [] }) {
         </div>
         <Divider />
         <List>
-          {links.map(({ icon, text, url, external }, index) => (
-            <ListItem
-              button
-              component={external ? ExternalLink : InternalLink}
-              key={index}
-              href={external && url}
-              to={!external && url}
-              target={external && "_blank"}
-            >
+          {links.map(({ icon, text, ...rest }, index) => (
+            <MixedListItem button {...rest} key={index}>
               <ListItemIcon>
                 <FontAwesomeIcon icon={icon} />
               </ListItemIcon>
               <ListItemText primary={text} className={classes.drawerLink} />
-            </ListItem>
+            </MixedListItem>
           ))}
         </List>
       </Drawer>

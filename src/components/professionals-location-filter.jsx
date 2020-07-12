@@ -26,7 +26,7 @@ function DynamicMarker({ permanent, cityData, onclick }) {
   );
 }
 
-function ProfessionalsMap({ setCity, cityList, city }) {
+function ProfessionalsMap({ setCity, cityList, city, onChange }) {
   const [key] = useState(uuidv4());
   const [zoom, setZoom] = useState(9);
   return (
@@ -34,7 +34,11 @@ function ProfessionalsMap({ setCity, cityList, city }) {
       key={
         city ? `professional-map-set-${key}` : `professional-map-unset-${key}`
       }
-      style={{ height: "100%", width: "100%", direction: "ltr" }}
+      style={{
+        height: "100%",
+        width: "100%",
+        direction: "ltr"
+      }}
       zoom={zoom}
       center={city ? cityList[city].position : [32, 34.9]}
       onzoomend={(event) => setZoom(event.target.getZoom())}
@@ -50,7 +54,10 @@ function ProfessionalsMap({ setCity, cityList, city }) {
           cityId={cityId}
           cityData={cityData}
           permanent={cityId === city}
-          onclick={() => setCity(cityId)}
+          onclick={() => {
+            setCity(cityId);
+            onChange(cityId);
+          }}
         />
       ))}
     </Map>

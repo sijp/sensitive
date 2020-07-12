@@ -2,16 +2,20 @@ import React from "react";
 import { connect } from "react-redux";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { Chip } from "@material-ui/core";
+import { Chip, Typography } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { actions } from "../ducks/professionals";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    paddingLeft: theme.spacing(3)
+  },
   chip: {
     padding: theme.spacing(1),
     paddingLeft: theme.spacing(1.2),
-    marginRight: theme.spacing(1)
+    marginRight: theme.spacing(1),
+    marginBottom: theme.spacing(1)
   },
   iconBg: {
     color: theme.palette.grey[50]
@@ -39,11 +43,16 @@ function ProfessionalFilters({
   style,
   filters,
   addFilter,
-  removeFilter
+  removeFilter,
+  onChange
 }) {
   const classes = useStyles();
   return (
-    <div style={style}>
+    <div style={style} className={classes.root}>
+      <Typography variant="body1" color="secondary" component="span">
+        סינון לפי סוג שירות:
+        <br />
+      </Typography>
       {Object.entries(filterTypes).map(([filterType, filterData]) => (
         <Chip
           className={classes.chip}
@@ -58,11 +67,12 @@ function ProfessionalFilters({
           color={filters[filterType] ? "primary" : "default"}
           key={filterType}
           label={filterData.label}
-          onClick={() =>
+          onClick={() => {
             filters[filterType]
               ? removeFilter(filterType)
-              : addFilter(filterType)
-          }
+              : addFilter(filterType);
+            onChange(filterType, !filters[filterType]);
+          }}
         ></Chip>
       ))}
     </div>

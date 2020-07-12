@@ -9,7 +9,8 @@ import {
 import { faFacebookF } from "@fortawesome/free-brands-svg-icons";
 
 export const PROFESSIONALS_DB_URL =
-  process.env.PROFESSIONALS_DB_URL || "http://localhost:5000";
+  process.env.REACT_APP_PROFESSIONALS_DB_URL || "http://localhost:5000";
+
 export const PROFESSIONALS_DB_TYPES = {
   trainers: { label: "אימון כלבים", icon: faDog },
   walkers: { label: "הולכת כלבים", icon: faWalking },
@@ -41,6 +42,11 @@ export const PROFESSIONALS_CITY_LIST = {
 export const NAVIGATION_LINKS = [
   {
     url: "/",
+    text: "דף ראשי",
+    icon: faHome
+  },
+  {
+    url: "/professionals",
     text: "אינדקס אנשי מקצוע",
     icon: faSearch
   },
