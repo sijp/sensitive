@@ -3,7 +3,10 @@ import {
   faWalking,
   faHome,
   faCut,
-  faSearch
+  faNewspaper,
+  faPaw,
+  faStar,
+  faSearchLocation
 } from "@fortawesome/free-solid-svg-icons";
 
 import { faFacebookF } from "@fortawesome/free-brands-svg-icons";
@@ -48,13 +51,33 @@ export const NAVIGATION_LINKS = [
   {
     url: "/professionals",
     text: "אינדקס אנשי מקצוע",
-    icon: faSearch
+    icon: faSearchLocation
+  },
+  {
+    url: "/articles",
+    text: "מאמרים",
+    icon: faNewspaper,
+    highlighted: true
+  },
+  {
+    url: "/position-statements",
+    text: "עקרונות הגישה",
+    icon: faStar,
+    highlighted: true
+  },
+  {
+    url: "/about",
+    text: "על הקבוצה",
+    icon: faPaw,
+    highlighted: true
   },
   {
     url: "https://www.facebook.com/groups/476196172437302/",
     text: "הקבוצה בפייסבוק",
     icon: faFacebookF,
-    external: true
+    external: true,
+    logo: true,
+    highlighted: true
   },
   {
     url: "https://www.facebook.com/groups/470596276647495/",
