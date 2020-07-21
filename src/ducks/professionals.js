@@ -11,7 +11,15 @@ import {
 
 const DEFAULT_STATE = {
   filterTypes: PROFESSIONALS_DB_TYPES,
-  activeFilters: PROFESSIONALS_DB_TYPES,
+  activeFilters: Object.entries(PROFESSIONALS_DB_TYPES)
+    .filter(([_filterKey, filterProps]) => filterProps.default === true)
+    .reduce(
+      (activeFilters, [filterKey, filterProps]) => ({
+        ...activeFilters,
+        [filterKey]: filterProps
+      }),
+      {}
+    ),
   city: "",
   results: [],
   lastSync: undefined,
