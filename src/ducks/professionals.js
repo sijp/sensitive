@@ -74,7 +74,6 @@ async function requestDB() {
 }
 
 function isCacheValid(lastSync) {
-  console.log(lastSync);
   return (
     lastSync &&
     Date.now() - lastSync.getTime() < PROFESSIONALS_DB_CACHE_VALIDITY * 1000

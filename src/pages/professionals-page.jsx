@@ -37,6 +37,9 @@ const useStyles = makeStyles((theme) => ({
   map: {
     height: "80vh"
   },
+  mapSmaller: {
+    height: "70vh"
+  },
   filters: {
     minHeight: "5vh"
   },
@@ -85,7 +88,6 @@ function ProfessionalsPage({
   const handleFiltersChange = (filter, enabled) => {
     const newParams = new URLSearchParams(queryString);
     const currentFilters = Object.keys(activeFilters) || [];
-    console.log(currentFilters);
     const newFilters = enabled
       ? [...currentFilters, filter]
       : currentFilters.filter((f) => f !== filter);
@@ -140,10 +142,14 @@ function ProfessionalsPage({
               <ProfessionalsResults />
             </Grid>
           )}
-          <Grid item xs={city ? 4 : 12} className={classes.map}>
+          <Grid
+            item
+            xs={city ? 4 : 12}
+            className={city ? classes.map : classes.mapSmaller}
+          >
             {!city && (
               <div className={classes.filtersInMap}>
-                <ProfessionalsFilters />
+                <ProfessionalsFilters onChange={handleFiltersChange} />
               </div>
             )}
             <ProfessionalsMap onChange={handleCityChange} />

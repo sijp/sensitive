@@ -1,5 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
+
+import { createBrowserHistory } from "history";
+
 import { Provider } from "react-redux";
 import { create } from "jss";
 import rtl from "jss-rtl";
@@ -21,6 +24,13 @@ import store from "./store";
 import AppRouter from "./app-router";
 import NavBar from "./components/nav-bar";
 import { NAVIGATION_LINKS } from "./config/config";
+
+const history = createBrowserHistory();
+
+const path = (/#!(\/.*)$/.exec(window.location.hash) || [])[1];
+if (path) {
+  history.replace(path);
+}
 
 delete L.Icon.Default.prototype._getIconUrl;
 
