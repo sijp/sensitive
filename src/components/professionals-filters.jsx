@@ -2,18 +2,18 @@ import React from "react";
 import { connect } from "react-redux";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { Chip, Typography } from "@material-ui/core";
+import { Chip, Typography, Badge, Avatar } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { actions } from "../ducks/professionals";
-import { faCircle } from "@fortawesome/free-solid-svg-icons";
+import { faCircle, faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     paddingLeft: theme.spacing(3)
   },
   chip: {
-    padding: theme.spacing(1),
-    paddingLeft: theme.spacing(1.2),
+    padding: `${theme.spacing(1)}px ${theme.spacing(1.5)}px`,
     marginRight: theme.spacing(1),
     marginBottom: theme.spacing(1)
   },
@@ -22,6 +22,17 @@ const useStyles = makeStyles((theme) => ({
   },
   iconBgEnabled: {
     color: theme.palette.secondary.light
+  },
+  chipShowMore: {
+    flip: false,
+    direction: "ltr",
+    padding: `${theme.spacing(1)}px ${theme.spacing(1.5)}px`,
+    marginRight: theme.spacing(1),
+    marginBottom: theme.spacing(1)
+  },
+  HiddenFiltersIcon: {
+    backgroundColor: `${theme.palette.primary.dark} !important`,
+    fontSize: "1.1em !important"
   }
 }));
 
@@ -47,13 +58,26 @@ function ProfessionalFilters({
   onChange
 }) {
   const classes = useStyles();
+  const defaultLimit = 3;
+  const [limitFilters, setLimitFilters] = useState(defaultLimit);
+
+  const filtersEntries = Object.entries(filterTypes);
+  const filtersToShow = limitFilters
+    ? filtersEntries.slice(0, limitFilters)
+    : filtersEntries;
+  const numberOfHiddenEnabledFilters = !limitFilters
+    ? 0
+    : filtersEntries
+        .slice(limitFilters)
+        .filter(([filterType]) => filters[filterType]).length;
+
   return (
     <div style={style} className={classes.root}>
       <Typography variant="body1" color="secondary" component="span">
         סינון לפי סוג שירות:
         <br />
       </Typography>
-      {Object.entries(filterTypes).map(([filterType, filterData]) => (
+      {filtersToShow.map(([filterType, filterData]) => (
         <Chip
           className={classes.chip}
           icon={
@@ -75,6 +99,24 @@ function ProfessionalFilters({
           }}
         ></Chip>
       ))}
+      <Chip
+        className={classes.chipShowMore}
+        color="secondary"
+        label={limitFilters ? "עוד" : "פחות"}
+        classes={{ avatar: classes.HiddenFiltersIcon }}
+        avatar={
+          numberOfHiddenEnabledFilters ? (
+            <Avatar color="primary">{numberOfHiddenEnabledFilters}</Avatar>
+          ) : null
+        }
+        deleteIcon={<FontAwesomeIcon icon={limitFilters ? faPlus : faMinus} />}
+        onClick={() => {
+          setLimitFilters(limitFilters ? undefined : defaultLimit);
+        }}
+        onDelete={() => {
+          setLimitFilters(limitFilters ? undefined : defaultLimit);
+        }}
+      ></Chip>
     </div>
   );
 }

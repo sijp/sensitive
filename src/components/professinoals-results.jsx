@@ -83,7 +83,7 @@ function Result({ result, cardContentClass, filterTypes, cityList }) {
           {result.services.map((service) => (
             <Tooltip
               key={`service-${result.id}-${service}-tooltip`}
-              title={filterTypes[service]?.label}
+              title={filterTypes[service]?.label || "NO TITLE"}
               arrow
               placement="top"
             >
@@ -99,7 +99,7 @@ function Result({ result, cardContentClass, filterTypes, cityList }) {
         </ListItemText>
         <ListItemText>
           איזורים: {"  "}
-          {result.cities.map((city) => cityList[city].label).join(", ")}
+          {result.cities.map((city) => cityList[city]?.label).join(", ")}
         </ListItemText>
       </List>
     </>
@@ -117,20 +117,22 @@ function ProfessionalsResults({
 
   const renderResults = () =>
     results.length > 0 ? (
-      results.map((result) => (
-        <Card
-          variant="outlined"
-          className={classes.card}
-          key={`${result.type}-${result.id}`}
-        >
-          <Result
-            result={result}
-            cardContentClass={classes.cardContent}
-            filterTypes={filterTypes}
-            cityList={cityList}
-          />
-        </Card>
-      ))
+      results
+        .sort((result1, result2) => (result1.name > result2.name ? 1 : -1))
+        .map((result) => (
+          <Card
+            variant="outlined"
+            className={classes.card}
+            key={`${result.type}-${result.id}`}
+          >
+            <Result
+              result={result}
+              cardContentClass={classes.cardContent}
+              filterTypes={filterTypes}
+              cityList={cityList}
+            />
+          </Card>
+        ))
     ) : (
       <Typography variant="h2" className={classes.noResults}>
         לא נמצאו תוצאות <FontAwesomeIcon icon={faSadTear} />

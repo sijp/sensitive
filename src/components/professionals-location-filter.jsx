@@ -28,7 +28,7 @@ function DynamicMarker({ permanent, cityData, onclick }) {
 
 function ProfessionalsMap({ setCity, cityList, city, onChange }) {
   const [key] = useState(uuidv4());
-  const [zoom, setZoom] = useState(9);
+  const [zoom, setZoom] = useState(8);
   return (
     <Map
       key={
