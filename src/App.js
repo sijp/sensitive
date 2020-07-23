@@ -43,11 +43,15 @@ L.Icon.Default.mergeOptions({
 const jss = create({ plugins: [...jssPreset().plugins, rtl()] });
 const theme = createMuiTheme({
   direction: "rtl",
+  typography: {
+    fontFamily: ["Assistant", "Helvetica", "Arial", "sans-serif"].join(",")
+  },
   palette: {
     secondary: { light: "#c3977c", main: "#8f6c56", dark: "#483620" },
     primary: { light: "#edf5e8", main: "#b5d1a0", dark: "#84aa67" }
   }
 });
+
 function App() {
   return (
     <Router>

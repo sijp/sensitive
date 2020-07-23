@@ -24,7 +24,9 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flexFlow: "row wrap",
-    padding: theme.spacing(1)
+    padding: theme.spacing(1),
+    overflowY: "auto",
+    overflowX: "hidden"
   },
 
   card: {
@@ -34,7 +36,12 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.primary.dark,
     height: 250,
     minWidth: 350,
-    maxWidth: 350
+    maxWidth: 350,
+    "@media only screen and (max-width: 640px)": {
+      height: 200,
+      minWidth: 200,
+      maxWidth: 200
+    }
   },
 
   cardContent: {
