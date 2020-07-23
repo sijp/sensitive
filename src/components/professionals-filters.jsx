@@ -55,7 +55,8 @@ function ProfessionalFilters({
   filters,
   addFilter,
   removeFilter,
-  onChange
+  onChange,
+  moreChips = []
 }) {
   const classes = useStyles();
   const defaultLimit = 3;
@@ -116,7 +117,14 @@ function ProfessionalFilters({
         onDelete={() => {
           setLimitFilters(limitFilters ? undefined : defaultLimit);
         }}
-      ></Chip>
+      ></Chip>{" "}
+      {moreChips.map(({ className, ...chipProps }, index) => (
+        <Chip
+          key={index}
+          {...chipProps}
+          className={`${classes.chip} ${className}`}
+        />
+      ))}
     </div>
   );
 }

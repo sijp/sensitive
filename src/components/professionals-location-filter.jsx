@@ -6,6 +6,7 @@ import { Map, TileLayer, Marker, Tooltip } from "react-leaflet";
 import { actions } from "../ducks/professionals";
 
 import { v4 as uuidv4 } from "uuid";
+import { Typography } from "@material-ui/core";
 
 function DynamicMarker({ permanent, cityData, onclick }) {
   const [hovered, setHovered] = useState(false);
@@ -30,37 +31,43 @@ function ProfessionalsMap({ setCity, cityList, city, onChange }) {
   const [key] = useState(uuidv4());
   const [zoom, setZoom] = useState(8);
   return (
-    <Map
-      key={
-        city ? `professional-map-set-${key}` : `professional-map-unset-${key}`
-      }
-      style={{
-        height: "100%",
-        width: "100%",
-        direction: "ltr"
-      }}
-      zoom={zoom}
-      center={city ? cityList[city].position : [32, 34.9]}
-      onzoomend={(event) => setZoom(event.target.getZoom())}
-    >
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-      />
-      {Object.entries(cityList).map(([cityId, cityData]) => (
-        <DynamicMarker
-          key={`city-marker-${cityId}`}
-          selectedCity={city}
-          cityId={cityId}
-          cityData={cityData}
-          permanent={cityId === city}
-          onclick={() => {
-            setCity(cityId);
-            onChange(cityId);
-          }}
+    <>
+      <Typography variant="body1" color="secondary" component="span">
+        סינון לפי מיקום:
+        <br />
+      </Typography>
+      <Map
+        key={
+          city ? `professional-map-set-${key}` : `professional-map-unset-${key}`
+        }
+        style={{
+          height: "95%",
+          width: "100%",
+          direction: "ltr"
+        }}
+        zoom={zoom}
+        center={city ? cityList[city].position : [32, 34.9]}
+        onzoomend={(event) => setZoom(event.target.getZoom())}
+      >
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         />
-      ))}
-    </Map>
+        {Object.entries(cityList).map(([cityId, cityData]) => (
+          <DynamicMarker
+            key={`city-marker-${cityId}`}
+            selectedCity={city}
+            cityId={cityId}
+            cityData={cityData}
+            permanent={cityId === city}
+            onclick={() => {
+              setCity(cityId);
+              onChange(cityId);
+            }}
+          />
+        ))}
+      </Map>
+    </>
   );
 }
 

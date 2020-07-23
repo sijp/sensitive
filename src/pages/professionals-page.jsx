@@ -9,14 +9,23 @@ import {
   Snackbar,
   Slide,
   makeStyles,
-  CircularProgress
+  CircularProgress,
+  Hidden,
+  Chip,
+  Fab
 } from "@material-ui/core";
 
 import ProfessionalsMap from "../components/professionals-location-filter";
 import ProfessionalsFilters from "../components/professionals-filters";
 import ProfessionalsResults from "../components/professinoals-results";
 
-import { faSearchLocation } from "@fortawesome/free-solid-svg-icons";
+import {
+  faSearchLocation,
+  faLocationArrow,
+  faMapMarker,
+  faMap,
+  faMapMarkerAlt
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { actions } from "../ducks/professionals";
@@ -35,22 +44,36 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 5
   },
   map: {
-    height: "80vh"
+    height: "80vh",
+    "@media only screen and (max-width: 640px)": {
+      display: "none"
+    }
   },
   mapSmaller: {
     height: "70vh"
   },
+  clearCityButtonContainer: {
+    position: "absolute",
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
+    "@media only screen and (min-width: 640px)": {
+      display: "none"
+    }
+  },
   filters: {
-    minHeight: "5vh"
+    flex: "0 1 auto"
   },
   filtersInMap: {
-    paddingBottom: theme.spacing(3),
-    textAlign: "center"
+    textAlign: "center",
+    "@media only screen and (max-width: 640px)": {
+      display: "none"
+    }
   },
   results: {
-    height: "100%",
-    overflowY: "auto",
-    overflowX: "hidden"
+    overflow: "hidden",
+    display: "flex",
+    flexFlow: "column",
+    height: "80vh"
   }
 }));
 
@@ -63,7 +86,21 @@ function useQuery() {
   ];
 }
 
+function ResponsiveResultsGrid(props) {
+  return (
+    <>
+      <Hidden smUp>
+        <Grid {...props} xs={12} />
+      </Hidden>
+      <Hidden xsDown>
+        <Grid {...props} />
+      </Hidden>
+    </>
+  );
+}
+
 function ProfessionalsPage({
+  cityList,
   city,
   activeFilters,
   setCity,
@@ -106,8 +143,13 @@ function ProfessionalsPage({
 
   useEffect(function () {
     const newParams = new URLSearchParams(queryString);
-    newParams.set("city", qsCity);
-    newParams.set("filters", qsFilters);
+
+    if (qsCity) newParams.set("city", qsCity);
+    else newParams.delete("city");
+
+    if (qsFilters && qsFilters.length > 0) newParams.set("filters", qsFilters);
+    else newParams.delete("filters");
+
     setQueryString(newParams);
     // eslint-disable-next-line
   }, []);
@@ -133,44 +175,61 @@ function ProfessionalsPage({
     <>
       <Container maxWidth="xl">
         <Grid container spacing={1} className={classes.root}>
-          {city && (
-            <Grid item xs={8} className={classes.results}>
-              <div className={classes.filters}>
-                <ProfessionalsFilters onChange={handleFiltersChange} />
-              </div>
+          <ResponsiveResultsGrid
+            item
+            xs={city ? 8 : 12}
+            className={city && classes.results}
+          >
+            <div className={city ? classes.filters : classes.filtersInMap}>
+              <ProfessionalsFilters onChange={handleFiltersChange} />
+            </div>
 
-              <ProfessionalsResults />
-            </Grid>
-          )}
+            {city && <ProfessionalsResults />}
+          </ResponsiveResultsGrid>
+
           <Grid
             item
             xs={city ? 4 : 12}
             className={city ? classes.map : classes.mapSmaller}
           >
-            {!city && (
-              <div className={classes.filtersInMap}>
-                <ProfessionalsFilters onChange={handleFiltersChange} />
-              </div>
-            )}
             <ProfessionalsMap onChange={handleCityChange} />
           </Grid>
         </Grid>
       </Container>
-      <Snackbar
-        TransitionComponent={(props) => <Slide {...props} direction="right" />}
-        open={!city}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-        ContentProps={{ classes: { message: classes.message } }}
-        message={
-          <>
-            <FontAwesomeIcon
-              icon={faSearchLocation}
-              className={classes.snackIcon}
-            />{" "}
-            כדי להתחיל, יש לסמן את סוג השירות המבוקש, ואת איזור המגורים
-          </>
-        }
-      />
+
+      {city && (
+        <div className={classes.clearCityButtonContainer}>
+          <Fab
+            variant="extended"
+            color="primary"
+            onClick={() => {
+              setCity(undefined);
+            }}
+          >
+            <FontAwesomeIcon icon={faMapMarkerAlt} style={{ padding: 4 }} />
+            {cityList[city]?.label}
+          </Fab>
+        </div>
+      )}
+      {!city && (
+        <Snackbar
+          TransitionComponent={(props) => (
+            <Slide {...props} direction="right" />
+          )}
+          open={!city}
+          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+          ContentProps={{ classes: { message: classes.message } }}
+          message={
+            <>
+              <FontAwesomeIcon
+                icon={faSearchLocation}
+                className={classes.snackIcon}
+              />{" "}
+              כדי להתחיל, יש לסמן את סוג השירות המבוקש, ואת איזור המגורים
+            </>
+          }
+        />
+      )}
     </>
   );
 }
