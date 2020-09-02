@@ -11,7 +11,6 @@ import {
   makeStyles,
   CircularProgress,
   Hidden,
-  Chip,
   Fab
 } from "@material-ui/core";
 
@@ -21,9 +20,6 @@ import ProfessionalsResults from "../components/professinoals-results";
 
 import {
   faSearchLocation,
-  faLocationArrow,
-  faMapMarker,
-  faMap,
   faMapMarkerAlt
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -33,7 +29,10 @@ import { actions } from "../ducks/professionals";
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.grey[50],
-    height: "80vh"
+    paddingTop: theme.spacing(2),
+    height: `calc(100vh - ${
+      theme.mixins.toolbar.minHeight + theme.spacing(1)
+    }px)`
   },
   message: {
     flex: 1,
@@ -44,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 5
   },
   map: {
-    height: "80vh",
+    height: "95%",
     "@media only screen and (max-width: 640px)": {
       display: "none"
     }
@@ -73,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
     display: "flex",
     flexFlow: "column",
-    height: "80vh"
+    height: "95%"
   }
 }));
 
@@ -166,7 +165,7 @@ function ProfessionalsPage({
 
   if (!mounted) {
     return (
-      <div style={{ textAlign: "center" }}>
+      <div className={classes.root} style={{ textAlign: "center" }}>
         <CircularProgress color="secondary" size={120} />
       </div>
     );
@@ -237,9 +236,9 @@ function ProfessionalsPage({
 
 function mapStateToProps(state) {
   return {
-    cityList: state.cityList,
-    city: state.city,
-    activeFilters: state.activeFilters
+    cityList: state.professionals.cityList,
+    city: state.professionals.city,
+    activeFilters: state.professionals.activeFilters
   };
 }
 

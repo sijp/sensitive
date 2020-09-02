@@ -1,12 +1,14 @@
 require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
+const { promisify } = require("util");
+const _ = require("underscore-contrib");
 
 const { authenticate } = require("./lib/authenticate");
 const { mapDir, download } = require("./lib/drive");
 const { processProfessionals, processTeam } = require("./lib/processing");
 const { getSpreadSheet } = require("./lib/sheets");
-const { promisify } = require("util");
+const { getGoogleDoc, docToMarkDown } = require("./lib/docs");
 
 const auth = authenticate();
 
@@ -25,6 +27,21 @@ async function downloadImages() {
   }
 }
 
+function monthlySort(jsonData) {
+  const sets = Object.values(_.groupBy(jsonData, (v) => parseInt(v.id) % 12));
+
+  let count = new Date().getMonth();
+  const next = () => {
+    const value = sets[count];
+    count++;
+    if (count > 11) count = 0;
+    return value;
+  };
+
+  const sortedSets = sets.map(next);
+  return _.flatten(sortedSets);
+}
+
 async function getData() {
   await promisify(fs.mkdir)("./tmp/data", { recursive: true });
   try {
@@ -34,7 +51,7 @@ async function getData() {
         const data = await getSpreadSheet(auth, file.id);
         const jsonData =
           file.name === "professionals"
-            ? processProfessionals(data)
+            ? monthlySort(processProfessionals(data))
             : file.name === "team"
             ? processTeam(data)
             : null;
@@ -51,5 +68,23 @@ async function getData() {
   }
 }
 
+async function getDocs() {
+  try {
+    const doc = await getGoogleDoc(
+      auth,
+      "1AjOP0huDj7jf0yR0Mx_wSen65J8ZCcifpXcHJd2p32k"
+    );
+    console.log(docToMarkDown(doc));
+
+    // console.log(
+    //   doc.inlineObjects["kix.chvxfcs206hg"].inlineObjectProperties
+    //     .embeddedObject.imageProperties.contentUri
+    // );
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 downloadImages();
 getData();
+//getDocs();

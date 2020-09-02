@@ -3,15 +3,9 @@ import MockAdapter from "axios-mock-adapter";
 
 import { actions, types } from "../../professionals";
 
-import {
-  MOCK_SIMPLE_TRAINERS,
-  MOCK_PROFESSIONALS_DB_TYPES
-} from "../../__mocks__/professionals";
+import { MOCK_PROFESSIONALS_DB_TYPES } from "../../__mocks__/professionals";
 
-import {
-  PROFESSIONALS_DB_URL,
-  PROFESSIONALS_DB_CACHE_VALIDITY
-} from "../../../config/config";
+import { PROFESSIONALS_DB_URL } from "../../../config/config";
 
 const mockAxios = new MockAdapter(axios);
 
@@ -105,54 +99,5 @@ describe("removeType", () => {
     expect(params[0].type).toEqual(types.REMOVE_FILTERS);
     const syncAction = syncDBParams[0];
     assertSync(syncAction);
-  });
-});
-
-describe("synchronize()", () => {
-  mockDBServer();
-  it("should dispatch SYNCHRONIZE and later SYNCHRONIZE_DONE", async () => {
-    mockDBServer();
-    const action = actions.synchronize();
-    const { calls, actionResult } = asyncDispatch(action);
-    expect(calls.length).toEqual(1);
-
-    const syncParams = calls[0];
-    expect(syncParams[0].type).toEqual(types.SYNCHRONIZE);
-
-    await actionResult;
-
-    expect(calls.length).toEqual(2);
-    const syncDoneParams = calls[1];
-    expect(syncDoneParams[0].type).toEqual(types.SYNCHRONIZE_DONE);
-  });
-
-  it("should send ajax request cache is old", async () => {
-    const { json: fakeData } = MOCK_SIMPLE_TRAINERS;
-    mockDBServer(fakeData);
-
-    const action = actions.synchronize();
-    const state = mockState({
-      lastSync: new Date(Date.now() - PROFESSIONALS_DB_CACHE_VALIDITY * 1001)
-    });
-
-    const { calls, actionResult } = asyncDispatch(action, state);
-
-    const resolvedActionResult = await actionResult;
-    expect(resolvedActionResult).toEqual(fakeData);
-    const syncDoneParams = calls[1];
-
-    expect(syncDoneParams[0].payload).toEqual(fakeData);
-  });
-
-  it("should use cache if it is valid", async () => {
-    const action = actions.synchronize();
-    const rawData = "RAW_DATA";
-    const state = mockState({
-      lastSync: new Date(),
-      rawData
-    });
-    const { actionResult } = asyncDispatch(action, state);
-    const result = await actionResult;
-    expect(result).toEqual(rawData);
   });
 });

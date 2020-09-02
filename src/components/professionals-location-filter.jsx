@@ -72,7 +72,10 @@ function ProfessionalsMap({ setCity, cityList, city, onChange }) {
 }
 
 function mapStateToProps(state) {
-  return { cityList: state.cityList, city: state.city };
+  return {
+    cityList: state.professionals.cityList,
+    city: state.professionals.city
+  };
 }
 
 export default connect(mapStateToProps, { setCity: actions.setCity })(

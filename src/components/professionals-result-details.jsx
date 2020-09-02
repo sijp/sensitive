@@ -162,14 +162,6 @@ function ProfessinoalsResultDetails({
         <b>
           {result.firstName} {result.lastName}
         </b>
-        {result.pinned && (
-          <Typography variant="h6" component="span">
-            <FontAwesomeIcon
-              icon={faStar}
-              style={{ margin: 6, float: "left" }}
-            />
-          </Typography>
-        )}
       </Typography>
       <List className={cardContentClass}>
         <ListItemText>

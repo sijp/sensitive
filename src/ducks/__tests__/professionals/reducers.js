@@ -54,30 +54,7 @@ describe("professionals", () => {
     });
   });
 
-  describe("SYNCHRONIZE", () => {
-    it("should set loading to true", () => {
-      const result = reducer(undefined, {
-        type: types.SYNCHRONIZE
-      });
-      expect(result.loading).toEqual(true);
-    });
-  });
-
   describe("SYNCHRONIZE_DONE", () => {
-    it("should set loading to false", () => {
-      const result = reducer(undefined, {
-        type: types.SYNCHRONIZE_DONE
-      });
-      expect(result.loading).toEqual(false);
-    });
-    it("should have the rawData from payload", () => {
-      const payload = MOCK_SIMPLE_TRAINERS.json;
-      const result = reducer(undefined, {
-        type: types.SYNCHRONIZE_DONE,
-        payload
-      });
-      expect(result.rawData).toEqual(payload);
-    });
     it("should not filter result if city is not set", () => {
       const payload = MOCK_DIFFERENT_CITIES.json;
       const state = {};
