@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     height: "70vh"
   },
   clearCityButtonContainer: {
-    position: "absolute",
+    position: "fixed",
     bottom: theme.spacing(2),
     right: theme.spacing(2),
     "@media only screen and (min-width: 640px)": {
@@ -219,6 +219,7 @@ function ProfessionalsPage({
           open={!city}
           anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
           ContentProps={{ classes: { message: classes.message } }}
+          style={{ position: "fixed" }}
           message={
             <>
               <FontAwesomeIcon

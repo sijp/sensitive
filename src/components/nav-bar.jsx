@@ -71,18 +71,18 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     height: "10vh",
     position: "relative",
-    top: theme.spacing(6),
+    top: "50vh",
     left: 0,
-    backgroundColor: theme.palette.primary.light + "33",
+    //backgroundColor: theme.palette.primary.light + "33",
     zIndex: theme.zIndex.appBar + 1,
     marginBottom: "-10vh",
 
     "& $svg": {
       marginRight: theme.spacing(12),
       float: "right",
-      backgroundColor: theme.palette.primary.light,
-      height: "10vh",
-      width: "10vh",
+      //backgroundColor: theme.palette.primary.light,
+      height: "17vh",
+      width: "17vh",
       "@media only screen and (max-width: 640px)": {
         marginRight: theme.spacing(2)
       }

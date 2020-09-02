@@ -1,25 +1,25 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { useState } from "react";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import {
   Card,
   Typography,
   Box,
-  List,
-  ListItemText,
-  Link,
-  Tooltip
+  Dialog,
+  useMediaQuery,
+  DialogActions,
+  Button
 } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 import { connect } from "react-redux";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPhoneSquare,
-  faGlobe,
-  faAt,
-  faSadTear
-} from "@fortawesome/free-solid-svg-icons";
-import { faFacebookF } from "@fortawesome/free-brands-svg-icons";
+import { faSadTear } from "@fortawesome/free-solid-svg-icons";
+
+import ProfessionalsResultDetails from "./professionals-result-details";
+
+const MOBILE_CARD_WIDTH = 230;
+const DEFAULT_CARD_WIDTH = 280;
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -30,88 +30,54 @@ const useStyles = makeStyles((theme) => ({
   },
 
   card: {
-    flex: 1,
-    padding: theme.spacing(3),
+    cursor: "pointer",
+
     margin: theme.spacing(2),
     color: theme.palette.primary.dark,
     height: 250,
-    minWidth: 350,
-    maxWidth: 350,
-    "@media only screen and (max-width: 640px)": {
-      height: 200,
-      minWidth: 200,
-      maxWidth: 200
+    flexBasis: DEFAULT_CARD_WIDTH,
+    [theme.breakpoints.down("sm")]: {
+      height: 250,
+      flexBasis: MOBILE_CARD_WIDTH
     }
   },
 
+  cardHeader: {
+    padding: `0 ${theme.spacing(2)}px`
+  },
+
   cardContent: {
-    color: theme.palette.secondary.dark
+    color: theme.palette.secondary.dark,
+    padding: `0 ${theme.spacing(2)}px`,
+    direction: "ltr"
   },
 
   noResults: {
     color: theme.palette.secondary.light,
     width: "100%",
     textAlign: "center"
+  },
+
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+
+  modalCard: {
+    direction: "ltr",
+    "& $cardContent": {
+      margin: theme.spacing(2),
+      marginTop: 0
+    },
+    "& h6": {
+      color: theme.palette.primary.dark,
+      fontSize: "2em",
+      margin: theme.spacing(2),
+      marginBottom: 0
+    }
   }
 }));
-
-function Result({ result, cardContentClass, filterTypes, cityList }) {
-  return (
-    <>
-      <Typography variant="h3">{result.name}</Typography>
-
-      <List className={cardContentClass}>
-        <ListItemText>
-          <Typography variant="h5">
-            <FontAwesomeIcon icon={faPhoneSquare} /> {"  "} {result.phone}
-          </Typography>
-        </ListItemText>
-        <ListItemText>
-          <Typography variant="h5">
-            <Link href={result.facebookPage} color="inherit" target="_blank">
-              <FontAwesomeIcon icon={faFacebookF} />
-            </Link>{" "}
-            {"  "}
-            <Link href={result.web} color="inherit" target="_blank">
-              <FontAwesomeIcon icon={faGlobe} />
-            </Link>{" "}
-            {"  "}
-            <Link
-              href={`mailto:${result.email}`}
-              color="inherit"
-              target="_blank"
-            >
-              <FontAwesomeIcon icon={faAt} />
-            </Link>
-          </Typography>
-        </ListItemText>
-        <ListItemText>
-          שירותים:{"  "}
-          {result.services.map((service) => (
-            <Tooltip
-              key={`service-${result.id}-${service}-tooltip`}
-              title={filterTypes[service]?.label || "NO TITLE"}
-              arrow
-              placement="top"
-            >
-              <span>
-                <FontAwesomeIcon
-                  key={`service-${result.id}-${service}`}
-                  icon={filterTypes[service]?.icon}
-                  style={{ marginRight: 5 }}
-                />
-              </span>
-            </Tooltip>
-          ))}
-        </ListItemText>
-        <ListItemText>
-          איזורים: {"  "}
-          {result.cities.map((city) => cityList[city]?.label).join(", ")}
-        </ListItemText>
-      </List>
-    </>
-  );
-}
 
 function ProfessionalsResults({
   style,
@@ -121,20 +87,30 @@ function ProfessionalsResults({
   cityList
 }) {
   const classes = useStyles();
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const [selected, setSelected] = useState();
+  const isMobile = useMediaQuery("@media only screen and (max-width: 640px)");
 
   const renderResults = () =>
     results.length > 0 ? (
       results
-        .sort((result1, result2) => (result1.name > result2.name ? 1 : -1))
+        .sort((result1, result2) => (result1.id > result2.id ? 1 : -1))
+        .sort((result1, result2) =>
+          result1.pinned === result2.pinned ? 0 : result1.pinned ? -1 : 1
+        )
         .map((result) => (
           <Card
             variant="outlined"
             className={classes.card}
-            key={`${result.type}-${result.id}`}
+            key={`professional-${result.id}`}
+            onClick={() => setSelected(result)}
           >
-            <Result
+            <ProfessionalsResultDetails
               result={result}
+              cardHeaderClass={classes.cardHeader}
               cardContentClass={classes.cardContent}
+              width={isMobile ? MOBILE_CARD_WIDTH : DEFAULT_CARD_WIDTH}
               filterTypes={filterTypes}
               cityList={cityList}
             />
@@ -160,9 +136,41 @@ function ProfessionalsResults({
         </Card>
       ));
 
+  const renderModalContent = () => {
+    return (
+      <div className={classes.modalCard}>
+        <ProfessionalsResultDetails
+          result={selected}
+          cardHeaderClass={classes.cardHeader}
+          cardContentClass={classes.cardContent}
+          filterTypes={filterTypes}
+          cityList={cityList}
+          width={fullScreen ? 300 : 500}
+          bannerHeight={120}
+          showDetails
+        />
+      </div>
+    );
+  };
+
+  const handleCloseDialog = () => setSelected(undefined);
+
   return (
     <Box className={classes.root} style={style}>
       {loading ? renderSkeletons() : renderResults()}
+
+      <Dialog
+        open={!!selected}
+        onClose={handleCloseDialog}
+        className={classes.modal}
+      >
+        {selected && renderModalContent()}
+        <DialogActions>
+          <Button autoFocus onClick={handleCloseDialog} color="secondary">
+            אוקיי
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

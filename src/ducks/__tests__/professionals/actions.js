@@ -22,9 +22,11 @@ function mockState(state) {
   };
 }
 
-function mockDBServer(response = "") {
+function mockDBServer(response = []) {
   mockAxios.reset();
-  mockAxios.onGet(new RegExp(`${PROFESSIONALS_DB_URL}/*`)).reply(200, response);
+  mockAxios
+    .onGet(new RegExp(`${PROFESSIONALS_DB_URL}/*`))
+    .reply(200, JSON.stringify(response));
 }
 
 function asyncDispatch(action, state = mockState({})) {
@@ -125,7 +127,7 @@ describe("synchronize()", () => {
   });
 
   it("should send ajax request cache is old", async () => {
-    const { csv: fakeData, json: processedFakeData } = MOCK_SIMPLE_TRAINERS;
+    const { json: fakeData } = MOCK_SIMPLE_TRAINERS;
     mockDBServer(fakeData);
 
     const action = actions.synchronize();
@@ -136,10 +138,10 @@ describe("synchronize()", () => {
     const { calls, actionResult } = asyncDispatch(action, state);
 
     const resolvedActionResult = await actionResult;
-    expect(resolvedActionResult).toEqual(processedFakeData);
+    expect(resolvedActionResult).toEqual(fakeData);
     const syncDoneParams = calls[1];
 
-    expect(syncDoneParams[0].payload).toEqual(processedFakeData);
+    expect(syncDoneParams[0].payload).toEqual(fakeData);
   });
 
   it("should use cache if it is valid", async () => {
