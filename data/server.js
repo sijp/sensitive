@@ -12,5 +12,6 @@ app.get("/team", (req, res) =>
 );
 
 app.use(express.static("./images/"));
+app.use("/articles/", express.static("./articles/"));
 
 app.listen(5000);

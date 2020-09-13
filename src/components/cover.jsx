@@ -110,7 +110,7 @@ function Cover() {
           <Typography variant="h5" className={classes.text}>
             איגדנו עבור הקהילה מאגר שירותים העובדים לפי עקרונותינו
           </Typography>
-          <div class={classes.buttonContainer}>
+          <div className={classes.buttonContainer}>
             <Button
               className={classes.button}
               onClick={() => history.push("/professionals")}

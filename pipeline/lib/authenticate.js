@@ -1,4 +1,4 @@
-const { GoogleAuth } = require("google-auth-library");
+const { GoogleAuth, auth } = require("google-auth-library");
 
 const SCOPES = [
   "https://www.googleapis.com/auth/spreadsheets.readonly",
@@ -12,10 +12,17 @@ const SCOPES = [
 ];
 
 function authenticate() {
-  return new GoogleAuth({
-    keyFile: "./pipeline/secrets.json",
-    scopes: SCOPES
-  });
+  const keysEnvVar = process.env["GOOGLE_API_CREDS"];
+  if (!keysEnvVar) {
+    return new GoogleAuth({
+      keyFile: "./pipeline/secrets.json",
+      scopes: SCOPES
+    });
+  }
+  const keys = JSON.parse(keysEnvVar);
+  const client = auth.fromJSON(keys);
+  client.scopes = SCOPES;
+  return client;
 }
 
 module.exports = { authenticate };

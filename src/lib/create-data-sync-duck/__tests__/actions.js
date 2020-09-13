@@ -80,8 +80,7 @@ describe("synchronize()", () => {
     const action = actions.synchronize();
     const rawData = "RAW_DATA";
     const state = {
-      lastSync: new Date(),
-      rawData
+      SYNC: { lastSync: new Date(), rawData }
     };
     const { actionResult } = asyncDispatch(action, state);
     const result = await actionResult;

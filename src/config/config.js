@@ -3,7 +3,7 @@ import {
   faWalking,
   faHome,
   faCut,
-  faNewspaper,
+  //faNewspaper,
   faPaw,
   faStar,
   faSearchLocation,
@@ -25,6 +25,8 @@ export const TEAM_DB_URL =
   process.env.REACT_APP_TEAM_DB_URL || "http://localhost:5000/team";
 export const TEAM_IMAGES_URL =
   process.env.REACT_APP_TEAM_IMAGES_URL || "http://localhost:5000/";
+export const ARTICLES_URL =
+  process.env.REACT_APP_ARTICLES_URL || "http://localhost:5000/articles";
 
 export const PROFESSIONALS_DB_TYPES = {
   trainers: { label: "אימון כלבים", icon: faDog, default: true },
@@ -119,11 +121,11 @@ export const NAVIGATION_LINKS = [
     icon: faSearchLocation,
     highlighted: true
   },
-  {
-    url: "/articles",
-    text: "מאמרים",
-    icon: faNewspaper
-  },
+  // {
+  //   url: "/articles",
+  //   text: "מאמרים",
+  //   icon: faNewspaper
+  // },
   {
     url: "/position-statements",
     text: "עקרונות הגישה",

@@ -4,6 +4,19 @@ const fs = require("fs");
 const path = require("path");
 const https = require("https");
 
+function maybeConvertToInteractive(element) {
+  const youtube = (element.text || "").match(
+    /https:\/\/www\.youtube\.com\/watch\?v=([\w-]+)/
+  );
+  if (youtube) {
+    return {
+      link: `https://www.youtube.com/embed/${youtube[1]}`,
+      interactive: "youtube"
+    };
+  }
+  return element;
+}
+
 async function getGoogleDoc(auth, id) {
   const docs = google.docs({ version: "v1", auth });
   try {
@@ -16,43 +29,63 @@ async function getGoogleDoc(auth, id) {
   }
 }
 
-function docToMarkDown(doc) {
+function parseDocument(doc) {
   const paragraphs = doc.body.content.map(({ paragraph }) => {
     if (paragraph) {
-      const { elements } = paragraph;
-      const text = elements
-        .map(({ textRun = {} }) => textRun.content)
-        .filter((text) => text)
-        .join(" ");
-      const images = elements
-        .map(
-          ({ inlineObjectElement = {} }) => inlineObjectElement.inlineObjectId
+      const { elements, paragraphStyle } = paragraph;
+      return {
+        type: paragraphStyle.namedStyleType,
+        elements: elements.map(
+          ({
+            textRun = { textStyle: {} },
+            inlineObjectElement = { textStyle: {} }
+          }) => {
+            const {
+              content,
+              textStyle: { italic, underline, bold, link: textLink }
+            } = textRun;
+            const {
+              inlineObjectId,
+              textStyle: { link: imageLink }
+            } = inlineObjectElement;
+
+            return maybeConvertToInteractive({
+              text: content,
+              italic,
+              underline,
+              bold,
+              link: textLink || imageLink,
+              image: inlineObjectId
+            });
+          }
         )
-        .filter((img) => img);
-      return { text, images };
+      };
     }
-    return { text: "", images: [] };
+    return null;
   });
-  return paragraphs
-    .map(({ text, images }) => {
-      return `${text}\n ${images}`;
-    })
-    .join("\n\n");
+  return paragraphs.filter((p) => p);
 }
 
-async function downloadImages(doc, folderPath) {
+async function downloadEmbeddedImages(doc, folderPath) {
+  if (!doc.inlineObjects) return;
   const imagesUris = Object.entries(doc.inlineObjects).map(
     ([objectId, props]) => ({
       id: objectId,
-      uri: _.getPath(props, ["embeddedObject", "imageProperties", "contentUri"])
+      uri: _.getPath(props, [
+        "inlineObjectProperties",
+        "embeddedObject",
+        "imageProperties",
+        "contentUri"
+      ])
     })
   );
 
   imagesUris.forEach(({ id, uri }) => {
-    const filePath = path.join(folderPath, "docs", `${id}.jpg`);
+    const filePath = path.join(folderPath, `${id}.jpg`);
     const dest = fs.createWriteStream(filePath);
+    console.log(`Downloading Embedded Image:\n ${uri}`);
     https.get(uri, (response) => response.pipe(dest));
   });
 }
 
-module.exports = { getGoogleDoc, downloadImages, docToMarkDown };
+module.exports = { getGoogleDoc, downloadEmbeddedImages, parseDocument };
