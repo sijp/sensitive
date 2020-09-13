@@ -1,11 +1,9 @@
-import axios from "axios";
-
 import {
   PROFESSIONALS_DB_URL,
   PROFESSIONALS_DB_TYPES,
-  PROFESSIONALS_DB_CACHE_VALIDITY,
   PROFESSIONALS_CITY_LIST
 } from "../config/config";
+import createDataSyncDuck from "../lib/create-data-sync-duck/create-data-sync-duck";
 
 const DEFAULT_STATE = {
   filterTypes: PROFESSIONALS_DB_TYPES,
@@ -20,36 +18,12 @@ const DEFAULT_STATE = {
     ),
   city: "",
   results: [],
-  lastSync: undefined,
-  cityList: PROFESSIONALS_CITY_LIST,
-  rawData: localStorage.getItem("PROFESSIONALS_RAW_DATA") || [],
-  loading: false
+  cityList: PROFESSIONALS_CITY_LIST
 };
 
 function withLoading(dispatch, action) {
   dispatch(action);
   dispatch(actions.synchronize());
-}
-
-async function requestDB() {
-  try {
-    const response = await axios.get(`${PROFESSIONALS_DB_URL}`);
-    return response.data;
-  } catch (e) {
-    console.error(e.message, `${PROFESSIONALS_DB_URL}`);
-    return "";
-  }
-}
-
-function isCacheValid(lastSync) {
-  return (
-    lastSync &&
-    Date.now() - lastSync.getTime() < PROFESSIONALS_DB_CACHE_VALIDITY * 1000
-  );
-}
-
-async function getDB() {
-  return await requestDB();
 }
 
 function setResults(state) {
@@ -77,14 +51,61 @@ function setResults(state) {
   };
 }
 
+function reducer(state = DEFAULT_STATE, action = {}) {
+  switch (action.type) {
+    case types.SET_CITY:
+      return { ...state, city: action.payload };
+    case types.ADD_FILTERS: {
+      const activeFilters = {
+        ...state.activeFilters,
+        [action.payload]: state.filterTypes[action.payload]
+      };
+      return {
+        ...state,
+        activeFilters
+      };
+    }
+    case types.REMOVE_FILTERS: {
+      const {
+        [action.payload]: _toRemove,
+        ...activeFilters
+      } = state.activeFilters;
+      return {
+        ...state,
+        activeFilters
+      };
+    }
+    case types.SET_FILTERS:
+      return {
+        ...state,
+        activeFilters: action.payload.reduce(
+          (filters, filterName) => ({
+            ...filters,
+            [filterName]: state.filterTypes[filterName]
+          }),
+          {}
+        )
+      };
+    case types.SYNCHRONIZE_DONE:
+      return setResults(state);
+    default:
+      return state;
+  }
+}
+
+const dataSyncDuck = createDataSyncDuck(
+  PROFESSIONALS_DB_URL,
+  reducer,
+  "professionals"
+);
+
 export const types = {
-  SET_CITY: "SET_CITY",
-  SET_CITY_DONE: "SET_CITY_DONE",
-  ADD_FILTERS: "ADD_FILTERS",
-  REMOVE_FILTERS: "REMOVE_FILTERS",
-  SET_FILTERS: "SET_FILTERS",
-  SYNCHRONIZE: "SYNCHRONIZE",
-  SYNCHRONIZE_DONE: "SYNCHRONIZE_DONE"
+  SET_CITY: "sensitive/professionals/SET_CITY",
+  SET_CITY_DONE: "sensitive/professionals/SET_CITY_DONE",
+  ADD_FILTERS: "sensitive/professionals/ADD_FILTERS",
+  REMOVE_FILTERS: "sensitive/professionals/REMOVE_FILTERS",
+  SET_FILTERS: "sensitive/professionals/SET_FILTERS",
+  ...dataSyncDuck.types
 };
 
 export const actions = {
@@ -123,80 +144,7 @@ export const actions = {
       });
     };
   },
-
-  synchronize() {
-    const fakeTime = () =>
-      new Promise((res) => setTimeout(() => res(true), 500));
-    return async (dispatch, getState) => {
-      const { lastSync, rawData = [], loading } = getState();
-      if (loading) return rawData;
-      dispatch({
-        type: types.SYNCHRONIZE
-      });
-      try {
-        const [flattenData] = await Promise.all([
-          isCacheValid(lastSync) ? Promise.resolve(rawData) : getDB(),
-          fakeTime()
-        ]);
-
-        dispatch({
-          type: types.SYNCHRONIZE_DONE,
-          payload: flattenData
-        });
-        return flattenData;
-      } catch (e) {
-        console.log(e);
-        return [];
-      }
-    };
-  }
+  ...dataSyncDuck.actions
 };
 
-export default function reducer(state = DEFAULT_STATE, action) {
-  switch (action.type) {
-    case types.SET_CITY:
-      return { ...state, city: action.payload };
-    case types.ADD_FILTERS: {
-      const activeFilters = {
-        ...state.activeFilters,
-        [action.payload]: state.filterTypes[action.payload]
-      };
-      return {
-        ...state,
-        activeFilters
-      };
-    }
-    case types.REMOVE_FILTERS: {
-      const {
-        [action.payload]: _toRemove,
-        ...activeFilters
-      } = state.activeFilters;
-      return {
-        ...state,
-        activeFilters
-      };
-    }
-    case types.SET_FILTERS:
-      return {
-        ...state,
-        activeFilters: action.payload.reduce(
-          (filters, filterName) => ({
-            ...filters,
-            [filterName]: state.filterTypes[filterName]
-          }),
-          {}
-        )
-      };
-    case types.SYNCHRONIZE:
-      return { ...state, loading: true };
-    case types.SYNCHRONIZE_DONE:
-      return setResults({
-        ...state,
-        rawData: action.payload,
-        loading: false,
-        lastSync: new Date()
-      });
-    default:
-      return state;
-  }
-}
+export default dataSyncDuck.reducer;

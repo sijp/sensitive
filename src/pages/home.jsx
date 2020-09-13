@@ -1,19 +1,21 @@
-import React from "react";
-import { useHistory } from "react-router-dom";
-import {
-  Container,
-  BottomNavigation,
-  BottomNavigationAction,
-  Box,
-  Typography
-} from "@material-ui/core";
+import React, { useState } from "react";
+import { Container, Typography, useScrollTrigger } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { NAVIGATION_LINKS } from "../config/config";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
+import TeamList from "../components/team-list";
+import Article from "../components/article";
+import Cover from "../components/cover";
+import { useHistory } from "react-router-dom";
+import { useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    backgroundColor: theme.palette.grey[100],
+    marginTop: -theme.mixins.toolbar.minHeight,
+    [theme.breakpoints.down("sm")]: {
+      paddingTop: theme.mixins.toolbar.minHeight
+    }
+  },
   bottomNavigationRoot: {
     backgroundColor: theme.palette.secondary.light,
     padding: theme.spacing(1)
@@ -38,36 +40,61 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function () {
+export default function ({ about }) {
   const classes = useStyles();
   const history = useHistory();
+  const [mounted, setMounted] = useState(false);
+  const trigger = useScrollTrigger({
+    threshold:
+      Math.max(document.documentElement.clientHeight, window.innerHeight || 0) *
+      0.8,
+    disableHysteresis: true
+  });
+  console.log("HOME render");
+  console.log(trigger);
+
+  const scrollToSection = () => {
+    console.log("effect1");
+    setTimeout(() => {
+      if (about)
+        window.scrollTo({
+          top: Math.max(
+            document.documentElement.clientHeight,
+            window.innerHeight || 0
+          ),
+          behavior: "smooth"
+        });
+      else window.scrollTo({ top: 0, behavior: "smooth" });
+      if (!mounted) setMounted(true);
+    }, 100);
+  };
+
+  const changeRoute = () => {
+    console.log("effect2");
+    if (mounted) history.push(trigger ? "/about" : "/");
+  };
+
+  useEffect(scrollToSection, [about]);
+  useEffect(changeRoute, [trigger]);
+
+  useEffect(() => () => window.scrollTo({ top: 0, behavior: "smooth" }), []);
 
   return (
-    <>
-      <Container maxWidth="xl" className={classes.bottomNavigationRoot}>
-        <BottomNavigation
-          className={classes.bottomNavigation}
-          showLabels
-          onChange={(_event, { external, url }) =>
-            external ? window.open(url, "_blank") : history.push(url)
-          }
+    <div className={classes.root}>
+      <Cover />
+
+      <Container maxWidth="lg" id="about">
+        <Typography
+          variant="h2"
+          style={{ textAlign: "center", marginBottom: 32, marginTop: 64 }}
         >
-          {NAVIGATION_LINKS.filter((link) => link.highlighted).map(
-            (link, index) => (
-              <BottomNavigationAction
-                key={index}
-                label={link.text}
-                icon={<FontAwesomeIcon icon={link.icon} />}
-                value={link}
-                classes={{
-                  label: classes.actionLabel,
-                  wrapper: classes.actionIcon
-                }}
-              />
-            )
-          )}
-        </BottomNavigation>
+          על הקבוצה
+        </Typography>
+        <Article name="about-group" />
+        <TeamList type="admins" />
+        <Article name="about-moderators" />
+        <TeamList type="moderators" />
       </Container>
-    </>
+    </div>
   );
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 
 import { createBrowserHistory } from "history";
@@ -12,7 +12,6 @@ import {
   ThemeProvider,
   createMuiTheme
 } from "@material-ui/core/styles";
-import { Box } from "@material-ui/core";
 
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -20,7 +19,7 @@ import "./App.css";
 
 // import { SearchPage } from "./pages";
 // import { AppBar } from "./components";
-import store from "./store";
+import store, { syncAllStores } from "./store";
 import AppRouter from "./app-router";
 import NavBar from "./components/nav-bar";
 import { NAVIGATION_LINKS } from "./config/config";
@@ -53,15 +52,16 @@ const theme = createMuiTheme({
 });
 
 function App() {
+  useEffect(() => {
+    syncAllStores();
+  }, []);
   return (
     <Router>
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <StylesProvider jss={jss}>
             <NavBar links={NAVIGATION_LINKS}>
-              <Box style={{ flexGrow: 1 }}>
-                <AppRouter />
-              </Box>
+              <AppRouter />
             </NavBar>
           </StylesProvider>
         </ThemeProvider>

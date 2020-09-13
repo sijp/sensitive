@@ -18,7 +18,7 @@ async function mapDir(auth, id, callback) {
       return [];
     }
   } catch (error) {
-    throw `API Error ${error}`;
+    throw new Error(`API Error ${error}`);
   }
 }
 

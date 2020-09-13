@@ -10,7 +10,7 @@ async function getSpreadSheet(auth, id) {
 
     return res.data.values;
   } catch (err) {
-    throw `API Error ${err}`;
+    throw new Error(`API Error ${err}`);
   }
 }
 

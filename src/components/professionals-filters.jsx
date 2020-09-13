@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { Chip, Typography, Badge, Avatar } from "@material-ui/core";
+import { Chip, Typography, Badge } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { actions } from "../ducks/professionals";
 import { faCircle, faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
@@ -123,8 +123,8 @@ function ProfessionalFilters({
 
 function mapStateToProps(state) {
   return {
-    filterTypes: state.filterTypes,
-    filters: state.activeFilters
+    filterTypes: state.professionals.filterTypes,
+    filters: state.professionals.activeFilters
   };
 }
 

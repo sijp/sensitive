@@ -7,18 +7,27 @@ import {
   Dialog,
   useMediaQuery,
   DialogActions,
-  Button
+  Button,
+  Badge,
+  Tooltip
 } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 import { connect } from "react-redux";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSadTear } from "@fortawesome/free-solid-svg-icons";
+import {
+  faSadTear,
+  faStar,
+  faUserShield,
+  faShieldAlt
+} from "@fortawesome/free-solid-svg-icons";
 
 import ProfessionalsResultDetails from "./professionals-result-details";
+import { faSuperpowers } from "@fortawesome/free-brands-svg-icons";
+import { PROFESSIONAL_PRIORITY } from "../config/config";
 
 const MOBILE_CARD_WIDTH = 230;
-const DEFAULT_CARD_WIDTH = 280;
+const DEFAULT_CARD_WIDTH = 250;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,10 +38,13 @@ const useStyles = makeStyles((theme) => ({
     overflowX: "hidden"
   },
 
+  cardBadge: {
+    margin: theme.spacing(3)
+  },
+
   card: {
     cursor: "pointer",
 
-    margin: theme.spacing(2),
     color: theme.palette.primary.dark,
     height: 250,
     flexBasis: DEFAULT_CARD_WIDTH,
@@ -43,7 +55,8 @@ const useStyles = makeStyles((theme) => ({
   },
 
   cardHeader: {
-    padding: `0 ${theme.spacing(2)}px`
+    padding: `0 ${theme.spacing(2)}px`,
+    color: theme.palette.primary.dark
   },
 
   cardContent: {
@@ -84,7 +97,9 @@ function ProfessionalsResults({
   results,
   loading,
   filterTypes,
-  cityList
+  cityList,
+  admins,
+  moderators
 }) {
   const classes = useStyles();
   const theme = useTheme();
@@ -95,26 +110,52 @@ function ProfessionalsResults({
   const renderResults = () =>
     results.length > 0 ? (
       results
-        .sort((result1, result2) => (result1.id > result2.id ? 1 : -1))
-        .sort((result1, result2) =>
-          result1.pinned === result2.pinned ? 0 : result1.pinned ? -1 : 1
-        )
+        .map((result) => {
+          const resultType = result.pinned
+            ? "star"
+            : moderators
+                .map((mod) => mod.name)
+                .includes(`${result.firstName} ${result.lastName}`)
+            ? "moderator"
+            : admins
+                .map((admin) => admin.name)
+                .includes(`${result.firstName} ${result.lastName}`)
+            ? "admin"
+            : "regular";
+          return { ...result, ...PROFESSIONAL_PRIORITY[resultType] };
+        })
+        .sort((result1, result2) => result2.order - result1.order)
         .map((result) => (
-          <Card
-            variant="outlined"
-            className={classes.card}
+          <Badge
+            className={classes.cardBadge}
+            badgeContent={
+              <>
+                <FontAwesomeIcon icon={result.icon} />{" "}
+                <span style={{ paddingRight: theme.spacing(0.5) }}>
+                  {result.label}
+                </span>
+              </>
+            }
+            color="primary"
+            invisible={!result.icon}
+            anchorOrigin={{ vertical: "top", horizontal: "left" }}
             key={`professional-${result.id}`}
-            onClick={() => setSelected(result)}
           >
-            <ProfessionalsResultDetails
-              result={result}
-              cardHeaderClass={classes.cardHeader}
-              cardContentClass={classes.cardContent}
-              width={isMobile ? MOBILE_CARD_WIDTH : DEFAULT_CARD_WIDTH}
-              filterTypes={filterTypes}
-              cityList={cityList}
-            />
-          </Card>
+            <Card
+              className={classes.card}
+              variant="outlined"
+              onClick={() => setSelected(result)}
+            >
+              <ProfessionalsResultDetails
+                result={result}
+                cardHeaderClass={classes.cardHeader}
+                cardContentClass={classes.cardContent}
+                width={isMobile ? MOBILE_CARD_WIDTH : DEFAULT_CARD_WIDTH}
+                filterTypes={filterTypes}
+                cityList={cityList}
+              />
+            </Card>
+          </Badge>
         ))
     ) : (
       <Typography variant="h2" className={classes.noResults}>
@@ -127,8 +168,7 @@ function ProfessionalsResults({
       .map((_, i) => (
         <Card
           variant="outlined"
-          className={classes.card}
-          key={`result-skeleton-${i}`}
+          className={`${classes.card} ${classes.cardBadge}`}
         >
           <Skeleton variant="text" />
           <Skeleton variant="circle" width={40} height={40} />
@@ -177,10 +217,12 @@ function ProfessionalsResults({
 
 function mapStateToProps(state) {
   return {
-    results: state.results,
-    loading: state.loading,
-    filterTypes: state.filterTypes,
-    cityList: state.cityList
+    results: state.professionals.results,
+    loading: state.professionals.loading,
+    filterTypes: state.professionals.filterTypes,
+    cityList: state.professionals.cityList,
+    admins: state.team.admins || [],
+    moderators: state.team.moderators || []
   };
 }
 

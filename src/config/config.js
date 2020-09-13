@@ -11,13 +11,20 @@ import {
   faCameraRetro,
   faHandHoldingMedical,
   faBriefcaseMedical,
-  faShoppingCart
+  faShoppingCart,
+  faUserShield,
+  faShieldAlt
 } from "@fortawesome/free-solid-svg-icons";
 
 import { faFacebookF } from "@fortawesome/free-brands-svg-icons";
 
 export const PROFESSIONALS_DB_URL =
-  process.env.REACT_APP_PROFESSIONALS_DB_URL || "http://localhost:5000";
+  process.env.REACT_APP_PROFESSIONALS_DB_URL ||
+  "http://localhost:5000/professionals";
+export const TEAM_DB_URL =
+  process.env.REACT_APP_TEAM_DB_URL || "http://localhost:5000/team";
+export const TEAM_IMAGES_URL =
+  process.env.REACT_APP_TEAM_IMAGES_URL || "http://localhost:5000/";
 
 export const PROFESSIONALS_DB_TYPES = {
   trainers: { label: "אימון כלבים", icon: faDog, default: true },
@@ -34,7 +41,29 @@ export const PROFESSIONALS_DB_TYPES = {
   }
 };
 
+export const PROFESSIONAL_PRIORITY = {
+  regular: {
+    order: 1
+  },
+  star: {
+    icon: faStar,
+    order: 2,
+    label: "כוכב"
+  },
+  moderator: {
+    icon: faUserShield,
+    order: 3,
+    label: "מגשרת"
+  },
+  admin: {
+    icon: faShieldAlt,
+    order: 4,
+    label: "מנהלת"
+  }
+};
+
 export const PROFESSIONALS_DB_CACHE_VALIDITY = 5 * 60; // 5 minutes
+export const DB_CACHE_VALIDITY = 5 * 60; // 5 minutes
 export const PROFESSIONALS_CITY_LIST = {
   "Tel Aviv": { position: [32.06, 34.77], label: "תל אביב" },
   Hashfela: { position: [31.9, 34.88], label: "השפלה" },
@@ -75,29 +104,30 @@ export const NAVIGATION_LINKS = [
   {
     url: "/",
     text: "דף ראשי",
-    icon: faHome
+    icon: faHome,
+    highlighted: true
+  },
+  {
+    url: "/about",
+    text: "אודות הקבוצה",
+    icon: faPaw,
+    highlighted: true
   },
   {
     url: "/professionals",
-    text: "אינדקס אנשי מקצוע",
-    icon: faSearchLocation
+    text: "מאגר אנשי מקצוע",
+    icon: faSearchLocation,
+    highlighted: true
   },
   {
     url: "/articles",
     text: "מאמרים",
-    icon: faNewspaper,
-    highlighted: true
+    icon: faNewspaper
   },
   {
     url: "/position-statements",
     text: "עקרונות הגישה",
     icon: faStar,
-    highlighted: true
-  },
-  {
-    url: "/about",
-    text: "על הקבוצה",
-    icon: faPaw,
     highlighted: true
   },
   {
