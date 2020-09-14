@@ -69,7 +69,7 @@ export const PROFESSIONALS_CITY_LIST = {
   Hashfela: { position: [31.9, 34.88], label: "השפלה" },
   Jerusalem: { position: [31.76, 35.2], label: "ירושלים" },
   Haifa: { position: [32.8, 34.98], label: "חיפה" },
-  "Rishon Lezion": { position: [31.9, 34.8], label: "ראשון לציון" },
+  "Rishon Lezion": { position: [31.961775, 34.809837], label: "ראשון לציון" },
   "Beer Sheva": { position: [31.25, 34.8], label: "באר שבע" },
   "Ramat-Gan-Givataim": {
     position: [32.068424, 34.824783],

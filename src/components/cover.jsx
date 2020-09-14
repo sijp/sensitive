@@ -18,28 +18,44 @@ const useStyles = makeStyles((theme) => ({
 
     display: "flex",
     flexDirection: "row-reverse",
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down("sm")]: {
       backgroundPosition: "30% 50%"
     }
   },
   cardContainer: {
-    flexBasis: "50%",
+    flexBasis: 520,
     display: "flex",
     flexDirection: "row-reverse",
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down("sm")]: {
       flexBasis: "100%"
     }
   },
 
   card: {
     padding: theme.spacing(4),
-    margin: theme.spacing(12),
-    alignSelf: "center",
-    backgroundColor: "#FFFFFFCC",
+    marginTop: theme.mixins.toolbar.minHeight,
 
-    [theme.breakpoints.down("xs")]: {
+    alignSelf: "flex-start",
+    backgroundColor: "#FFFFFFCC",
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+
+    [theme.breakpoints.up("md")]: {
+      marginRight: theme.spacing(8),
+
+      minHeight: `calc(90vh - ${
+        theme.mixins.toolbar.minHeight * 2 + theme.spacing(8)
+      }px )`,
+      display: "flex",
+      flexDirection: "column",
+      flexGrow: 1,
+      "& > *": {
+        flex: 1,
+        flexBasis: "100%"
+      }
+    },
+    [theme.breakpoints.down("sm")]: {
       margin: 0,
-      alignSelf: "flex-start",
       borderRadius: 0,
       flexGrow: 1
     }
@@ -47,27 +63,35 @@ const useStyles = makeStyles((theme) => ({
   button: {
     fontSize: theme.typography.h5.fontSize,
     width: "100%",
-    [theme.breakpoints.down("xs")]: {
-      fontSize: theme.typography.body1.fontSize
+    [theme.breakpoints.down("sm")]: {
+      fontSize: theme.typography.body1.fontSize,
+      width: "auto",
+      marginRight: "auto",
+      marginLeft: "auto"
     }
   },
+  buttonContainer: {
+    textAlign: "center",
+    paddingTop: theme.spacing(2)
+  },
   text: {
-    [theme.breakpoints.down("xs")]: {
+    textAlign: "center",
+    [theme.breakpoints.down("sm")]: {
       fontSize: theme.typography.h6.fontSize
     }
   },
   logo: {
     "& > svg": {
-      width: 192,
-      height: 192,
+      width: 256,
+      height: 256,
       margin: "0 auto",
       display: "block",
-      [theme.breakpoints.down("xs")]: {
-        width: 96,
-        height: 96
+      [theme.breakpoints.down("sm")]: {
+        width: 128,
+        height: 128
       }
     },
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down("sm")]: {
       float: "left"
     }
   }
@@ -86,16 +110,17 @@ function Cover() {
           <Typography variant="h5" className={classes.text}>
             איגדנו עבור הקהילה מאגר שירותים העובדים לפי עקרונותינו
           </Typography>
-          <br />
-          <Button
-            className={classes.button}
-            onClick={() => history.push("/professionals")}
-            variant="contained"
-            color="primary"
-            startIcon={<FontAwesomeIcon icon={faSearchLocation} />}
-          >
-            למאגר אנשי המקצוע
-          </Button>
+          <div class={classes.buttonContainer}>
+            <Button
+              className={classes.button}
+              onClick={() => history.push("/professionals")}
+              variant="contained"
+              color="primary"
+              startIcon={<FontAwesomeIcon icon={faSearchLocation} />}
+            >
+              למאגר אנשי המקצוע
+            </Button>
+          </div>
         </Card>
       </div>
     </div>
