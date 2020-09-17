@@ -23,9 +23,9 @@ function PositionStatementsPage() {
             marginLeft: "auto"
           }}
         >
-          <a href="principles.jpg" target="_blank">
+          <a href="principles.pdf" target="_blank">
             <img
-              src="/principles.jpg"
+              src="/principles.png"
               alt="עקרונות הקבוצה"
               style={{ width: "100%", display: "block" }}
             />
