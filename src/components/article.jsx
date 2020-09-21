@@ -3,6 +3,7 @@ import { Typography } from "@material-ui/core";
 import { useEffect } from "react";
 import Axios from "axios";
 import { ARTICLES_URL } from "../config/config";
+import { Skeleton } from "@material-ui/lab";
 
 const PARAGRAPH_TYPES = {
   HEADING_1: (props) => (
@@ -104,6 +105,18 @@ function ParsedDoc({ article }) {
   });
 }
 
+function ArticleSkeleton() {
+  return (
+    <>
+      <Skeleton variant="text" />
+      <Skeleton variant="text" />
+      <Skeleton variant="text" />
+      <Skeleton variant="text" />
+      <Skeleton variant="text" />
+    </>
+  );
+}
+
 function Article({ name }) {
   const [article, setArticle] = useState(null);
 
@@ -114,7 +127,7 @@ function Article({ name }) {
   };
 
   useEffect(getArticle, []);
-  return article ? <ParsedDoc article={article} /> : "Loading";
+  return article ? <ParsedDoc article={article} /> : <ArticleSkeleton />;
 }
 
 export default Article;
