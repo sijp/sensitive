@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Container, Typography, useScrollTrigger } from "@material-ui/core";
+import { Container, useScrollTrigger } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 import TeamList from "../components/team-list";
@@ -50,11 +50,8 @@ export default function ({ about }) {
       0.8,
     disableHysteresis: true
   });
-  console.log("HOME render");
-  console.log(trigger);
 
   const scrollToSection = () => {
-    console.log("effect1");
     setTimeout(() => {
       if (about)
         window.scrollTo({
@@ -70,7 +67,6 @@ export default function ({ about }) {
   };
 
   const changeRoute = () => {
-    console.log("effect2");
     if (mounted) history.push(trigger ? "/about" : "/");
   };
 
@@ -83,13 +79,11 @@ export default function ({ about }) {
     <div className={classes.root}>
       <Cover />
 
-      <Container maxWidth="lg" id="about">
-        <Typography
-          variant="h2"
-          style={{ textAlign: "center", marginBottom: 32, marginTop: 64 }}
-        >
-          על הקבוצה
-        </Typography>
+      <Container
+        maxWidth="lg"
+        id="about"
+        style={{ marginBottom: 32, marginTop: 64, minHeight: "100vh" }}
+      >
         <Article name="about-group" />
         <TeamList type="admins" />
         <Article name="about-moderators" />

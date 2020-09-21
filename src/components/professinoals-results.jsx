@@ -8,22 +8,16 @@ import {
   useMediaQuery,
   DialogActions,
   Button,
-  Badge,
-  Tooltip
+  Badge
 } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 import { connect } from "react-redux";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faSadTear,
-  faStar,
-  faUserShield,
-  faShieldAlt
-} from "@fortawesome/free-solid-svg-icons";
+import { faSadTear } from "@fortawesome/free-solid-svg-icons";
 
 import ProfessionalsResultDetails from "./professionals-result-details";
-import { faSuperpowers } from "@fortawesome/free-brands-svg-icons";
+
 import { PROFESSIONAL_PRIORITY } from "../config/config";
 
 const MOBILE_CARD_WIDTH = 230;

@@ -1,4 +1,3 @@
-import axios from "axios";
 import { TEAM_DB_URL, TEAM_IMAGES_URL } from "../config/config";
 import createDataSyncDuck from "../lib/create-data-sync-duck/create-data-sync-duck";
 
@@ -6,7 +5,7 @@ function reducer(state = {}, action = {}) {
   const { rawData = [] } = state;
   const data = rawData.map(({ picture, ...member }) => ({
     ...member,
-    picture: `${TEAM_IMAGES_URL}/${picture}`
+    ...(picture ? { picture: `${TEAM_IMAGES_URL}/${picture}` } : {})
   }));
   switch (action.type) {
     case types.SYNCHRONIZE_DONE:

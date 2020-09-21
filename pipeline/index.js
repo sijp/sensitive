@@ -8,16 +8,20 @@ const { authenticate } = require("./lib/authenticate");
 const { mapDir, download } = require("./lib/drive");
 const { processProfessionals, processTeam } = require("./lib/processing");
 const { getSpreadSheet } = require("./lib/sheets");
-const { getGoogleDoc, docToMarkDown } = require("./lib/docs");
+const {
+  getGoogleDoc,
+  parseDocument,
+  downloadEmbeddedImages
+} = require("./lib/docs");
 
 const auth = authenticate();
 
 async function downloadImages() {
-  await promisify(fs.mkdir)("./tmp/images", { recursive: true });
+  await promisify(fs.mkdir)("./tmp/data/images", { recursive: true });
   try {
     await Promise.all(
       await mapDir(auth, process.env.IMAGES_FOLDER_ID, (file) => {
-        const filePath = path.join("./tmp/images", file.name);
+        const filePath = path.join("./tmp/data/images", file.name);
         return download(auth, file.id, filePath);
         //console.log(file);
       })
@@ -69,17 +73,22 @@ async function getData() {
 }
 
 async function getDocs() {
-  try {
-    const doc = await getGoogleDoc(
-      auth,
-      "1AjOP0huDj7jf0yR0Mx_wSen65J8ZCcifpXcHJd2p32k"
-    );
-    console.log(docToMarkDown(doc));
+  await promisify(fs.mkdir)("./tmp/data/articles", { recursive: true });
 
-    // console.log(
-    //   doc.inlineObjects["kix.chvxfcs206hg"].inlineObjectProperties
-    //     .embeddedObject.imageProperties.contentUri
-    // );
+  try {
+    await Promise.all(
+      await mapDir(auth, process.env.ARTICLES_FOLDER_ID, async (file) => {
+        const doc = await getGoogleDoc(auth, file.id);
+
+        const filePath = path.join("./tmp/data/articles", `${file.name}.json`);
+        const paredDoc = parseDocument(doc);
+        await Promise.all([
+          promisify(fs.writeFile)(filePath, JSON.stringify(paredDoc)),
+          downloadEmbeddedImages(doc, "./tmp/data/articles")
+        ]);
+        console.log(`Wrote ${filePath}`);
+      })
+    );
   } catch (error) {
     console.log(error);
   }
@@ -87,4 +96,4 @@ async function getDocs() {
 
 downloadImages();
 getData();
-//getDocs();
+getDocs();

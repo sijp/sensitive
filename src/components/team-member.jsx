@@ -9,8 +9,10 @@ function TeamMember({ member, classes = {} }) {
       <CardMedia className={media} image={member.picture} />
       <CardContent className={content}>
         <Typography variant="h4">{member.name}</Typography>
-        {member.description.split("\n").map((paragraph) => (
-          <Typography variant="body2">{paragraph}</Typography>
+        {member.description.split("\n").map((paragraph, idx) => (
+          <Typography variant="body2" key={`para-${idx}`}>
+            {paragraph}
+          </Typography>
         ))}
       </CardContent>
     </Card>

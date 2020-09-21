@@ -24,15 +24,17 @@ function createTypes(namespace) {
   };
 }
 
-function createActions(types, url, predicate) {
+function createActions(namespace, types, url, predicate) {
   const fakeTime = () => new Promise((res) => setTimeout(() => res(true), 500));
   return {
     synchronize() {
       return async (dispatch, getState) => {
         const state = getState();
-        const { lastSync, rawData = [], loading } = state;
+        const { lastSync, rawData = [], loading } = state[namespace] || {};
+
         if (loading) return rawData;
         if (!predicate(state)) return rawData;
+
         dispatch({
           type: types.SYNCHRONIZE
         });
@@ -61,7 +63,12 @@ function createReducer(types) {
       case types.SYNCHRONIZE:
         return { ...state, loading: true };
       case types.SYNCHRONIZE_DONE:
-        return { ...state, loading: false, rawData: action.payload };
+        return {
+          ...state,
+          loading: false,
+          rawData: action.payload,
+          lastSync: new Date()
+        };
       default:
         return state;
     }
@@ -75,7 +82,7 @@ export default function createDataSyncDuck(
   predicate = () => true
 ) {
   const types = createTypes(namespace);
-  const actions = createActions(types, url, predicate);
+  const actions = createActions(namespace, types, url, predicate);
   const syncReducer = createReducer(types, predicate);
 
   return {

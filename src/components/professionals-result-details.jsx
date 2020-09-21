@@ -15,8 +15,7 @@ import {
   faPhoneSquare,
   faGlobe,
   faAt,
-  faBone,
-  faStar
+  faBone
 } from "@fortawesome/free-solid-svg-icons";
 import { faFacebookF } from "@fortawesome/free-brands-svg-icons";
 

@@ -1,0 +1,36 @@
+name: Sync-Data-Stage
+on:
+  schedule:
+    - cron: "0 * * * *"
+  push:
+    branches:
+      - deploy
+      - master
+jobs:
+  data-sync:
+    name: Synchronize Google Drive Data
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run sync-data
+        env:
+          GOOGLE_API_CREDS: ${{ secrets.GOOGLE_API_CREDS }}
+      - name: Setup - gcloud / gsutil
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GOOGLE_API_CREDS }}
+          project_id: ${{ secrets.GCS_PROJECT }}
+          export_default_credentials: true
+      - name: Sync GCP Storage Bucket
+        run: |-
+          gsutil -h "Cache-Control:public, max-age=600" cp -r tmp/* gs://$GCS_BUCKET_STAGE
+        env:
+          GCS_BUCKET_STAGE: ${{ secrets.GCS_BUCKET_STAGE }}
