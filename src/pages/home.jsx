@@ -82,7 +82,7 @@ export default function ({ about }) {
       <Container
         maxWidth="lg"
         id="about"
-        style={{ marginBottom: 32, marginTop: 64, minHeight: "100vh" }}
+        style={{ marginTop: 64, minHeight: "100vh" }}
       >
         <Article name="about-group" />
         <TeamList type="admins" />

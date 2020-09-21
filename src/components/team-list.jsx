@@ -37,14 +37,23 @@ const useStyles = makeStyles((theme) => ({
     height: "100%"
   },
   media: {
-    height: 360
+    height: 360,
+    backgroundPosition: "50% 30%"
+  },
+  mediaSmall: {
+    height: 260,
+    backgroundPosition: "50% 30%"
   },
   content: {}
 }));
 
-function TeamList({ type, members }) {
+function TeamList({ type, members, loading }) {
   const list = members[type] || [];
   const classes = useStyles();
+  const relevantClasses = {
+    ...classes,
+    media: classes[type === "admins" ? "media" : "mediaSmall"]
+  };
 
   return (
     <Grid container justify="center" className={classes.root}>
@@ -55,7 +64,7 @@ function TeamList({ type, members }) {
           {...GRID_PROPS[type]}
           className={classes.item}
         >
-          <TeamMember member={member} classes={classes} />
+          <TeamMember member={member} classes={relevantClasses} />
         </Grid>
       ))}
     </Grid>
@@ -69,9 +78,10 @@ TeamList.propTypes = {
 
 function mapStateToProps(state) {
   const {
-    team: { admins = [], moderators = [] }
+    team: { admins = [], moderators = [], loading }
   } = state;
   return {
+    loading,
     members: {
       admins,
       moderators,

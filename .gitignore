@@ -28,3 +28,4 @@ pipeline/secrets.json
 data/node_modules
 
 tmp/
+data/data/
