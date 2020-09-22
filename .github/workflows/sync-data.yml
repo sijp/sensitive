@@ -31,6 +31,6 @@ jobs:
           export_default_credentials: true
       - name: Sync GCP Storage Bucket
         run: |-
-          gsutil -h "Cache-Control:public, max-age=600" cp -r tmp/* gs://$GCS_BUCKET_STAGE
+          gsutil -m -h "Cache-Control:public, max-age=600"  rsync -r -c tmp/ gs://$GCS_BUCKET_STAGE
         env:
           GCS_BUCKET_STAGE: ${{ secrets.GCS_BUCKET_STAGE }}
