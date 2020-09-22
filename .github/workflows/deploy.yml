@@ -2,7 +2,6 @@ name: Deploy to Stage
 on:
   push:
     branches:
-      - deploy
       - master
 jobs:
   deploy:
@@ -30,6 +29,6 @@ jobs:
           export_default_credentials: true
       - name: Sync GCP Storage Bucket
         run: |-
-          gsutil cp -r build/* gs://$GCS_BUCKET_STAGE
+          gsutil -m rsync -r -c build/ gs://$GCS_BUCKET_STAGE
         env:
           GCS_BUCKET_STAGE: ${{ secrets.GCS_BUCKET_STAGE }}
