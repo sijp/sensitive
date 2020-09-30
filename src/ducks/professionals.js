@@ -18,7 +18,8 @@ const DEFAULT_STATE = {
     ),
   city: "",
   results: [],
-  cityList: PROFESSIONALS_CITY_LIST
+  cityList: PROFESSIONALS_CITY_LIST,
+  showRemote: false
 };
 
 function withLoading(dispatch, action) {
@@ -27,10 +28,15 @@ function withLoading(dispatch, action) {
 }
 
 function setResults(state) {
-  const { rawData = [], city, activeFilters } = state;
+  const { rawData = [], city, activeFilters, showRemote } = state;
   const noop = (data) => data;
   const filterCity = city
-    ? (data) => data.filter((record) => record.cities.includes(city))
+    ? (data) =>
+        data.filter((record) =>
+          showRemote && record.remote === true
+            ? true
+            : record.cities.includes(city)
+        )
     : noop;
   const filterType = activeFilters
     ? (data) =>
@@ -86,6 +92,11 @@ function reducer(state = DEFAULT_STATE, action = {}) {
           {}
         )
       };
+    case types.SET_SHOW_REMOTE:
+      return {
+        ...state,
+        showRemote: !!action.payload
+      };
     case types.SYNCHRONIZE_DONE:
       return setResults(state);
     default:
@@ -105,6 +116,7 @@ export const types = {
   ADD_FILTERS: "sensitive/professionals/ADD_FILTERS",
   REMOVE_FILTERS: "sensitive/professionals/REMOVE_FILTERS",
   SET_FILTERS: "sensitive/professionals/SET_FILTERS",
+  SET_SHOW_REMOTE: "sensitive/professionals/SET_SHOW_REMOTE",
   ...dataSyncDuck.types
 };
 
@@ -144,6 +156,16 @@ export const actions = {
       });
     };
   },
+
+  setShowRemote(value) {
+    return (dispatch) => {
+      withLoading(dispatch, {
+        type: types.SET_SHOW_REMOTE,
+        payload: value
+      });
+    };
+  },
+
   ...dataSyncDuck.actions
 };
 

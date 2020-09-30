@@ -37,6 +37,7 @@ function ExpandableListItem({ text, articles = [], ...props }) {
         <List component="div" disablePadding>
           {articles.map((article) => (
             <InternalLinkEntry
+              key={`article-link-entry-${article.id}`}
               icon={faCircle}
               text={article.text}
               url={`/article/${article.text}`}
@@ -51,13 +52,18 @@ function ExpandableListItem({ text, articles = [], ...props }) {
 }
 
 function ArticlesLinkEntry({ articles, loading, ...props }) {
-  if (loading || !articles) return <></>;
+  if (loading || !articles || !Array.isArray(articles.categories)) return <></>;
 
   return (
     <>
-      {articles.categories.map(({ text, articles }) =>
+      {articles.categories.map(({ id, text, articles }) =>
         articles ? (
-          <ExpandableListItem text={text} articles={articles} {...props} />
+          <ExpandableListItem
+            key={`expandable-list-item-${id}`}
+            text={text}
+            articles={articles}
+            {...props}
+          />
         ) : null
       )}
     </>

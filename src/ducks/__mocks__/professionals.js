@@ -67,3 +67,20 @@ export const MOCK_DIFFERENT_CITIES = {
     }
   ]
 };
+
+export const MOCK_DIFFERENT_CITIES_REMOTE = {
+  json: [
+    {
+      type: "0",
+      id: "3",
+      name: "t2-remote",
+      facebookPage: "fb.com",
+      phone: "222",
+      web: "www",
+      email: "c@d.com",
+      cities: ["unknown-city"],
+      services: ["trainers", "walkers"],
+      remote: true
+    }
+  ]
+};
