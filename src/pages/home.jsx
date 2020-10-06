@@ -84,9 +84,9 @@ export default function ({ about }) {
         id="about"
         style={{ marginTop: 64, minHeight: "100vh" }}
       >
-        <Article name="about-group" />
+        <Article name={process.env.REACT_APP_ABOUT_PAGE_ID1} />
         <TeamList type="admins" />
-        <Article name="about-moderators" />
+        <Article name={process.env.REACT_APP_ABOUT_PAGE_ID2} />
         <TeamList type="moderators" />
       </Container>
     </div>

@@ -13,7 +13,7 @@ async function requestDB(url) {
     return response.data;
   } catch (e) {
     console.error(e.message, url);
-    return {};
+    return [];
   }
 }
 

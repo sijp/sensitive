@@ -25,6 +25,9 @@ export const TEAM_DB_URL =
   process.env.REACT_APP_TEAM_DB_URL || "http://localhost:5000/team";
 export const TEAM_IMAGES_URL =
   process.env.REACT_APP_TEAM_IMAGES_URL || "http://localhost:5000/";
+export const ARTICLES_DB_URL =
+  process.env.REACT_APP_ARTICLES_DB_URL ||
+  "http://localhost:5000/articles-info";
 export const ARTICLES_URL =
   process.env.REACT_APP_ARTICLES_URL || "http://localhost:5000/articles";
 
@@ -121,11 +124,9 @@ export const NAVIGATION_LINKS = [
     icon: faSearchLocation,
     highlighted: true
   },
-  // {
-  //   url: "/articles",
-  //   text: "מאמרים",
-  //   icon: faNewspaper
-  // },
+  {
+    type: "ArticlesLinkEntry"
+  },
   {
     url: "/position-statements",
     text: "עקרונות הגישה",
@@ -136,7 +137,7 @@ export const NAVIGATION_LINKS = [
     url: "https://www.facebook.com/groups/476196172437302/",
     text: "הקבוצה בפייסבוק",
     icon: faFacebookF,
-    external: true,
+    type: "ExternalLinkEntry",
     logo: true,
     highlighted: true
   },
@@ -144,6 +145,6 @@ export const NAVIGATION_LINKS = [
     url: "https://www.facebook.com/groups/470596276647495/",
     text: "קבוצת הגורים בפייסבוק",
     icon: faFacebookF,
-    external: true
+    type: "ExternalLinkEntry"
   }
 ];

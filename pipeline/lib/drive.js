@@ -7,12 +7,12 @@ async function mapDir(auth, id, callback) {
     const res = await drive.files.list({
       q: `'${id}' in parents`,
       pageSize: 10,
-      fields: "nextPageToken, files(id, name, parents)"
+      fields: "nextPageToken, files(id, name, parents, mimeType)"
     });
     const files = res.data.files;
 
     if (files.length) {
-      return files.map(callback);
+      return Promise.all(files.map(callback));
     } else {
       console.log(`Bad or empty directory ${id}`);
       return [];

@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Axios from "axios";
 import { ARTICLES_URL } from "../config/config";
 import { Skeleton } from "@material-ui/lab";
+import { connect } from "react-redux";
 
 const PARAGRAPH_TYPES = {
   HEADING_1: (props) => (
@@ -117,17 +118,27 @@ function ArticleSkeleton() {
   );
 }
 
-function Article({ name }) {
+function Article({ name, articleNameMapping, loading }) {
   const [article, setArticle] = useState(null);
 
+  const id = articleNameMapping[name];
+
   const getArticle = () => {
-    Axios.get(`${ARTICLES_URL}/${name}.json`)
+    if (!id) return;
+    Axios.get(`${ARTICLES_URL}/${id}.json`)
       .then((result) => setArticle(result.data))
       .catch((e) => {});
   };
 
-  useEffect(getArticle, []);
+  useEffect(getArticle, [id]);
   return article ? <ParsedDoc article={article} /> : <ArticleSkeleton />;
 }
 
-export default Article;
+function mapStateToProps(state) {
+  return {
+    loading: state.articlesInfo.loading,
+    articleNameMapping: state.articlesInfo.information?.mapping || []
+  };
+}
+
+export default connect(mapStateToProps)(Article);
