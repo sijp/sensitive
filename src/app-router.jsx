@@ -3,6 +3,7 @@ import { Route, Switch } from "react-router-dom";
 import ProfessionalsPage from "./pages/professionals-page";
 import Home from "./pages/home";
 import PositionStatementsPage from "./pages/position-statements-page";
+import ArticlePage from "./pages/article-page";
 
 export default function AppRouter() {
   return (
@@ -18,6 +19,9 @@ export default function AppRouter() {
       </Route>
       <Route path="/position-statements">
         <PositionStatementsPage />
+      </Route>
+      <Route path="/article/:name">
+        <ArticlePage />
       </Route>
     </Switch>
   );

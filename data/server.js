@@ -11,6 +11,10 @@ app.get("/team", (req, res) =>
   res.sendFile("./data/team.json", { root: __dirname })
 );
 
+app.get("/articles-info", (req, res) =>
+  res.sendFile("./data/articles-info.json", { root: __dirname })
+);
+
 app.use(express.static("./data/images/"));
 app.use("/articles/", express.static("./data/articles/"));
 

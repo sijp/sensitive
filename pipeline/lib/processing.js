@@ -38,7 +38,32 @@ function processTeam(rows) {
   );
 }
 
+function processDocs(docs) {
+  const buildCategories = (docsTree) =>
+    docsTree.map((doc) => {
+      if (doc.folder && doc.docs) {
+        return {
+          text: doc.folder.name,
+          articles: buildCategories(doc.docs)
+        };
+      }
+      return { text: doc.name, id: doc.internalId };
+    });
+  const buildMapping = (docTree) =>
+    docTree.reduce((mappings, doc) => {
+      if (doc.folder && doc.docs)
+        return { ...mappings, ...buildMapping(doc.docs) };
+      return { ...mappings, [doc.name]: doc.internalId };
+    }, {});
+
+  return {
+    categories: buildCategories(docs),
+    mapping: buildMapping(docs)
+  };
+}
+
 module.exports = {
   processProfessionals,
-  processTeam
+  processTeam,
+  processDocs
 };

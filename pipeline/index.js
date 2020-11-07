@@ -6,7 +6,11 @@ const _ = require("underscore-contrib");
 
 const { authenticate } = require("./lib/authenticate");
 const { mapDir, download } = require("./lib/drive");
-const { processProfessionals, processTeam } = require("./lib/processing");
+const {
+  processProfessionals,
+  processTeam,
+  processDocs
+} = require("./lib/processing");
 const { getSpreadSheet } = require("./lib/sheets");
 const {
   getGoogleDoc,
@@ -49,46 +53,63 @@ function monthlySort(jsonData) {
 async function getData() {
   await promisify(fs.mkdir)("./tmp/data", { recursive: true });
   try {
-    await Promise.all(
-      await mapDir(auth, process.env.DATA_FOLDER_ID, async (file) => {
-        const filePath = path.join("./tmp/data", `${file.name}.json`);
-        const data = await getSpreadSheet(auth, file.id);
-        const jsonData =
-          file.name === "professionals"
-            ? monthlySort(processProfessionals(data))
-            : file.name === "team"
-            ? processTeam(data)
-            : null;
-        if (jsonData) {
-          await promisify(fs.writeFile)(filePath, JSON.stringify(jsonData));
-          console.log(`Wrote ${filePath}`);
-          return jsonData;
-        }
-        return null;
-      })
-    );
+    await mapDir(auth, process.env.DATA_FOLDER_ID, async (file) => {
+      const filePath = path.join("./tmp/data", `${file.name}.json`);
+      const data = await getSpreadSheet(auth, file.id);
+      const jsonData =
+        file.name === "professionals"
+          ? monthlySort(processProfessionals(data))
+          : file.name === "team"
+          ? processTeam(data)
+          : null;
+      if (jsonData) {
+        await promisify(fs.writeFile)(filePath, JSON.stringify(jsonData));
+        console.log(`Wrote ${filePath}`);
+        return jsonData;
+      }
+      return null;
+    });
   } catch (error) {
     console.log(error);
   }
 }
 
 async function getDocs() {
+  let counter = 0;
+  const writeFile = promisify(fs.writeFile);
   await promisify(fs.mkdir)("./tmp/data/articles", { recursive: true });
 
-  try {
-    await Promise.all(
-      await mapDir(auth, process.env.ARTICLES_FOLDER_ID, async (file) => {
-        const doc = await getGoogleDoc(auth, file.id);
+  const recGetDocs = async (folderId) => {
+    return await mapDir(auth, folderId, async (file) => {
+      switch (file.mimeType) {
+        case "application/vnd.google-apps.folder":
+          return { folder: file, docs: await recGetDocs(file.id) };
+        case "application/vnd.google-apps.document":
+          counter++;
+          const internalId = counter;
+          const doc = await getGoogleDoc(auth, file.id);
+          const filePath = path.join(
+            "./tmp/data/articles",
+            `${internalId}.json`
+          );
+          const paredDoc = parseDocument(doc);
+          await Promise.all([
+            writeFile(filePath, JSON.stringify(paredDoc)),
+            downloadEmbeddedImages(doc, "./tmp/data/articles")
+          ]);
+          console.log(`Wrote ${filePath}`);
+          return { ...file, internalId };
+        default:
+          return file;
+      }
+    });
+  };
 
-        const filePath = path.join("./tmp/data/articles", `${file.name}.json`);
-        const paredDoc = parseDocument(doc);
-        await Promise.all([
-          promisify(fs.writeFile)(filePath, JSON.stringify(paredDoc)),
-          downloadEmbeddedImages(doc, "./tmp/data/articles")
-        ]);
-        console.log(`Wrote ${filePath}`);
-      })
-    );
+  try {
+    const docs = await recGetDocs(process.env.ARTICLES_FOLDER_ID);
+    const filePath = "./tmp/data/articles-info.json";
+    writeFile(filePath, JSON.stringify(processDocs(docs)));
+    console.log(`wrote ${filePath}`);
   } catch (error) {
     console.log(error);
   }
