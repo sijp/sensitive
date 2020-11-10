@@ -53,7 +53,6 @@ function ProfessionalFilters({
   filters,
   addFilter,
   removeFilter,
-  onChange,
   moreChips = []
 }) {
   const classes = useStyles();
@@ -94,7 +93,6 @@ function ProfessionalFilters({
             filters[filterType]
               ? removeFilter(filterType)
               : addFilter(filterType);
-            onChange(filterType, !filters[filterType]);
           }}
         ></Chip>
       ))}
@@ -110,6 +108,7 @@ function ProfessionalFilters({
           }}
         ></Chip>
       </Badge>
+
       {moreChips.map(({ className, ...chipProps }, index) => (
         <Chip
           key={index}

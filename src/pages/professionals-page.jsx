@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useHistory } from "react-router-dom";
 
 import { connect } from "react-redux";
 
 import {
   Grid,
   Container,
-  Snackbar,
-  Slide,
   makeStyles,
   CircularProgress,
   Hidden,
@@ -18,19 +15,23 @@ import ProfessionalsMap from "../components/professionals-location-filter";
 import ProfessionalsFilters from "../components/professionals-filters";
 import ProfessionalsResults from "../components/professinoals-results";
 
-import {
-  faSearchLocation,
-  faMapMarkerAlt
-} from "@fortawesome/free-solid-svg-icons";
+import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { actions } from "../ducks/professionals";
+import { Alert } from "@material-ui/lab";
+import QueryStringUpdater from "../components/query-string-updater";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.grey[50],
     paddingTop: theme.spacing(2),
     height: `calc(100vh - ${
+      theme.mixins.toolbar.minHeight + theme.spacing(1)
+    }px)`
+  },
+  rootNoCity: {
+    height: `calc(100% - ${
       theme.mixins.toolbar.minHeight + theme.spacing(1)
     }px)`
   },
@@ -49,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   mapSmaller: {
-    height: "70vh"
+    height: "calc(70vh - 30px)"
   },
   clearCityButtonContainer: {
     position: "fixed",
@@ -76,15 +77,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function useQuery() {
-  const location = useLocation();
-  const history = useHistory();
-  return [
-    location.search,
-    (search) => history.replace({ ...location, search: search.toString() })
-  ];
-}
-
 function ResponsiveResultsGrid(props) {
   return (
     <>
@@ -102,56 +94,15 @@ function ProfessionalsPage({
   cityList,
   city,
   activeFilters,
+  showingRemote,
   setCity,
   setFilters,
+  setShowRemote,
   synchronize
 }) {
   const classes = useStyles();
-  const [queryString, setQueryString] = useQuery();
-  const queryParams = new URLSearchParams(queryString);
+
   const [mounted, setMounted] = useState(false);
-
-  const qsCity = queryParams.get("city") || city;
-  const qsFilters =
-    queryParams.get("filters") || Object.keys(activeFilters).join(",") || "";
-
-  const handleCityChange = (city) => {
-    const newParams = new URLSearchParams(queryString);
-    newParams.set("city", city);
-    setQueryString(newParams);
-  };
-
-  const handleFiltersChange = (filter, enabled) => {
-    const newParams = new URLSearchParams(queryString);
-    const currentFilters = Object.keys(activeFilters) || [];
-    const newFilters = enabled
-      ? [...currentFilters, filter]
-      : currentFilters.filter((f) => f !== filter);
-    newParams.set("filters", newFilters.join(","));
-    setQueryString(newParams);
-  };
-
-  useEffect(
-    function () {
-      if (qsCity) setCity(qsCity);
-      if (qsFilters) setFilters(qsFilters.split(","));
-    },
-    // eslint-disable-next-line
-    [qsCity, qsFilters]
-  );
-
-  useEffect(function () {
-    const newParams = new URLSearchParams(queryString);
-
-    if (qsCity) newParams.set("city", qsCity);
-    else newParams.delete("city");
-
-    if (qsFilters && qsFilters.length > 0) newParams.set("filters", qsFilters);
-    else newParams.delete("filters");
-
-    setQueryString(newParams);
-    // eslint-disable-next-line
-  }, []);
 
   useEffect(
     function () {
@@ -173,14 +124,24 @@ function ProfessionalsPage({
   return (
     <>
       <Container maxWidth="xl">
-        <Grid container spacing={1} className={classes.root}>
+        {!city && (
+          <Alert severity="info" className={classes.alert}>
+            כדי להתחיל, יש לסמן את סוג השירות המבוקש, ואת איזור המגורים. אם
+            איזור המגורים לא מופיע יש לבחור במפה את האיזור הקרוב ביותר
+          </Alert>
+        )}
+        <Grid
+          container
+          spacing={1}
+          className={`${classes.root} ${city ? "" : classes.rootNoCity}`}
+        >
           <ResponsiveResultsGrid
             item
             xs={city ? 8 : 12}
             className={city && classes.results}
           >
             <div className={city ? classes.filters : classes.filtersInMap}>
-              <ProfessionalsFilters onChange={handleFiltersChange} />
+              <ProfessionalsFilters />
             </div>
 
             {city && <ProfessionalsResults />}
@@ -191,7 +152,7 @@ function ProfessionalsPage({
             xs={city ? 4 : 12}
             className={city ? classes.map : classes.mapSmaller}
           >
-            <ProfessionalsMap onChange={handleCityChange} />
+            <ProfessionalsMap />
           </Grid>
         </Grid>
       </Container>
@@ -210,26 +171,20 @@ function ProfessionalsPage({
           </Fab>
         </div>
       )}
-      {!city && (
-        <Snackbar
-          TransitionComponent={(props) => (
-            <Slide {...props} direction="right" />
-          )}
-          open={!city}
-          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-          ContentProps={{ classes: { message: classes.message } }}
-          style={{ position: "fixed" }}
-          message={
-            <>
-              <FontAwesomeIcon
-                icon={faSearchLocation}
-                className={classes.snackIcon}
-              />{" "}
-              כדי להתחיל, יש לסמן את סוג השירות המבוקש, ואת איזור המגורים
-            </>
-          }
-        />
-      )}
+      <QueryStringUpdater
+        filters={Object.keys(activeFilters)}
+        city={city}
+        remote={showingRemote}
+        init={(queryParams) => {
+          const filters = queryParams.get("filters");
+          const city = queryParams.get("city");
+          const remote = queryParams.get("remote");
+
+          if (filters) setFilters(filters.split(","));
+          if (city) setCity(city);
+          if (remote) setShowRemote(remote === "true");
+        }}
+      />
     </>
   );
 }
@@ -238,12 +193,14 @@ function mapStateToProps(state) {
   return {
     cityList: state.professionals.cityList,
     city: state.professionals.city,
-    activeFilters: state.professionals.activeFilters
+    activeFilters: state.professionals.activeFilters,
+    showingRemote: state.professionals.showRemote
   };
 }
 
 export default connect(mapStateToProps, {
   setFilters: actions.setFilters,
   setCity: actions.setCity,
+  setShowRemote: actions.setShowRemote,
   synchronize: actions.synchronize
 })(ProfessionalsPage);

@@ -71,7 +71,7 @@ export const PROFESSIONALS_DB_CACHE_VALIDITY = 5 * 60; // 5 minutes
 export const DB_CACHE_VALIDITY = 5 * 60; // 5 minutes
 export const PROFESSIONALS_CITY_LIST = {
   "Tel Aviv": { position: [32.06, 34.77], label: "תל אביב" },
-  Hashfela: { position: [31.9, 34.88], label: "השפלה" },
+  Hashfela: { position: [31.894757, 34.810524], label: "השפלה" },
   Jerusalem: { position: [31.76, 35.2], label: "ירושלים" },
   Haifa: { position: [32.8, 34.98], label: "חיפה" },
   "Rishon Lezion": { position: [31.961775, 34.809837], label: "ראשון לציון" },

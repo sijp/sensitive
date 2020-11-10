@@ -2,7 +2,8 @@ import reducer, { types } from "../../professionals";
 import {
   MOCK_DIFFERENT_CITIES,
   MOCK_SIMPLE_TRAINERS,
-  MOCK_SIMPLE_DOGWALKERS
+  MOCK_SIMPLE_DOGWALKERS,
+  MOCK_DIFFERENT_CITIES_REMOTE
 } from "../../__mocks__/professionals";
 
 describe("professionals", () => {
@@ -13,6 +14,26 @@ describe("professionals", () => {
         payload: "Berlin"
       });
       expect(result.city).toEqual("Berlin");
+    });
+  });
+
+  describe("SET_SHOW_REMOTE", () => {
+    it("should start with remote disabled", () => {
+      const result = reducer(undefined, {});
+      expect(result.showRemote).toEqual(false);
+    });
+
+    it("should set showRemote to payload", () => {
+      const result = reducer(undefined, {
+        type: types.SET_SHOW_REMOTE,
+        payload: true
+      });
+      expect(result.showRemote).toEqual(true);
+      const result2 = reducer(result, {
+        type: types.SET_SHOW_REMOTE,
+        payload: false
+      });
+      expect(result2.showRemote).toEqual(false);
     });
   });
 
@@ -108,6 +129,44 @@ describe("professionals", () => {
       });
 
       expect(result.results).toEqual([payload[1]]);
+    });
+
+    it("should not show by default remote professionals from different cities", () => {
+      const payload = [
+        ...MOCK_DIFFERENT_CITIES.json,
+        ...MOCK_DIFFERENT_CITIES_REMOTE.json
+      ];
+      const state = {
+        city: payload[0].cities[0]
+      };
+      const result = reducer(state, {
+        type: types.SYNCHRONIZE_DONE,
+        payload
+      });
+      expect(result.results.length).toEqual(1);
+      expect(result.results).toEqual([payload[0]]);
+    });
+
+    it("should show remote professionals from different cities if showRemote is set ", () => {
+      const payload = [
+        ...MOCK_DIFFERENT_CITIES.json,
+        ...MOCK_DIFFERENT_CITIES_REMOTE.json
+      ];
+      const state = {
+        city: payload[0].cities[0],
+        showRemote: true
+      };
+      const result = reducer(state, {
+        type: types.SYNCHRONIZE_DONE,
+        payload
+      });
+      expect(result.results.length).toEqual(
+        1 + MOCK_DIFFERENT_CITIES_REMOTE.json.length
+      );
+      expect(result.results).toEqual([
+        payload[0],
+        ...MOCK_DIFFERENT_CITIES_REMOTE.json
+      ]);
     });
   });
 });

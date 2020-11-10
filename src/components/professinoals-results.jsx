@@ -8,33 +8,42 @@ import {
   useMediaQuery,
   DialogActions,
   Button,
-  Badge
+  Badge,
+  Tooltip,
+  ListItem,
+  Divider,
+  List
 } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 import { connect } from "react-redux";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSadTear } from "@fortawesome/free-solid-svg-icons";
+import { faLaptopHouse, faSadTear } from "@fortawesome/free-solid-svg-icons";
 
 import ProfessionalsResultDetails from "./professionals-result-details";
 
 import { PROFESSIONAL_PRIORITY } from "../config/config";
+import ProfessionalsRemoteSwitch from "./professionals-remote-switch";
 
 const MOBILE_CARD_WIDTH = 230;
 const DEFAULT_CARD_WIDTH = 250;
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex",
-    flexFlow: "row wrap",
-    padding: theme.spacing(1),
     overflowY: "auto",
     overflowX: "hidden"
+  },
+
+  resultsFlex: {
+    display: "flex",
+    flexFlow: "row wrap",
+    padding: theme.spacing(1)
   },
 
   cardBadge: {
     margin: theme.spacing(3)
   },
+  cardRemoteBadge: {},
 
   card: {
     cursor: "pointer",
@@ -83,8 +92,56 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(2),
       marginBottom: 0
     }
+  },
+  divider: {
+    width: "80%",
+    margin: "0 auto"
+  },
+  dividerText: {
+    textAlign: "center"
   }
 }));
+
+function PriorityBadge({ className, result, theme, children }) {
+  return (
+    <Badge
+      className={className}
+      badgeContent={
+        <>
+          <FontAwesomeIcon icon={result.icon} />{" "}
+          <span style={{ paddingRight: theme.spacing(0.5) }}>
+            {result.label}
+          </span>
+        </>
+      }
+      color="primary"
+      invisible={!result.icon}
+      anchorOrigin={{ vertical: "top", horizontal: "left" }}
+    >
+      {children}
+    </Badge>
+  );
+}
+
+function RemoteBadge({ children, result, className, theme, invisible }) {
+  return (
+    <Badge
+      className={className}
+      badgeContent={
+        <Tooltip title="שירות מקוון" arrow placement="top">
+          <div>
+            <FontAwesomeIcon icon={faLaptopHouse} />
+          </div>
+        </Tooltip>
+      }
+      color="primary"
+      invisible={invisible || !result.remote}
+      anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+    >
+      {children}
+    </Badge>
+  );
+}
 
 function ProfessionalsResults({
   style,
@@ -93,74 +150,110 @@ function ProfessionalsResults({
   filterTypes,
   cityList,
   admins,
-  moderators
+  moderators,
+  showingRemote,
+  city
 }) {
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [selected, setSelected] = useState();
   const isMobile = useMediaQuery("@media only screen and (max-width: 640px)");
+  const resultsLabels = [
+    undefined,
+    <>
+      <FontAwesomeIcon icon={faLaptopHouse} /> שירות מקוון בלבד
+    </>
+  ];
 
-  const renderResults = () =>
-    results.length > 0 ? (
-      results
-        .map((result) => {
-          const resultType = result.pinned
-            ? "star"
-            : moderators
-                .map((mod) => mod.name)
-                .includes(`${result.firstName} ${result.lastName}`)
-            ? "moderator"
-            : admins
-                .map((admin) => admin.name)
-                .includes(`${result.firstName} ${result.lastName}`)
-            ? "admin"
-            : "regular";
-          return { ...result, ...PROFESSIONAL_PRIORITY[resultType] };
-        })
-        .sort((result1, result2) => result2.order - result1.order)
-        .map((result) => (
-          <Badge
-            className={classes.cardBadge}
-            badgeContent={
-              <>
-                <FontAwesomeIcon icon={result.icon} />{" "}
-                <span style={{ paddingRight: theme.spacing(0.5) }}>
-                  {result.label}
-                </span>
-              </>
-            }
-            color="primary"
-            invisible={!result.icon}
-            anchorOrigin={{ vertical: "top", horizontal: "left" }}
-            key={`professional-${result.id}`}
-          >
-            <Card
-              className={classes.card}
-              variant="outlined"
-              onClick={() => setSelected(result)}
+  const renderResults = (subResults, index) => (
+    <>
+      {resultsLabels[index] && (
+        <>
+          <Divider component="li" className={classes.divider} />
+          <li>
+            <Typography
+              className={classes.dividerText}
+              color="textSecondary"
+              display="block"
+              variant="caption"
             >
-              <ProfessionalsResultDetails
+              {resultsLabels[index]}
+            </Typography>
+          </li>
+        </>
+      )}
+      <ListItem className={classes.resultsFlex}>
+        {subResults
+          .map((result) => {
+            const resultType = result.pinned
+              ? "star"
+              : moderators
+                  .map((mod) => mod.name)
+                  .includes(`${result.firstName} ${result.lastName}`)
+              ? "moderator"
+              : admins
+                  .map((admin) => admin.name)
+                  .includes(`${result.firstName} ${result.lastName}`)
+              ? "admin"
+              : "regular";
+            return { ...result, ...PROFESSIONAL_PRIORITY[resultType] };
+          })
+          .sort((result1, result2) => result2.order - result1.order)
+          .map((result) => (
+            <PriorityBadge
+              className={classes.cardBadge}
+              result={result}
+              theme={theme}
+              key={`professional-${result.id}`}
+            >
+              <RemoteBadge
+                className={classes.cardRemoteBadge}
                 result={result}
-                cardHeaderClass={classes.cardHeader}
-                cardContentClass={classes.cardContent}
-                width={isMobile ? MOBILE_CARD_WIDTH : DEFAULT_CARD_WIDTH}
-                filterTypes={filterTypes}
-                cityList={cityList}
-              />
-            </Card>
-          </Badge>
-        ))
-    ) : (
+                theme={theme}
+                invisible={!showingRemote}
+              >
+                <Card
+                  className={classes.card}
+                  variant="outlined"
+                  onClick={() => setSelected(result)}
+                >
+                  <ProfessionalsResultDetails
+                    result={result}
+                    cardHeaderClass={classes.cardHeader}
+                    cardContentClass={classes.cardContent}
+                    width={isMobile ? MOBILE_CARD_WIDTH : DEFAULT_CARD_WIDTH}
+                    filterTypes={filterTypes}
+                    cityList={cityList}
+                  />
+                </Card>
+              </RemoteBadge>
+            </PriorityBadge>
+          ))}
+      </ListItem>
+    </>
+  );
+  const renderNoResults = () => (
+    <>
       <Typography variant="h2" className={classes.noResults}>
-        לא נמצאו תוצאות <FontAwesomeIcon icon={faSadTear} />
+        לא נמצאו תוצאות
+        <br />
+        <FontAwesomeIcon icon={faSadTear} />
       </Typography>
-    );
+      {!showingRemote && (
+        <Typography variant="h4" className={classes.noResults}>
+          אבל אולי אפשר לקבל שירות מקוון? <br />
+          <ProfessionalsRemoteSwitch />
+        </Typography>
+      )}
+    </>
+  );
   const renderSkeletons = () =>
     Array(2)
       .fill()
       .map((_, i) => (
         <Card
+          key={`skeleton-card-${i}`}
           variant="outlined"
           className={`${classes.card} ${classes.cardBadge}`}
         >
@@ -188,10 +281,27 @@ function ProfessionalsResults({
   };
 
   const handleCloseDialog = () => setSelected(undefined);
+  const splitResults = (results, tester) => {
+    const group1 = [];
+    const group2 = [];
+    results.forEach((result) =>
+      tester(result) ? group1.push(result) : group2.push(result)
+    );
+    return [group1, group2];
+  };
+  const resultsGroups = showingRemote
+    ? splitResults(results, (result) => result.cities.includes(city))
+    : [results];
 
   return (
     <Box className={classes.root} style={style}>
-      {loading ? renderSkeletons() : renderResults()}
+      {loading ? (
+        <Box className={classes.resultsFlex}>{renderSkeletons()}</Box>
+      ) : results.length > 0 ? (
+        <List>{resultsGroups.map(renderResults)}</List>
+      ) : (
+        renderNoResults()
+      )}
 
       <Dialog
         open={!!selected}
@@ -216,7 +326,9 @@ function mapStateToProps(state) {
     filterTypes: state.professionals.filterTypes,
     cityList: state.professionals.cityList,
     admins: state.team.admins || [],
-    moderators: state.team.moderators || []
+    moderators: state.team.moderators || [],
+    showingRemote: state.professionals.showRemote,
+    city: state.professionals.city
   };
 }
 
