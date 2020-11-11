@@ -6,7 +6,7 @@ import {
   ListItemText,
   Tooltip,
   Box,
-  Chip
+  Button
 } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 
@@ -17,7 +17,11 @@ import {
   faAt,
   faBone
 } from "@fortawesome/free-solid-svg-icons";
-import { faFacebookF } from "@fortawesome/free-brands-svg-icons";
+import {
+  faFacebookF,
+  faInstagram,
+  faWhatsapp
+} from "@fortawesome/free-brands-svg-icons";
 
 function FacebookSkeleton({ width, height, style, animation = false }) {
   return (
@@ -81,20 +85,20 @@ function FacebookSkeleton({ width, height, style, animation = false }) {
   );
 }
 
-function ContactLink({ label, url, icon }) {
+function ContactLink({ label, url, icon, style, iconStyle }) {
   return (
-    <Chip
-      icon={<FontAwesomeIcon icon={icon} />}
-      label={label}
-      variant="outlined"
-      size="small"
-      color="secondary"
-      clickable={!!url}
+    <Button
+      startIcon={<FontAwesomeIcon icon={icon} style={iconStyle} />}
+      color="primary"
+      variant="contained"
+      disabled={!url}
       href={url}
       target="_blank"
-      style={{ margin: "0 2px", paddingRight: 5 }}
+      style={{ margin: 2, ...style }}
       component="a"
-    />
+    >
+      {label}
+    </Button>
   );
 }
 
@@ -172,41 +176,6 @@ function ProfessinoalsResultDetails({
                 }`}
           </Typography>
         </ListItemText>
-        {showDetails && (
-          <ListItemText>
-            <Typography variant="body2">
-              יצירת קשר:{" "}
-              {result.phone && (
-                <ContactLink
-                  icon={faPhoneSquare}
-                  label={result.phone}
-                  url={`tel:${result.phone}`}
-                />
-              )}
-              {result.facebookPage && (
-                <ContactLink
-                  icon={faFacebookF}
-                  label="פייסבוק"
-                  url={result.facebookPage}
-                />
-              )}
-              {result.web && (
-                <ContactLink
-                  icon={faGlobe}
-                  label="אתר אינטרנט"
-                  url={result.web}
-                />
-              )}
-              {result.email && (
-                <ContactLink
-                  icon={faAt}
-                  label={result.email}
-                  url={`mailto:${result.email}`}
-                />
-              )}
-            </Typography>
-          </ListItemText>
-        )}
         <ListItemText>
           <Typography variant="body2">
             שירותים:{"  "}
@@ -234,6 +203,66 @@ function ProfessinoalsResultDetails({
               איזורים: {"  "}
               {result.cities.map((city) => cityList[city]?.label).join(", ")}
             </Typography>
+          </ListItemText>
+        )}
+        {showDetails && (
+          <ListItemText>
+            {result.phone && result.phone.startsWith("05") && (
+              <ContactLink
+                icon={faWhatsapp}
+                label="ווצאפ"
+                style={{
+                  backgroundColor: "#25D366",
+                  color: "black"
+                }}
+                iconStyle={{ color: "white" }}
+                url={`https://wa.me/972${result.phone
+                  .substring(1)
+                  .replace(/\D/gi, "")}?text=${encodeURI(
+                  "היי, ראיתי את הכרטיס שלך באינדקס הרגישים ואשמח ליצור עמך קשר :)"
+                )}`}
+              />
+            )}
+            {result.facebookPage && (
+              <ContactLink
+                icon={faFacebookF}
+                label="פייסבוק"
+                style={{ backgroundColor: "#4267B2", color: "white" }}
+                url={result.facebookPage}
+              />
+            )}
+            {result.instagram && (
+              <ContactLink
+                icon={faInstagram}
+                label="אינסטגרם"
+                style={{ backgroundColor: "#405DE6", color: "white" }}
+                url={result.web}
+              />
+            )}
+            {result.phone && (
+              <>
+                <ContactLink
+                  icon={faPhoneSquare}
+                  label={result.phone}
+                  url={`tel:${result.phone}`}
+                />
+              </>
+            )}
+            {result.web && (
+              <ContactLink
+                icon={faGlobe}
+                label="אתר אינטרנט"
+                url={result.web}
+              />
+            )}
+
+            {result.email && (
+              <ContactLink
+                icon={faAt}
+                label={result.email}
+                url={`mailto:${result.email}`}
+              />
+            )}
           </ListItemText>
         )}
       </List>
