@@ -6,7 +6,8 @@ import {
   IconButton,
   Button,
   useMediaQuery,
-  useTheme
+  useTheme,
+  Link
 } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
@@ -28,7 +29,10 @@ const useStyles = makeStyles((theme) => ({
   navLink: {
     color: theme.palette.grey[800],
     marginRight: theme.spacing(1),
-    fontSize: theme.typography.body1.fontSize
+    fontSize: theme.typography.body1.fontSize,
+    "&:hover": {
+      textDecoration: "none"
+    }
   },
   activeNavLink: {
     color: theme.palette.grey[900],
@@ -36,17 +40,28 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function NavButtonLink({ to, ...props }) {
+const linkTypes = {
+  ExternalLinkEntry: React.forwardRef(
+    ({ to, activeClassName: _, ...innerProps }, ref) => (
+      <Link {...innerProps} ref={ref} href={to} target="_blank" />
+    )
+  ),
+  InternalLinkEntry: React.forwardRef((innerProps, ref) => (
+    <NavLink ref={ref} exact {...innerProps} />
+  ))
+};
+
+function NavButtonLink({ to, type, ...props }) {
   const classes = useStyles();
+  const LinkComponent = linkTypes[type];
 
   return (
     <Button
-      component={React.forwardRef((innerProps, ref) => (
-        <NavLink ref={ref} {...innerProps} exact to={to} />
-      ))}
+      component={LinkComponent}
       activeClassName={classes.activeNavLink}
       className={classes.navLink}
       size="large"
+      to={to}
       {...props}
     />
   );
@@ -78,12 +93,12 @@ export default function ({ links = [], children }) {
             <FontAwesomeIcon icon={faBars} />
           </IconButton>
           {links
-            .filter(({ highlighted, external }) => highlighted && !external)
-
-            .map(({ url, text, icon }, index) => (
+            .filter(({ highlighted }) => highlighted)
+            .map(({ url, text, icon, type = "InternalLinkEntry" }, index) => (
               <NavButtonLink
                 key={`navlink-${index}`}
                 to={url}
+                type={type}
                 startIcon={<FontAwesomeIcon icon={icon} />}
               >
                 {!mobile && text}

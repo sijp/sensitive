@@ -15,7 +15,6 @@ export default function QueryStringUpdater({ init, ...props }) {
   const [mounted, setMounted] = useState(false);
   const queryParams = new URLSearchParams(queryString);
   const jsonProps = JSON.stringify(props);
-  console.log("ZZZZ", jsonProps);
 
   useEffect(() => {
     if (!mounted) {
