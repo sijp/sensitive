@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function InternalLinkEntry({ icon, text, url, linkClassName, ...props }) {
   const match = useRouteMatch(url);
-  console.log("In Internal");
+
   return (
     <ListItem
       {...props}

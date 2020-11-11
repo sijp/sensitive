@@ -53,7 +53,7 @@ function DynamicMarker({ permanent, cityData, onclick }) {
   );
 }
 
-function LocationSelect({ cityList, city, className, onChange }) {
+function LocationSelect({ cityList, city, className, variant, onChange }) {
   const cityListSorted = Object.entries(cityList).sort(
     ([_aCityId, aCityData], [_bCityId, bCityData]) =>
       aCityData.label > bCityData.label
@@ -65,10 +65,10 @@ function LocationSelect({ cityList, city, className, onChange }) {
       </InputLabel>
       <Select
         native
+        variant={variant}
         inputProps={{ name: "city-list-select", id: "city-list-select" }}
         value={city}
         onChange={(event) => {
-          console.log(event.target);
           onChange(event.target.value);
         }}
       >
@@ -83,13 +83,7 @@ function LocationSelect({ cityList, city, className, onChange }) {
   );
 }
 
-function ProfessionalsMap({
-  setCity,
-  cityList,
-  city,
-  showRemote,
-  setShowRemote
-}) {
+function ProfessionalsMap({ setCity, cityList, city }) {
   const [key] = useState(uuidv4());
   const [zoom, setZoom] = useState(10);
   const classes = useStyles();
@@ -98,14 +92,22 @@ function ProfessionalsMap({
     <div style={{ height: "100%" }} className={classes.verticalGrid}>
       <div>
         <Grid container>
-          <Grid item xs={city ? 4 : 12}>
+          <Grid
+            item
+            xs={city ? 4 : 12}
+            style={{
+              textAlign: city ? undefined : "center",
+              paddingBottom: city ? undefined : 16
+            }}
+          >
             <ProfessionalsRemoteSwitch className={classes.switchLabel} />
           </Grid>
-          <Grid item xs={city ? 8 : 3}>
+          <Grid item xs={city ? 8 : 12}>
             <LocationSelect
               onChange={setCity}
               city={city}
               cityList={cityList}
+              variant={city ? "standard" : "filled"}
             />
           </Grid>
         </Grid>

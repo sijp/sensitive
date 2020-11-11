@@ -108,7 +108,7 @@ function PriorityBadge({ className, result, theme, children }) {
       className={className}
       badgeContent={
         <>
-          <FontAwesomeIcon icon={result.icon} />{" "}
+          {result.icon && <FontAwesomeIcon icon={result.icon} />}
           <span style={{ paddingRight: theme.spacing(0.5) }}>
             {result.label}
           </span>
@@ -162,12 +162,12 @@ function ProfessionalsResults({
   const resultsLabels = [
     undefined,
     <>
-      <FontAwesomeIcon icon={faLaptopHouse} /> שירות מקוון בלבד
+      <FontAwesomeIcon icon={faLaptopHouse} /> שירות מקוון בלבד לאיזור המסומן
     </>
   ];
 
   const renderResults = (subResults, index) => (
-    <>
+    <React.Fragment key={`sub-results-${index}`}>
       {resultsLabels[index] && (
         <>
           <Divider component="li" className={classes.divider} />
@@ -231,7 +231,7 @@ function ProfessionalsResults({
             </PriorityBadge>
           ))}
       </ListItem>
-    </>
+    </React.Fragment>
   );
   const renderNoResults = () => (
     <>
