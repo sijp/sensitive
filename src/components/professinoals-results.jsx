@@ -80,6 +80,10 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center"
   },
 
+  modalContainer: {
+    width: "100%"
+  },
+
   modalCard: {
     direction: "ltr",
     "& $cardContent": {
@@ -157,6 +161,7 @@ function ProfessionalsResults({
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   const [selected, setSelected] = useState();
   const isMobile = useMediaQuery("@media only screen and (max-width: 640px)");
   const resultsLabels = [
@@ -272,7 +277,7 @@ function ProfessionalsResults({
           cardContentClass={classes.cardContent}
           filterTypes={filterTypes}
           cityList={cityList}
-          width={fullScreen ? 300 : 500}
+          width={fullScreen ? 350 : 500}
           bannerHeight={120}
           showDetails
         />
@@ -304,9 +309,11 @@ function ProfessionalsResults({
       )}
 
       <Dialog
+        fullScreen={fullScreen}
         open={!!selected}
         onClose={handleCloseDialog}
         className={classes.modal}
+        classes={{ container: classes.modalContainer }}
       >
         {selected && renderModalContent()}
         <DialogActions>
