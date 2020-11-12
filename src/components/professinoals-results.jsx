@@ -311,7 +311,7 @@ function ProfessionalsResults({
         {selected && renderModalContent()}
         <DialogActions>
           <Button autoFocus onClick={handleCloseDialog} color="secondary">
-            אוקיי
+            חזרה לתוצאות
           </Button>
         </DialogActions>
       </Dialog>
