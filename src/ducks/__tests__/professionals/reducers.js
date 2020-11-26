@@ -9,11 +9,25 @@ import {
 describe("professionals", () => {
   describe("SET_CITY", () => {
     it("should set city", () => {
-      const result = reducer(undefined, {
-        type: types.SET_CITY,
-        payload: "Berlin"
-      });
+      const result = reducer(
+        { cityList: { Berlin: {} } },
+        {
+          type: types.SET_CITY,
+          payload: "Berlin"
+        }
+      );
       expect(result.city).toEqual("Berlin");
+    });
+
+    it("should not set city if city is unknown", () => {
+      const result = reducer(
+        { cityList: { Berlin: {} } },
+        {
+          type: types.SET_CITY,
+          payload: "Frankfurt"
+        }
+      );
+      expect(result.city).toEqual(undefined);
     });
   });
 

@@ -71,7 +71,10 @@ export const PROFESSIONALS_DB_CACHE_VALIDITY = 5 * 60; // 5 minutes
 export const DB_CACHE_VALIDITY = 5 * 60; // 5 minutes
 export const PROFESSIONALS_CITY_LIST = {
   "Tel Aviv": { position: [32.06, 34.77], label: "תל אביב" },
-  Hashfela: { position: [31.894757, 34.810524], label: "השפלה" },
+  Rehovot: { position: [31.896797, 34.811554], label: "רחובות והסביבה" },
+  LodRamla: { position: [31.932934, 34.876785], label: "רמלה-לוד והסביבה" },
+  Gadera: { position: [31.813396, 34.779282], label: "גדרה והסביבה" },
+  QiriatGat: { position: [31.612457, 34.768982], label: "קרית גת והסביבה" },
   Jerusalem: { position: [31.76, 35.2], label: "ירושלים" },
   Haifa: { position: [32.8, 34.98], label: "חיפה" },
   "Rishon Lezion": { position: [31.961775, 34.809837], label: "ראשון לציון" },
