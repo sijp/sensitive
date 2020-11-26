@@ -60,7 +60,8 @@ function setResults(state) {
 function reducer(state = DEFAULT_STATE, action = {}) {
   switch (action.type) {
     case types.SET_CITY:
-      return Object.keys(state.cityList).includes(action.payload)
+      return action.payload === undefined ||
+        Object.keys(state.cityList).includes(action.payload)
         ? { ...state, city: action.payload }
         : state;
     case types.ADD_FILTERS: {

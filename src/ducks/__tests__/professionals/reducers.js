@@ -19,6 +19,17 @@ describe("professionals", () => {
       expect(result.city).toEqual("Berlin");
     });
 
+    it("should be able to clear city with undefined", () => {
+      const result = reducer(
+        { cityList: { Berlin: {} }, city: "Berlin" },
+        {
+          type: types.SET_CITY,
+          payload: undefined
+        }
+      );
+      expect(result.city).toEqual(undefined);
+    });
+
     it("should not set city if city is unknown", () => {
       const result = reducer(
         { cityList: { Berlin: {} } },
