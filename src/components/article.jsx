@@ -20,6 +20,8 @@ const PARAGRAPH_TYPES = {
   )
 };
 
+const DEFAULT_PARAGRAPH_TYPE = PARAGRAPH_TYPES.NORMAL_TEXT;
+
 function YoutubeEmbed({ link }) {
   return (
     <iframe
@@ -36,7 +38,8 @@ function YoutubeEmbed({ link }) {
 
 function ParsedDoc({ article }) {
   return article.map((data, paragraphIdx) => {
-    const Paragraph = PARAGRAPH_TYPES[data.type];
+    const Paragraph = PARAGRAPH_TYPES[data.type] || DEFAULT_PARAGRAPH_TYPE;
+    
     return (
       <Paragraph key={`paragraph-${paragraphIdx}`}>
         {data.elements.map(
