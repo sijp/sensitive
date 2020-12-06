@@ -64,10 +64,7 @@ const useStyles = makeStyles((theme) => ({
     flex: "0 1 auto"
   },
   filtersInMap: {
-    textAlign: "center",
-    "@media only screen and (max-width: 640px)": {
-      display: "none"
-    }
+    textAlign: "center"
   },
   results: {
     overflow: "hidden",
