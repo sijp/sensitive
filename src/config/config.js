@@ -32,9 +32,9 @@ export const ARTICLES_URL =
   process.env.REACT_APP_ARTICLES_URL || "http://localhost:5000/articles";
 
 export const PROFESSIONALS_DB_TYPES = {
-  trainers: { label: "אימון כלבים", icon: faDog, default: true },
-  walkers: { label: "הולכת כלבים", icon: faWalking, default: true },
-  sitters: { label: "פנסיון ודוג סיטינג", icon: faHome, default: true },
+  trainers: { label: "אימון כלבים", icon: faDog },
+  walkers: { label: "הולכת כלבים", icon: faWalking },
+  sitters: { label: "פנסיון ודוג סיטינג", icon: faHome },
   groomers: { label: "טיפוח כלבים", icon: faCut },
   veterinarians: { label: "וטרינריה", icon: faBriefcaseMedical },
   Shops: { label: "חנויות", icon: faShoppingCart },

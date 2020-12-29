@@ -1,7 +1,7 @@
 import {
   PROFESSIONALS_DB_URL,
   PROFESSIONALS_DB_TYPES,
-  PROFESSIONALS_CITY_LIST
+  PROFESSIONALS_CITY_LIST,
 } from "../config/config";
 import createDataSyncDuck from "../lib/create-data-sync-duck/create-data-sync-duck";
 
@@ -12,14 +12,14 @@ const DEFAULT_STATE = {
     .reduce(
       (activeFilters, [filterKey, filterProps]) => ({
         ...activeFilters,
-        [filterKey]: filterProps
+        [filterKey]: filterProps,
       }),
       {}
     ),
   city: "",
   results: [],
   cityList: PROFESSIONALS_CITY_LIST,
-  showRemote: false
+  showRemote: false,
 };
 
 function withLoading(dispatch, action) {
@@ -29,32 +29,26 @@ function withLoading(dispatch, action) {
 
 function setResults(state) {
   const { rawData = [], city, activeFilters, showRemote } = state;
-  const noop = (data) => data;
-  const filterCity = city
-    ? (data) =>
-        data.filter((record) =>
-          showRemote && record.remote === true
-            ? true
-            : record.cities.includes(city)
-        )
-    : noop;
-  const filterType = activeFilters
-    ? (data) =>
-        data.filter((record) => {
-          const servicesToFilter = Object.keys(activeFilters);
-          const recordServices = record.services;
+  const filterCity = (data) =>
+    data.filter((record) =>
+      showRemote && record.remote === true ? true : record.cities.includes(city)
+    );
+  const filterType = (data) =>
+    data.filter((record) => {
+      const servicesToFilter = Object.keys(activeFilters);
+      const recordServices = record.services;
 
-          return (
-            servicesToFilter.filter((filter) => recordServices.includes(filter))
-              .length > 0
-          );
-        })
-    : noop;
-
-  return {
-    ...state,
-    results: filterType(filterCity(rawData))
-  };
+      return (
+        servicesToFilter.filter((filter) => recordServices.includes(filter))
+          .length > 0
+      );
+    });
+  if (city && activeFilters && Object.keys(activeFilters).length > 0)
+    return {
+      ...state,
+      results: filterType(filterCity(rawData)),
+    };
+  return { ...state, results: rawData };
 }
 
 function reducer(state = DEFAULT_STATE, action = {}) {
@@ -67,11 +61,11 @@ function reducer(state = DEFAULT_STATE, action = {}) {
     case types.ADD_FILTERS: {
       const activeFilters = {
         ...state.activeFilters,
-        [action.payload]: state.filterTypes[action.payload]
+        [action.payload]: state.filterTypes[action.payload],
       };
       return {
         ...state,
-        activeFilters
+        activeFilters,
       };
     }
     case types.REMOVE_FILTERS: {
@@ -81,7 +75,7 @@ function reducer(state = DEFAULT_STATE, action = {}) {
       } = state.activeFilters;
       return {
         ...state,
-        activeFilters
+        activeFilters,
       };
     }
     case types.SET_FILTERS:
@@ -90,15 +84,15 @@ function reducer(state = DEFAULT_STATE, action = {}) {
         activeFilters: action.payload.reduce(
           (filters, filterName) => ({
             ...filters,
-            [filterName]: state.filterTypes[filterName]
+            [filterName]: state.filterTypes[filterName],
           }),
           {}
-        )
+        ),
       };
     case types.SET_SHOW_REMOTE:
       return {
         ...state,
-        showRemote: !!action.payload
+        showRemote: !!action.payload,
       };
     case types.SYNCHRONIZE_DONE:
       return setResults(state);
@@ -120,7 +114,7 @@ export const types = {
   REMOVE_FILTERS: "sensitive/professionals/REMOVE_FILTERS",
   SET_FILTERS: "sensitive/professionals/SET_FILTERS",
   SET_SHOW_REMOTE: "sensitive/professionals/SET_SHOW_REMOTE",
-  ...dataSyncDuck.types
+  ...dataSyncDuck.types,
 };
 
 export const actions = {
@@ -128,7 +122,7 @@ export const actions = {
     return (dispatch) => {
       withLoading(dispatch, {
         type: types.SET_CITY,
-        payload: city
+        payload: city,
       });
     };
   },
@@ -137,7 +131,7 @@ export const actions = {
     return (dispatch) => {
       withLoading(dispatch, {
         type: types.ADD_FILTERS,
-        payload: filter
+        payload: filter,
       });
     };
   },
@@ -146,7 +140,7 @@ export const actions = {
     return (dispatch) => {
       withLoading(dispatch, {
         type: types.REMOVE_FILTERS,
-        payload: filter
+        payload: filter,
       });
     };
   },
@@ -155,7 +149,7 @@ export const actions = {
     return (dispatch) => {
       withLoading(dispatch, {
         type: types.SET_FILTERS,
-        payload: filterNames
+        payload: filterNames,
       });
     };
   },
@@ -164,12 +158,12 @@ export const actions = {
     return (dispatch) => {
       withLoading(dispatch, {
         type: types.SET_SHOW_REMOTE,
-        payload: value
+        payload: value,
       });
     };
   },
 
-  ...dataSyncDuck.actions
+  ...dataSyncDuck.actions,
 };
 
 export default dataSyncDuck.reducer;

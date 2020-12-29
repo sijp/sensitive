@@ -3,8 +3,10 @@ import {
   MOCK_DIFFERENT_CITIES,
   MOCK_SIMPLE_TRAINERS,
   MOCK_SIMPLE_DOGWALKERS,
-  MOCK_DIFFERENT_CITIES_REMOTE
+  MOCK_DIFFERENT_CITIES_REMOTE,
 } from "../../__mocks__/professionals";
+
+import _ from "underscore-contrib";
 
 describe("professionals", () => {
   describe("SET_CITY", () => {
@@ -13,7 +15,7 @@ describe("professionals", () => {
         { cityList: { Berlin: {} } },
         {
           type: types.SET_CITY,
-          payload: "Berlin"
+          payload: "Berlin",
         }
       );
       expect(result.city).toEqual("Berlin");
@@ -24,7 +26,7 @@ describe("professionals", () => {
         { cityList: { Berlin: {} }, city: "Berlin" },
         {
           type: types.SET_CITY,
-          payload: undefined
+          payload: undefined,
         }
       );
       expect(result.city).toEqual(undefined);
@@ -35,7 +37,7 @@ describe("professionals", () => {
         { cityList: { Berlin: {} } },
         {
           type: types.SET_CITY,
-          payload: "Frankfurt"
+          payload: "Frankfurt",
         }
       );
       expect(result.city).toEqual(undefined);
@@ -51,12 +53,12 @@ describe("professionals", () => {
     it("should set showRemote to payload", () => {
       const result = reducer(undefined, {
         type: types.SET_SHOW_REMOTE,
-        payload: true
+        payload: true,
       });
       expect(result.showRemote).toEqual(true);
       const result2 = reducer(result, {
         type: types.SET_SHOW_REMOTE,
-        payload: false
+        payload: false,
       });
       expect(result2.showRemote).toEqual(false);
     });
@@ -78,7 +80,7 @@ describe("professionals", () => {
         { ...initialState, activeFilters: {} },
         {
           type: types.ADD_FILTERS,
-          payload: "T1"
+          payload: "T1",
         }
       );
 
@@ -91,7 +93,7 @@ describe("professionals", () => {
         { ...initialState, activeFilters: { T1: {}, T2: {} } },
         {
           type: types.REMOVE_FILTERS,
-          payload: "T1"
+          payload: "T1",
         }
       );
 
@@ -103,10 +105,24 @@ describe("professionals", () => {
   describe("SYNCHRONIZE_DONE", () => {
     it("should not filter result if city is not set", () => {
       const payload = MOCK_DIFFERENT_CITIES.json;
-      const state = {};
+      const state = {
+        activeFilters: {
+          xxxx: {},
+        },
+      };
       const result = reducer(state, {
         type: types.SYNCHRONIZE_DONE,
-        payload
+        payload,
+      });
+      expect(result.results.length).toEqual(payload.length);
+      expect(result.results).toEqual(payload);
+    });
+    it("should not filter result if filters is empty", () => {
+      const payload = MOCK_DIFFERENT_CITIES.json;
+      const state = { activeFilters: {}, city: payload[0].cities[0] };
+      const result = reducer(state, {
+        type: types.SYNCHRONIZE_DONE,
+        payload,
       });
       expect(result.results.length).toEqual(payload.length);
       expect(result.results).toEqual(payload);
@@ -114,11 +130,14 @@ describe("professionals", () => {
     it("should have filtered results by city", () => {
       const payload = MOCK_DIFFERENT_CITIES.json;
       const state = {
-        city: payload[0].cities[0]
+        city: payload[0].cities[0],
+        activeFilters: _.flatten(
+          payload.map((raw) => raw.services)
+        ).reduce((memo, service) => ({ ...memo, [service]: {} })),
       };
       const result = reducer(state, {
         type: types.SYNCHRONIZE_DONE,
-        payload
+        payload,
       });
       expect(result.results.length).toEqual(1);
       expect(result.results).toEqual([payload[0]]);
@@ -127,12 +146,12 @@ describe("professionals", () => {
     it("should not filter results if type is not set", () => {
       const payload = [
         ...MOCK_SIMPLE_TRAINERS.json,
-        ...MOCK_SIMPLE_DOGWALKERS.json
+        ...MOCK_SIMPLE_DOGWALKERS.json,
       ];
       const state = {};
       const result = reducer(state, {
         type: types.SYNCHRONIZE_DONE,
-        payload
+        payload,
       });
 
       expect(result.results).toEqual(payload);
@@ -141,16 +160,17 @@ describe("professionals", () => {
     it("should have filtered results by type", () => {
       const payload = [
         ...MOCK_SIMPLE_TRAINERS.json,
-        ...MOCK_SIMPLE_DOGWALKERS.json
+        ...MOCK_SIMPLE_DOGWALKERS.json,
       ];
       const state = {
         activeFilters: {
-          walkers: {}
-        }
+          walkers: {},
+        },
+        city: MOCK_SIMPLE_TRAINERS.json[0].cities[0],
       };
       const result = reducer(state, {
         type: types.SYNCHRONIZE_DONE,
-        payload
+        payload,
       });
 
       expect(result.results).toEqual([payload[1]]);
@@ -159,14 +179,17 @@ describe("professionals", () => {
     it("should not show by default remote professionals from different cities", () => {
       const payload = [
         ...MOCK_DIFFERENT_CITIES.json,
-        ...MOCK_DIFFERENT_CITIES_REMOTE.json
+        ...MOCK_DIFFERENT_CITIES_REMOTE.json,
       ];
       const state = {
-        city: payload[0].cities[0]
+        city: payload[0].cities[0],
+        activeFilters: _.flatten(
+          payload.map((raw) => raw.services)
+        ).reduce((memo, service) => ({ ...memo, [service]: {} })),
       };
       const result = reducer(state, {
         type: types.SYNCHRONIZE_DONE,
-        payload
+        payload,
       });
       expect(result.results.length).toEqual(1);
       expect(result.results).toEqual([payload[0]]);
@@ -175,22 +198,25 @@ describe("professionals", () => {
     it("should show remote professionals from different cities if showRemote is set ", () => {
       const payload = [
         ...MOCK_DIFFERENT_CITIES.json,
-        ...MOCK_DIFFERENT_CITIES_REMOTE.json
+        ...MOCK_DIFFERENT_CITIES_REMOTE.json,
       ];
       const state = {
         city: payload[0].cities[0],
-        showRemote: true
+        activeFilters: _.flatten(
+          payload.map((raw) => raw.services)
+        ).reduce((memo, service) => ({ ...memo, [service]: {} })),
+        showRemote: true,
       };
       const result = reducer(state, {
         type: types.SYNCHRONIZE_DONE,
-        payload
+        payload,
       });
       expect(result.results.length).toEqual(
         1 + MOCK_DIFFERENT_CITIES_REMOTE.json.length
       );
       expect(result.results).toEqual([
         payload[0],
-        ...MOCK_DIFFERENT_CITIES_REMOTE.json
+        ...MOCK_DIFFERENT_CITIES_REMOTE.json,
       ]);
     });
   });
