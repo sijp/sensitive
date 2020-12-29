@@ -8,14 +8,16 @@ import {
   makeStyles,
   CircularProgress,
   Hidden,
-  Fab
+  Fab,
+  Button,
+  Typography
 } from "@material-ui/core";
 
 import ProfessionalsMap from "../components/professionals-location-filter";
 import ProfessionalsFilters from "../components/professionals-filters";
 import ProfessionalsResults from "../components/professinoals-results";
 
-import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
+import { faMapMarkedAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { actions } from "../ducks/professionals";
@@ -24,7 +26,6 @@ import QueryStringUpdater from "../components/query-string-updater";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: theme.palette.grey[50],
     paddingTop: theme.spacing(2),
     height: `calc(100vh - ${
       theme.mixins.toolbar.minHeight + theme.spacing(1)
@@ -50,7 +51,13 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   mapSmaller: {
-    height: "calc(70vh - 30px)"
+    height: "calc(70vh - 30px)",
+    maxWidth: 600,
+    marginRight: "auto",
+    marginLeft: "auto"
+  },
+  mapOnlyCombo: {
+    height: "unset"
   },
   clearCityButtonContainer: {
     position: "fixed",
@@ -71,6 +78,11 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexFlow: "column",
     height: "95%"
+  },
+  alert: {
+    maxWidth: 720,
+    marginRight: "auto",
+    marginLeft: "auto"
   }
 }));
 
@@ -101,6 +113,14 @@ function ProfessionalsPage({
 
   const [mounted, setMounted] = useState(false);
 
+  const showResults = !!(
+    city &&
+    activeFilters &&
+    Object.keys(activeFilters).length > 0
+  );
+
+  const [showMap, setShowMap] = useState(showResults);
+
   useEffect(
     function () {
       synchronize();
@@ -121,40 +141,60 @@ function ProfessionalsPage({
   return (
     <>
       <Container maxWidth="xl">
-        {!city && (
+        {!showResults && (
           <Alert severity="info" className={classes.alert}>
-            כדי להתחיל, יש לסמן את סוג השירות המבוקש, ואת איזור המגורים. אם
-            איזור המגורים לא מופיע יש לבחור במפה את האיזור הקרוב ביותר
+            <Typography variant="h5">
+              כדי להתחיל, יש לסמן את סוג השירות המבוקש, ואת איזור המגורים. אם
+              איזור המגורים לא מופיע יש לבחור במפה את האיזור הקרוב ביותר
+            </Typography>
           </Alert>
         )}
         <Grid
           container
           spacing={1}
-          className={`${classes.root} ${city ? "" : classes.rootNoCity}`}
+          className={`${classes.root} ${showResults ? "" : classes.rootNoCity}`}
         >
           <ResponsiveResultsGrid
             item
-            xs={city ? 8 : 12}
-            className={city && classes.results}
+            xs={showResults ? 8 : 12}
+            className={showResults && classes.results}
           >
-            <div className={city ? classes.filters : classes.filtersInMap}>
+            <div
+              className={showResults ? classes.filters : classes.filtersInMap}
+            >
               <ProfessionalsFilters />
             </div>
 
-            {city && <ProfessionalsResults />}
+            {showResults && <ProfessionalsResults />}
           </ResponsiveResultsGrid>
 
           <Grid
             item
-            xs={city ? 4 : 12}
-            className={city ? classes.map : classes.mapSmaller}
+            xs={showResults ? 4 : 12}
+            className={`${showResults ? classes.map : classes.mapSmaller} ${
+              !showMap && classes.mapOnlyCombo
+            }`}
           >
-            <ProfessionalsMap />
+            <ProfessionalsMap
+              showMap={showResults || showMap}
+              showRemoteToggle={showResults}
+            />
+            {!showMap && !showResults && (
+              <div style={{ textAlign: "left" }}>
+                <Button
+                  variant="contained"
+                  onClick={() => setShowMap(true)}
+                  startIcon={<FontAwesomeIcon icon={faMapMarkedAlt} />}
+                >
+                  מפה לבחירת עיר/איזור
+                </Button>
+              </div>
+            )}
           </Grid>
         </Grid>
       </Container>
 
-      {city && (
+      {showResults && (
         <div className={classes.clearCityButtonContainer}>
           <Fab
             variant="extended"
@@ -163,7 +203,7 @@ function ProfessionalsPage({
               setCity(undefined);
             }}
           >
-            <FontAwesomeIcon icon={faMapMarkerAlt} style={{ padding: 4 }} />
+            <FontAwesomeIcon icon={faMapMarkedAlt} style={{ padding: 4 }} />
             {cityList[city]?.label}
           </Fab>
         </div>
