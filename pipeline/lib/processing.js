@@ -47,13 +47,23 @@ function processDocs(docs) {
           articles: buildCategories(doc.docs)
         };
       }
-      return { text: doc.name, id: doc.internalId };
+      return doc.internalId;
     });
   const buildMapping = (docTree) =>
     docTree.reduce((mappings, doc) => {
       if (doc.folder && doc.docs)
         return { ...mappings, ...buildMapping(doc.docs) };
-      return { ...mappings, [doc.name]: doc.internalId };
+      if (doc.description === undefined) console.log(doc);
+      const metadata = {
+        text: doc.name,
+        id: doc.internalId,
+        resource: doc.description
+      };
+      return {
+        ...mappings,
+        [doc.name]: metadata,
+        ...(doc.description ? { [doc.description]: metadata } : {})
+      };
     }, {});
 
   return {

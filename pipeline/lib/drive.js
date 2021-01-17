@@ -7,7 +7,7 @@ async function mapDir(auth, id, callback) {
     const res = await drive.files.list({
       q: `'${id}' in parents`,
       pageSize: 10,
-      fields: "nextPageToken, files(id, name, parents, mimeType)"
+      fields: "nextPageToken, files(id, name, parents, mimeType, description)"
     });
     const files = res.data.files;
 

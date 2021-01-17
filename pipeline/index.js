@@ -86,15 +86,15 @@ async function getDocs() {
           return { folder: file, docs: await recGetDocs(file.id) };
         case "application/vnd.google-apps.document":
           counter++;
-          const internalId = counter;
+          const internalId = file.description || counter;
           const doc = await getGoogleDoc(auth, file.id);
           const filePath = path.join(
             "./tmp/data/articles",
             `${internalId}.json`
           );
-          const paredDoc = parseDocument(doc);
+          const parsedDoc = parseDocument(doc);
           await Promise.all([
-            writeFile(filePath, JSON.stringify(paredDoc)),
+            writeFile(filePath, JSON.stringify(parsedDoc)),
             downloadEmbeddedImages(doc, "./tmp/data/articles")
           ]);
           console.log(`Wrote ${filePath}`);

@@ -67,7 +67,7 @@ function NavButtonLink({ to, type, ...props }) {
   );
 }
 
-export default function ({ links = [], children }) {
+export default function NavBar({ links = [], children }) {
   const classes = useStyles();
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const theme = useTheme();

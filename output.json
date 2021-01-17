@@ -1,0 +1,1439 @@
+{
+  "title": "מה זה אילוף חיובי",
+  "body": {
+    "content": [
+      {
+        "endIndex": 1,
+        "sectionBreak": {
+          "sectionStyle": {
+            "columnSeparatorStyle": "NONE",
+            "contentDirection": "RIGHT_TO_LEFT",
+            "sectionType": "CONTINUOUS"
+          }
+        }
+      },
+      {
+        "startIndex": 1,
+        "endIndex": 31,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 1,
+              "endIndex": 31,
+              "textRun": {
+                "content": "מה זה אילוף FF / אילוף חיובי?\n",
+                "textStyle": {}
+              }
+            }
+          ],
+          "paragraphStyle": {
+            "headingId": "h.i2tsekn7ojy1",
+            "namedStyleType": "HEADING_1",
+            "direction": "RIGHT_TO_LEFT",
+            "spaceAbove": {
+              "magnitude": 11,
+              "unit": "PT"
+            },
+            "spaceBelow": {
+              "magnitude": 2,
+              "unit": "PT"
+            },
+            "keepLinesTogether": false,
+            "keepWithNext": false
+          }
+        }
+      },
+      {
+        "startIndex": 31,
+        "endIndex": 101,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 31,
+              "endIndex": 36,
+              "textRun": {
+                "content": "מאת: ",
+                "textStyle": {}
+              }
+            },
+            {
+              "startIndex": 36,
+              "endIndex": 100,
+              "textRun": {
+                "content": "עירית רוטשילד - אימון התנהגותי וצילום מקצועי לכלבים ולאנשים שלהם",
+                "textStyle": {
+                  "underline": true,
+                  "foregroundColor": {
+                    "color": {
+                      "rgbColor": {
+                        "red": 0.06666667,
+                        "green": 0.33333334,
+                        "blue": 0.8
+                      }
+                    }
+                  },
+                  "link": {
+                    "url": "https://www.facebook.com/iritllavim/"
+                  }
+                }
+              }
+            },
+            {
+              "startIndex": 100,
+              "endIndex": 101,
+              "textRun": {
+                "content": "\n",
+                "textStyle": {}
+              }
+            }
+          ],
+          "paragraphStyle": {
+            "namedStyleType": "NORMAL_TEXT",
+            "direction": "RIGHT_TO_LEFT"
+          }
+        }
+      },
+      {
+        "startIndex": 101,
+        "endIndex": 364,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 101,
+              "endIndex": 364,
+              "textRun": {
+                "content": "אנחנו כותבים ומתעקשים על אילוף בגישת הקבוצה/ אילוף פורס פרי (FORCE FREE או בקיצור FF)/ אילוף ללא כפיה/ טיפול התנהגותי, או כמו שרבים אוהבים לקרוא לזה- אילוף חיובי. אבל מה זה בעצם אומר? ואיך תוכלו להבדיל בין מאלף/מאמן/מטפל חיובי באמת לבין מישהו שרק קורא לעצמו ככה?\n",
+                "textStyle": {
+                  "italic": true
+                }
+              }
+            }
+          ],
+          "paragraphStyle": {
+            "namedStyleType": "NORMAL_TEXT",
+            "direction": "RIGHT_TO_LEFT",
+            "spaceAbove": {
+              "magnitude": 11,
+              "unit": "PT"
+            },
+            "spaceBelow": {
+              "magnitude": 2,
+              "unit": "PT"
+            },
+            "keepLinesTogether": false,
+            "keepWithNext": false
+          }
+        }
+      },
+      {
+        "startIndex": 364,
+        "endIndex": 366,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 364,
+              "endIndex": 365,
+              "inlineObjectElement": {
+                "inlineObjectId": "kix.9riis1frpcye",
+                "textStyle": {}
+              }
+            },
+            {
+              "startIndex": 365,
+              "endIndex": 366,
+              "textRun": {
+                "content": "\n",
+                "textStyle": {}
+              }
+            }
+          ],
+          "paragraphStyle": {
+            "namedStyleType": "NORMAL_TEXT",
+            "direction": "RIGHT_TO_LEFT"
+          }
+        }
+      },
+      {
+        "startIndex": 366,
+        "endIndex": 424,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 366,
+              "endIndex": 424,
+              "textRun": {
+                "content": "ריכזתי כמה עקרונות של אילוף FF כדי שיהיה לכולם יותר ברור:\n",
+                "textStyle": {
+                  "bold": true,
+                  "foregroundColor": {
+                    "color": {
+                      "rgbColor": {}
+                    }
+                  },
+                  "fontSize": {
+                    "magnitude": 10,
+                    "unit": "PT"
+                  }
+                }
+              }
+            }
+          ],
+          "paragraphStyle": {
+            "headingId": "h.twwc3xvxodve",
+            "namedStyleType": "HEADING_5",
+            "direction": "RIGHT_TO_LEFT",
+            "spaceAbove": {
+              "magnitude": 11,
+              "unit": "PT"
+            },
+            "spaceBelow": {
+              "magnitude": 2,
+              "unit": "PT"
+            },
+            "keepLinesTogether": false,
+            "keepWithNext": false
+          }
+        }
+      },
+      {
+        "startIndex": 424,
+        "endIndex": 679,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 424,
+              "endIndex": 679,
+              "textRun": {
+                "content": "כל התנהגות היא רק סימפטום לרגש העומד מאחוריה, ונסיון לתקשורת. בגישת FF לעולם לא נתייחס רק להתנהגות, אלא ננסה להבין מה הרגש שעומד מאחוריה (פחד/ חרדה/ רעב/ כאב/ מחסור בהוצאת אנרגיה או בתשומת לב...) ולטפל בו. כך פותרים כל בעיה מהשורש ולא רק שמים עליה פלסתר.\n",
+                "textStyle": {}
+              }
+            }
+          ],
+          "paragraphStyle": {
+            "namedStyleType": "NORMAL_TEXT",
+            "direction": "RIGHT_TO_LEFT",
+            "spaceAbove": {
+              "magnitude": 12,
+              "unit": "PT"
+            },
+            "spaceBelow": {
+              "magnitude": 12,
+              "unit": "PT"
+            },
+            "indentFirstLine": {
+              "magnitude": 18,
+              "unit": "PT"
+            },
+            "indentStart": {
+              "magnitude": 36,
+              "unit": "PT"
+            }
+          },
+          "bullet": {
+            "listId": "kix.ovswf3ioox54",
+            "textStyle": {}
+          }
+        }
+      },
+      {
+        "startIndex": 679,
+        "endIndex": 965,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 679,
+              "endIndex": 965,
+              "textRun": {
+                "content": "עבודה מבוססת מדע, התואמת את המחקרים העדכניים במדעי התנהגות בעלי החיים, וזניחת הנחות ותאוריות מיושנות שהופרכו זה מכבר במחקרים. כך למשל, תאוריות ההיררכיה, האלפא, הדומיננטיות ודומיהן, הן תאוריות שגויות שעבר זמנן. אם מישהו מנסה להסביר לכם התנהגות במונחים כאלה, תגידו לו שהגיע הזמן להתעדכן.\n",
+                "textStyle": {}
+              }
+            }
+          ],
+          "paragraphStyle": {
+            "namedStyleType": "NORMAL_TEXT",
+            "direction": "RIGHT_TO_LEFT",
+            "spaceAbove": {
+              "magnitude": 12,
+              "unit": "PT"
+            },
+            "spaceBelow": {
+              "magnitude": 12,
+              "unit": "PT"
+            },
+            "indentFirstLine": {
+              "magnitude": 18,
+              "unit": "PT"
+            },
+            "indentStart": {
+              "magnitude": 36,
+              "unit": "PT"
+            }
+          },
+          "bullet": {
+            "listId": "kix.ovswf3ioox54",
+            "textStyle": {}
+          }
+        }
+      },
+      {
+        "startIndex": 965,
+        "endIndex": 1613,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 965,
+              "endIndex": 1613,
+              "textRun": {
+                "content": "הסתכלות על הכלב כמכלול, כבעל חיים עם רגשות ותחושות, המהווה חלק מן המשפחה, שותף מלא במערכת היחסים, ולא פקוד/נחות בהיררכיה/מישהו שצריך להראות עליו עליונות ולהבהיר לו את מקומו/ מישהו שמנסה לשלוט בנו. בכלל זה, חשוב להתאים את רמת הציפיות בעבודה עם כל כלב בהתאם ליכולותיו ולתכונותיו המולדות והנרכשות, וכן ליכולתו ומוכנותו של בעל הכלב עצמו לעבוד ולתרגל, ולספק תנאי מחיה מתאימים וניהול סביבתי נכון. כלב אינו מכונה שניתן לתקן או לעשות לה \"ריסטארט\", אי אפשר לצפות שהתנהגותו תתהפך בן רגע מקצה אל קצה, בדיוק כשם שבבני אדם איננו יכולים לשלוט ב100% ולקבל ציות מוחלט. כדי לגרום לשינוי בהתנהגותו של הכלב, עלינו להיות מוכנים קודם כל לעשות שינוי בהרגלים שלנו עצמנו.\n",
+                "textStyle": {}
+              }
+            }
+          ],
+          "paragraphStyle": {
+            "namedStyleType": "NORMAL_TEXT",
+            "direction": "RIGHT_TO_LEFT",
+            "spaceAbove": {
+              "magnitude": 12,
+              "unit": "PT"
+            },
+            "spaceBelow": {
+              "magnitude": 12,
+              "unit": "PT"
+            },
+            "indentFirstLine": {
+              "magnitude": 18,
+              "unit": "PT"
+            },
+            "indentStart": {
+              "magnitude": 36,
+              "unit": "PT"
+            }
+          },
+          "bullet": {
+            "listId": "kix.ovswf3ioox54",
+            "textStyle": {}
+          }
+        }
+      },
+      {
+        "startIndex": 1613,
+        "endIndex": 1810,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 1613,
+              "endIndex": 1672,
+              "textRun": {
+                "content": "עבודה לפי עקרון LIMA : Least Intrusive, Minimally Aversive.",
+                "textStyle": {
+                  "bold": true
+                }
+              }
+            },
+            {
+              "startIndex": 1672,
+              "endIndex": 1810,
+              "textRun": {
+                "content": " כלומר, בבואנו לטפל בבעיה כלשהי, ננסה לנקוט בצעדים הכי פחות פולשניים והכי פחות אברסיביים (לא נעימים לכלב), שעדיין יעילים לטפל באותה בעיה.\n",
+                "textStyle": {}
+              }
+            }
+          ],
+          "paragraphStyle": {
+            "namedStyleType": "NORMAL_TEXT",
+            "direction": "RIGHT_TO_LEFT",
+            "spaceAbove": {
+              "magnitude": 12,
+              "unit": "PT"
+            },
+            "spaceBelow": {
+              "magnitude": 12,
+              "unit": "PT"
+            },
+            "indentFirstLine": {
+              "magnitude": 18,
+              "unit": "PT"
+            },
+            "indentStart": {
+              "magnitude": 36,
+              "unit": "PT"
+            }
+          },
+          "bullet": {
+            "listId": "kix.ovswf3ioox54",
+            "textStyle": {}
+          }
+        }
+      },
+      {
+        "startIndex": 1810,
+        "endIndex": 2273,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 1810,
+              "endIndex": 2273,
+              "textRun": {
+                "content": "במסגרת עקרון LIMA נתחיל תמיד בכלים הכי פחות פולשניים ואברסיביים לכלב, כמו תזונה, בריאות וכו', ולאחר מכן נתקדם בסולם הכלים העומדים לרשותנו. על מנת לפתור בעיה כלשהי, יש לוודא קודם כל שצרכיו הבסיסיים של הכלב (פיסיים ונפשיים) יסופקו כראוי. מצבו הבריאותי, הפיזי וגם הנפשי של הכלב, משפיעים רבות על התנהגותו. לכן, פעמים רבות, לפני התערבות התנהגותית כלשהי, נשלח את הכלב לבדיקה רפואית, נציע שינוי בתזונה, שינוי בסדר היום ובפעילות היומיומית, נדאג לניהול סביבתי נכון, ועוד.\n",
+                "textStyle": {}
+              }
+            }
+          ],
+          "paragraphStyle": {
+            "namedStyleType": "NORMAL_TEXT",
+            "direction": "RIGHT_TO_LEFT",
+            "spaceAbove": {
+              "magnitude": 12,
+              "unit": "PT"
+            },
+            "spaceBelow": {
+              "magnitude": 12,
+              "unit": "PT"
+            },
+            "indentFirstLine": {
+              "magnitude": 18,
+              "unit": "PT"
+            },
+            "indentStart": {
+              "magnitude": 36,
+              "unit": "PT"
+            }
+          },
+          "bullet": {
+            "listId": "kix.ovswf3ioox54",
+            "textStyle": {}
+          }
+        }
+      },
+      {
+        "startIndex": 2273,
+        "endIndex": 2849,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 2273,
+              "endIndex": 2849,
+              "textRun": {
+                "content": "בתאוריה, על פי עקרון LIMA, הכלי האחרון בו נשתמש יהיה ענישה חיובית, משום שזה הכלי הכי אברסיבי בארגז הכלים. בפועל, הלכה למעשה, לעולם לא נגיע לענישה חיובית, משום שארגז הכלים שלנו כולל כל כך הרבה כלים הרבה יותר נעימים לכלב, ופרוטוקולים חכמים והומאניים לעבודה, שמאפשרים לפתור כל בעיה ללא ענישה חיובית. בכלל זה נשתמש בתקשורת טובה ומקרבת, הבנה עמוקה של שפת הגוף הכלבית, בניית הביטחון של הכלב והקניית יכולת בחירה, התניות אופרנטיות המבוססות בעיקר על חיזוקים חיוביים כדי לחזק התנהגויות חלופיות הרצויות לנו, והתניות קלאסיות, כלומר עבודה על שינוי הרגש של הכלב לטובה אל מול גירויים שונים.\n",
+                "textStyle": {}
+              }
+            }
+          ],
+          "paragraphStyle": {
+            "namedStyleType": "NORMAL_TEXT",
+            "direction": "RIGHT_TO_LEFT",
+            "spaceAbove": {
+              "magnitude": 12,
+              "unit": "PT"
+            },
+            "spaceBelow": {
+              "magnitude": 12,
+              "unit": "PT"
+            },
+            "indentFirstLine": {
+              "magnitude": 18,
+              "unit": "PT"
+            },
+            "indentStart": {
+              "magnitude": 36,
+              "unit": "PT"
+            }
+          },
+          "bullet": {
+            "listId": "kix.ovswf3ioox54",
+            "textStyle": {}
+          }
+        }
+      },
+      {
+        "startIndex": 2849,
+        "endIndex": 3125,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 2849,
+              "endIndex": 3125,
+              "textRun": {
+                "content": "חיזוק חיובי לא חייב להיות חטיפים, אלא מדובר בכל דבר שהכלב אוהב ונהנה ממנו וניתן לעשות בו שימוש כדי לחזק התנהגות רצויה (למשל משחק, צעצועים, ריצה, חפירה ועוד). לעומת זאת, ליטוף, למרבית הכלבים אינו חיזוק כלל. רק הכלב קובע מה נחשב חיזוק חיובי בשבילו, והוא יראה לנו זאת בהתנהגותו.\n",
+                "textStyle": {}
+              }
+            }
+          ],
+          "paragraphStyle": {
+            "namedStyleType": "NORMAL_TEXT",
+            "direction": "RIGHT_TO_LEFT",
+            "spaceAbove": {
+              "magnitude": 12,
+              "unit": "PT"
+            },
+            "spaceBelow": {
+              "magnitude": 12,
+              "unit": "PT"
+            },
+            "indentFirstLine": {
+              "magnitude": 18,
+              "unit": "PT"
+            },
+            "indentStart": {
+              "magnitude": 36,
+              "unit": "PT"
+            }
+          },
+          "bullet": {
+            "listId": "kix.ovswf3ioox54",
+            "textStyle": {}
+          }
+        }
+      },
+      {
+        "startIndex": 3125,
+        "endIndex": 3349,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 3125,
+              "endIndex": 3349,
+              "textRun": {
+                "content": "לא נשתמש בעונשים או בשמם הנפוץ\"תיקונים\", לא נעשה כל שימוש באמצעים כוחניים ואלימים, בכלל זה טונציה מאיימת, שפת גוף מאיימת, ענישה פיזית, מכה מסוג כלשהו/ ברכיה/אצבע לצלעות/הנפה באויר, וכל דבר שלא נעים לכלב או עשוי להפחיד אותו.\n",
+                "textStyle": {}
+              }
+            }
+          ],
+          "paragraphStyle": {
+            "namedStyleType": "NORMAL_TEXT",
+            "direction": "RIGHT_TO_LEFT",
+            "spaceAbove": {
+              "magnitude": 12,
+              "unit": "PT"
+            },
+            "spaceBelow": {
+              "magnitude": 12,
+              "unit": "PT"
+            },
+            "indentFirstLine": {
+              "magnitude": 18,
+              "unit": "PT"
+            },
+            "indentStart": {
+              "magnitude": 36,
+              "unit": "PT"
+            }
+          },
+          "bullet": {
+            "listId": "kix.ovswf3ioox54",
+            "textStyle": {}
+          }
+        }
+      },
+      {
+        "startIndex": 3349,
+        "endIndex": 3625,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 3349,
+              "endIndex": 3625,
+              "textRun": {
+                "content": "לעולם לעולם לא נשתמש בכלים ואביזרים הגורמים לכלב כאב, פחד או אי נוחות כמו קולרי חנק/דוקרנים/חשמל למיניהם. אביזרים אלה גורמים הן לנזק נפשי והן לנזק בריאותי, ואין כל הצדקה להשתמש בהם בימינו, כאשר ידועות לנו כל כך הרבה דרכים אחרות, יותר נעימות ופחות מזיקות, להביא לתוצאה הרצויה.\n",
+                "textStyle": {
+                  "bold": true
+                }
+              }
+            }
+          ],
+          "paragraphStyle": {
+            "namedStyleType": "NORMAL_TEXT",
+            "direction": "RIGHT_TO_LEFT",
+            "spaceAbove": {
+              "magnitude": 12,
+              "unit": "PT"
+            },
+            "spaceBelow": {
+              "magnitude": 12,
+              "unit": "PT"
+            },
+            "indentFirstLine": {
+              "magnitude": 18,
+              "unit": "PT"
+            },
+            "indentStart": {
+              "magnitude": 36,
+              "unit": "PT"
+            }
+          },
+          "bullet": {
+            "listId": "kix.ovswf3ioox54",
+            "textStyle": {}
+          }
+        }
+      },
+      {
+        "startIndex": 3625,
+        "endIndex": 3829,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 3625,
+              "endIndex": 3829,
+              "textRun": {
+                "content": "כאשר נבחר לעשות שימוש באביזרים שגורמים אי נוחות מסויימת או הגבלת תנועה, כמו גדר/כלוב/רתמה נגד משיכות, זה יהיה רק כאשר יש בכך צורך אמיתי, ורק לאחר הרגלה הדרגתית וטובה, כך שלכלב לא יגרם סטרס מן השימוש בהם.\n",
+                "textStyle": {}
+              }
+            }
+          ],
+          "paragraphStyle": {
+            "namedStyleType": "NORMAL_TEXT",
+            "direction": "RIGHT_TO_LEFT",
+            "spaceAbove": {
+              "magnitude": 12,
+              "unit": "PT"
+            },
+            "spaceBelow": {
+              "magnitude": 12,
+              "unit": "PT"
+            },
+            "indentFirstLine": {
+              "magnitude": 18,
+              "unit": "PT"
+            },
+            "indentStart": {
+              "magnitude": 36,
+              "unit": "PT"
+            }
+          },
+          "bullet": {
+            "listId": "kix.ovswf3ioox54",
+            "textStyle": {}
+          }
+        }
+      },
+      {
+        "startIndex": 3829,
+        "endIndex": 4174,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 3829,
+              "endIndex": 3836,
+              "textRun": {
+                "content": "לסיכום:",
+                "textStyle": {
+                  "bold": true,
+                  "underline": true
+                }
+              }
+            },
+            {
+              "startIndex": 3836,
+              "endIndex": 4174,
+              "textRun": {
+                "content": " אילוף FF או אילוף חיובי הוא לא שיטה אחת, אלא גישה הוליסטית להסתכלות על הכלב ועל החיים איתו, הכוללת בתוכה כלים רבים ושיטות עבודה רבות מספור. לא ניתן לשלב אותה עם ענישה משום שמדובר בשני דברים מנוגדים, והיא מתאימה לכל כלב מכל סוג, ולבעלי חיים מסוגים שונים, כולל בני אדם. עקרונות הגישה מאפשרים טיפול בכל סוג של בעיה התנהגותית, כולל תוקפנות.\n",
+                "textStyle": {
+                  "bold": true
+                }
+              }
+            }
+          ],
+          "paragraphStyle": {
+            "namedStyleType": "NORMAL_TEXT",
+            "direction": "RIGHT_TO_LEFT"
+          }
+        }
+      },
+      {
+        "startIndex": 4174,
+        "endIndex": 4408,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 4174,
+              "endIndex": 4408,
+              "textRun": {
+                "content": "לכן, אם אתם נתקלים במאלף שקורא לעצמו מאלף חיובי, אך אינו עומד בעקרונות שפרטתי, או טוען שהוא משלב בין השיטות, או שלכל כלב מתאימה שיטה אחרת, אתם יכולים להיות בטוחים שהוא לא מאלף FF, גם אם הוא עובד עם חטיפים, נשמע מאוד נחמד ואוהב כלבים.\n",
+                "textStyle": {
+                  "bold": true
+                }
+              }
+            }
+          ],
+          "paragraphStyle": {
+            "namedStyleType": "NORMAL_TEXT",
+            "direction": "RIGHT_TO_LEFT"
+          }
+        }
+      },
+      {
+        "startIndex": 4408,
+        "endIndex": 4622,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 4408,
+              "endIndex": 4554,
+              "textRun": {
+                "content": "אם אתם מתלבטים ולא יודעים באיזו גישה המאלף שלכם עובד באמת, או מתלבטים איך ניתן לטפל בבעיה כלשהי בגישת FF, אתם תמיד מוזמנים להתייעץ ולברר עם מנהלי ",
+                "textStyle": {}
+              }
+            },
+            {
+              "startIndex": 4554,
+              "endIndex": 4594,
+              "textRun": {
+                "content": "קבוצת התמיכה לבעלי כלבים רגישים בפייסבוק",
+                "textStyle": {
+                  "underline": true,
+                  "foregroundColor": {
+                    "color": {
+                      "rgbColor": {
+                        "red": 0.06666667,
+                        "green": 0.33333334,
+                        "blue": 0.8
+                      }
+                    }
+                  },
+                  "link": {
+                    "url": "https://www.facebook.com/groups/476196172437302"
+                  }
+                }
+              }
+            },
+            {
+              "startIndex": 4594,
+              "endIndex": 4622,
+              "textRun": {
+                "content": ". אנחנו לרשותכם לכל שאלה 🙂\n",
+                "textStyle": {}
+              }
+            }
+          ],
+          "paragraphStyle": {
+            "namedStyleType": "NORMAL_TEXT",
+            "direction": "RIGHT_TO_LEFT"
+          }
+        }
+      },
+      {
+        "startIndex": 4622,
+        "endIndex": 4623,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 4622,
+              "endIndex": 4623,
+              "textRun": {
+                "content": "\n",
+                "textStyle": {}
+              }
+            }
+          ],
+          "paragraphStyle": {
+            "namedStyleType": "NORMAL_TEXT",
+            "direction": "RIGHT_TO_LEFT"
+          }
+        }
+      },
+      {
+        "startIndex": 4623,
+        "endIndex": 4697,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 4623,
+              "endIndex": 4697,
+              "textRun": {
+                "content": "לצפייה נוספת, סרטון על הבחירה בגישה החיובית ששודר בקבוצת התמיכה בפייסבוק:\n",
+                "textStyle": {}
+              }
+            }
+          ],
+          "paragraphStyle": {
+            "namedStyleType": "NORMAL_TEXT",
+            "direction": "RIGHT_TO_LEFT"
+          }
+        }
+      },
+      {
+        "startIndex": 4697,
+        "endIndex": 4698,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 4697,
+              "endIndex": 4698,
+              "textRun": {
+                "content": "\n",
+                "textStyle": {
+                  "underline": true,
+                  "foregroundColor": {
+                    "color": {
+                      "rgbColor": {
+                        "red": 0.06666667,
+                        "green": 0.33333334,
+                        "blue": 0.8
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "paragraphStyle": {
+            "namedStyleType": "NORMAL_TEXT",
+            "direction": "RIGHT_TO_LEFT"
+          }
+        }
+      },
+      {
+        "startIndex": 4698,
+        "endIndex": 4742,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 4698,
+              "endIndex": 4741,
+              "textRun": {
+                "content": "https://www.youtube.com/watch?v=yt1LQaTGa5U",
+                "textStyle": {
+                  "underline": true,
+                  "foregroundColor": {
+                    "color": {
+                      "rgbColor": {
+                        "red": 0.06666667,
+                        "green": 0.33333334,
+                        "blue": 0.8
+                      }
+                    }
+                  },
+                  "link": {
+                    "url": "https://www.youtube.com/watch?v=yt1LQaTGa5U"
+                  }
+                }
+              }
+            },
+            {
+              "startIndex": 4741,
+              "endIndex": 4742,
+              "textRun": {
+                "content": "\n",
+                "textStyle": {}
+              }
+            }
+          ],
+          "paragraphStyle": {
+            "namedStyleType": "NORMAL_TEXT",
+            "direction": "LEFT_TO_RIGHT"
+          }
+        }
+      },
+      {
+        "startIndex": 4742,
+        "endIndex": 4743,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 4742,
+              "endIndex": 4743,
+              "textRun": {
+                "content": "\n",
+                "textStyle": {}
+              }
+            }
+          ],
+          "paragraphStyle": {
+            "namedStyleType": "NORMAL_TEXT",
+            "direction": "LEFT_TO_RIGHT"
+          }
+        }
+      }
+    ]
+  },
+  "documentStyle": {
+    "background": {
+      "color": {}
+    },
+    "pageNumberStart": 1,
+    "marginTop": {
+      "magnitude": 72,
+      "unit": "PT"
+    },
+    "marginBottom": {
+      "magnitude": 72,
+      "unit": "PT"
+    },
+    "marginRight": {
+      "magnitude": 72,
+      "unit": "PT"
+    },
+    "marginLeft": {
+      "magnitude": 72,
+      "unit": "PT"
+    },
+    "pageSize": {
+      "height": {
+        "magnitude": 792,
+        "unit": "PT"
+      },
+      "width": {
+        "magnitude": 612,
+        "unit": "PT"
+      }
+    },
+    "marginHeader": {
+      "magnitude": 36,
+      "unit": "PT"
+    },
+    "marginFooter": {
+      "magnitude": 36,
+      "unit": "PT"
+    },
+    "useCustomHeaderFooterMargins": true
+  },
+  "namedStyles": {
+    "styles": [
+      {
+        "namedStyleType": "NORMAL_TEXT",
+        "textStyle": {
+          "bold": false,
+          "italic": false,
+          "underline": false,
+          "strikethrough": false,
+          "smallCaps": false,
+          "backgroundColor": {},
+          "foregroundColor": {
+            "color": {
+              "rgbColor": {}
+            }
+          },
+          "fontSize": {
+            "magnitude": 11,
+            "unit": "PT"
+          },
+          "weightedFontFamily": {
+            "fontFamily": "Arial",
+            "weight": 400
+          },
+          "baselineOffset": "NONE"
+        },
+        "paragraphStyle": {
+          "namedStyleType": "NORMAL_TEXT",
+          "alignment": "START",
+          "lineSpacing": 115,
+          "direction": "LEFT_TO_RIGHT",
+          "spacingMode": "COLLAPSE_LISTS",
+          "spaceAbove": {
+            "unit": "PT"
+          },
+          "spaceBelow": {
+            "unit": "PT"
+          },
+          "borderBetween": {
+            "color": {},
+            "width": {
+              "unit": "PT"
+            },
+            "padding": {
+              "unit": "PT"
+            },
+            "dashStyle": "SOLID"
+          },
+          "borderTop": {
+            "color": {},
+            "width": {
+              "unit": "PT"
+            },
+            "padding": {
+              "unit": "PT"
+            },
+            "dashStyle": "SOLID"
+          },
+          "borderBottom": {
+            "color": {},
+            "width": {
+              "unit": "PT"
+            },
+            "padding": {
+              "unit": "PT"
+            },
+            "dashStyle": "SOLID"
+          },
+          "borderLeft": {
+            "color": {},
+            "width": {
+              "unit": "PT"
+            },
+            "padding": {
+              "unit": "PT"
+            },
+            "dashStyle": "SOLID"
+          },
+          "borderRight": {
+            "color": {},
+            "width": {
+              "unit": "PT"
+            },
+            "padding": {
+              "unit": "PT"
+            },
+            "dashStyle": "SOLID"
+          },
+          "indentFirstLine": {
+            "unit": "PT"
+          },
+          "indentStart": {
+            "unit": "PT"
+          },
+          "indentEnd": {
+            "unit": "PT"
+          },
+          "keepLinesTogether": false,
+          "keepWithNext": false,
+          "avoidWidowAndOrphan": true,
+          "shading": {
+            "backgroundColor": {}
+          }
+        }
+      },
+      {
+        "namedStyleType": "HEADING_1",
+        "textStyle": {
+          "fontSize": {
+            "magnitude": 20,
+            "unit": "PT"
+          }
+        },
+        "paragraphStyle": {
+          "namedStyleType": "NORMAL_TEXT",
+          "direction": "LEFT_TO_RIGHT",
+          "spaceAbove": {
+            "magnitude": 20,
+            "unit": "PT"
+          },
+          "spaceBelow": {
+            "magnitude": 6,
+            "unit": "PT"
+          },
+          "keepLinesTogether": true,
+          "keepWithNext": true
+        }
+      },
+      {
+        "namedStyleType": "HEADING_2",
+        "textStyle": {
+          "bold": false,
+          "fontSize": {
+            "magnitude": 16,
+            "unit": "PT"
+          }
+        },
+        "paragraphStyle": {
+          "namedStyleType": "NORMAL_TEXT",
+          "direction": "LEFT_TO_RIGHT",
+          "spaceAbove": {
+            "magnitude": 18,
+            "unit": "PT"
+          },
+          "spaceBelow": {
+            "magnitude": 6,
+            "unit": "PT"
+          },
+          "keepLinesTogether": true,
+          "keepWithNext": true
+        }
+      },
+      {
+        "namedStyleType": "HEADING_3",
+        "textStyle": {
+          "bold": false,
+          "foregroundColor": {
+            "color": {
+              "rgbColor": {
+                "red": 0.2627451,
+                "green": 0.2627451,
+                "blue": 0.2627451
+              }
+            }
+          },
+          "fontSize": {
+            "magnitude": 14,
+            "unit": "PT"
+          }
+        },
+        "paragraphStyle": {
+          "namedStyleType": "NORMAL_TEXT",
+          "direction": "LEFT_TO_RIGHT",
+          "spaceAbove": {
+            "magnitude": 16,
+            "unit": "PT"
+          },
+          "spaceBelow": {
+            "magnitude": 4,
+            "unit": "PT"
+          },
+          "keepLinesTogether": true,
+          "keepWithNext": true
+        }
+      },
+      {
+        "namedStyleType": "HEADING_4",
+        "textStyle": {
+          "foregroundColor": {
+            "color": {
+              "rgbColor": {
+                "red": 0.4,
+                "green": 0.4,
+                "blue": 0.4
+              }
+            }
+          },
+          "fontSize": {
+            "magnitude": 12,
+            "unit": "PT"
+          }
+        },
+        "paragraphStyle": {
+          "namedStyleType": "NORMAL_TEXT",
+          "direction": "LEFT_TO_RIGHT",
+          "spaceAbove": {
+            "magnitude": 14,
+            "unit": "PT"
+          },
+          "spaceBelow": {
+            "magnitude": 4,
+            "unit": "PT"
+          },
+          "keepLinesTogether": true,
+          "keepWithNext": true
+        }
+      },
+      {
+        "namedStyleType": "HEADING_5",
+        "textStyle": {
+          "foregroundColor": {
+            "color": {
+              "rgbColor": {
+                "red": 0.4,
+                "green": 0.4,
+                "blue": 0.4
+              }
+            }
+          },
+          "fontSize": {
+            "magnitude": 11,
+            "unit": "PT"
+          }
+        },
+        "paragraphStyle": {
+          "namedStyleType": "NORMAL_TEXT",
+          "direction": "LEFT_TO_RIGHT",
+          "spaceAbove": {
+            "magnitude": 12,
+            "unit": "PT"
+          },
+          "spaceBelow": {
+            "magnitude": 4,
+            "unit": "PT"
+          },
+          "keepLinesTogether": true,
+          "keepWithNext": true
+        }
+      },
+      {
+        "namedStyleType": "HEADING_6",
+        "textStyle": {
+          "italic": true,
+          "foregroundColor": {
+            "color": {
+              "rgbColor": {
+                "red": 0.4,
+                "green": 0.4,
+                "blue": 0.4
+              }
+            }
+          },
+          "fontSize": {
+            "magnitude": 11,
+            "unit": "PT"
+          }
+        },
+        "paragraphStyle": {
+          "namedStyleType": "NORMAL_TEXT",
+          "direction": "LEFT_TO_RIGHT",
+          "spaceAbove": {
+            "magnitude": 12,
+            "unit": "PT"
+          },
+          "spaceBelow": {
+            "magnitude": 4,
+            "unit": "PT"
+          },
+          "keepLinesTogether": true,
+          "keepWithNext": true
+        }
+      },
+      {
+        "namedStyleType": "TITLE",
+        "textStyle": {
+          "fontSize": {
+            "magnitude": 26,
+            "unit": "PT"
+          }
+        },
+        "paragraphStyle": {
+          "namedStyleType": "NORMAL_TEXT",
+          "direction": "LEFT_TO_RIGHT",
+          "spaceAbove": {
+            "unit": "PT"
+          },
+          "spaceBelow": {
+            "magnitude": 3,
+            "unit": "PT"
+          },
+          "keepLinesTogether": true,
+          "keepWithNext": true
+        }
+      },
+      {
+        "namedStyleType": "SUBTITLE",
+        "textStyle": {
+          "italic": false,
+          "foregroundColor": {
+            "color": {
+              "rgbColor": {
+                "red": 0.4,
+                "green": 0.4,
+                "blue": 0.4
+              }
+            }
+          },
+          "fontSize": {
+            "magnitude": 15,
+            "unit": "PT"
+          },
+          "weightedFontFamily": {
+            "fontFamily": "Arial",
+            "weight": 400
+          }
+        },
+        "paragraphStyle": {
+          "namedStyleType": "NORMAL_TEXT",
+          "direction": "LEFT_TO_RIGHT",
+          "spaceAbove": {
+            "unit": "PT"
+          },
+          "spaceBelow": {
+            "magnitude": 16,
+            "unit": "PT"
+          },
+          "keepLinesTogether": true,
+          "keepWithNext": true
+        }
+      }
+    ]
+  },
+  "lists": {
+    "kix.ovswf3ioox54": {
+      "listProperties": {
+        "nestingLevels": [
+          {
+            "bulletAlignment": "START",
+            "glyphType": "GLYPH_TYPE_UNSPECIFIED",
+            "indentFirstLine": {
+              "magnitude": 18,
+              "unit": "PT"
+            },
+            "indentStart": {
+              "magnitude": 36,
+              "unit": "PT"
+            },
+            "textStyle": {
+              "underline": false
+            },
+            "startNumber": 1
+          },
+          {
+            "bulletAlignment": "START",
+            "glyphType": "GLYPH_TYPE_UNSPECIFIED",
+            "indentFirstLine": {
+              "magnitude": 54,
+              "unit": "PT"
+            },
+            "indentStart": {
+              "magnitude": 72,
+              "unit": "PT"
+            },
+            "textStyle": {
+              "underline": false
+            },
+            "startNumber": 1
+          },
+          {
+            "bulletAlignment": "START",
+            "glyphType": "GLYPH_TYPE_UNSPECIFIED",
+            "indentFirstLine": {
+              "magnitude": 90,
+              "unit": "PT"
+            },
+            "indentStart": {
+              "magnitude": 108,
+              "unit": "PT"
+            },
+            "textStyle": {
+              "underline": false
+            },
+            "startNumber": 1
+          },
+          {
+            "bulletAlignment": "START",
+            "glyphType": "GLYPH_TYPE_UNSPECIFIED",
+            "indentFirstLine": {
+              "magnitude": 126,
+              "unit": "PT"
+            },
+            "indentStart": {
+              "magnitude": 144,
+              "unit": "PT"
+            },
+            "textStyle": {
+              "underline": false
+            },
+            "startNumber": 1
+          },
+          {
+            "bulletAlignment": "START",
+            "glyphType": "GLYPH_TYPE_UNSPECIFIED",
+            "indentFirstLine": {
+              "magnitude": 162,
+              "unit": "PT"
+            },
+            "indentStart": {
+              "magnitude": 180,
+              "unit": "PT"
+            },
+            "textStyle": {
+              "underline": false
+            },
+            "startNumber": 1
+          },
+          {
+            "bulletAlignment": "START",
+            "glyphType": "GLYPH_TYPE_UNSPECIFIED",
+            "indentFirstLine": {
+              "magnitude": 198,
+              "unit": "PT"
+            },
+            "indentStart": {
+              "magnitude": 216,
+              "unit": "PT"
+            },
+            "textStyle": {
+              "underline": false
+            },
+            "startNumber": 1
+          },
+          {
+            "bulletAlignment": "START",
+            "glyphType": "GLYPH_TYPE_UNSPECIFIED",
+            "indentFirstLine": {
+              "magnitude": 234,
+              "unit": "PT"
+            },
+            "indentStart": {
+              "magnitude": 252,
+              "unit": "PT"
+            },
+            "textStyle": {
+              "underline": false
+            },
+            "startNumber": 1
+          },
+          {
+            "bulletAlignment": "START",
+            "glyphType": "GLYPH_TYPE_UNSPECIFIED",
+            "indentFirstLine": {
+              "magnitude": 270,
+              "unit": "PT"
+            },
+            "indentStart": {
+              "magnitude": 288,
+              "unit": "PT"
+            },
+            "textStyle": {
+              "underline": false
+            },
+            "startNumber": 1
+          },
+          {
+            "bulletAlignment": "START",
+            "glyphType": "GLYPH_TYPE_UNSPECIFIED",
+            "indentFirstLine": {
+              "magnitude": 306,
+              "unit": "PT"
+            },
+            "indentStart": {
+              "magnitude": 324,
+              "unit": "PT"
+            },
+            "textStyle": {
+              "underline": false
+            },
+            "startNumber": 1
+          }
+        ]
+      }
+    }
+  },
+  "revisionId": "ALm37BUizG3iVHl9ezmuvK-eVmRB0C6w0xi3eil_Pk2YHqGkn7immaidcF6XBXJFF-e6_hX5ku_oyMCPBrBPVg",
+  "suggestionsViewMode": "SUGGESTIONS_INLINE",
+  "inlineObjects": {
+    "kix.9riis1frpcye": {
+      "objectId": "kix.9riis1frpcye",
+      "inlineObjectProperties": {
+        "embeddedObject": {
+          "imageProperties": {
+            "contentUri": "https://lh4.googleusercontent.com/IE0OHo8JLioNrrcDEHH1_Reop70LKHWpvg4zLWoLZVIB9l_PuDdFAvIvrKzV6O4V3qzS1k46veVtM5pZlXLyfgg-OqQHDBci3slZefID6Hfyf_8yOz7SpPHmqd0qxW-oUYFT8V2ca87Q66HCsw",
+            "cropProperties": {}
+          },
+          "embeddedObjectBorder": {
+            "color": {
+              "color": {
+                "rgbColor": {}
+              }
+            },
+            "width": {
+              "unit": "PT"
+            },
+            "dashStyle": "SOLID",
+            "propertyState": "NOT_RENDERED"
+          },
+          "size": {
+            "height": {
+              "magnitude": 392,
+              "unit": "PT"
+            },
+            "width": {
+              "magnitude": 468,
+              "unit": "PT"
+            }
+          },
+          "marginTop": {
+            "magnitude": 9,
+            "unit": "PT"
+          },
+          "marginBottom": {
+            "magnitude": 9,
+            "unit": "PT"
+          },
+          "marginRight": {
+            "magnitude": 9,
+            "unit": "PT"
+          },
+          "marginLeft": {
+            "magnitude": 9,
+            "unit": "PT"
+          }
+        }
+      }
+    }
+  },
+  "documentId": "1BphhjLm_6R6v2w4tRvGYV15Exj3W3bii9ZwGRAjjCWE"
+}

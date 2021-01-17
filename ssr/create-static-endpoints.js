@@ -1,0 +1,62 @@
+import fs from "fs";
+import path from "path";
+import { promisify } from "util";
+import React from "react";
+import ReactDOMServer from "react-dom/server";
+
+import { WEBSITE_TITLE } from "../src/config/config";
+import { ParsedDoc } from "../src/components/article";
+
+const indexFile = path.resolve("./build/index.html");
+const articlesInfoFile = path.resolve("./tmp/data/articles-info.json");
+
+const readFile = promisify(fs.readFile);
+const writeFile = promisify(fs.writeFile);
+const mkdir = promisify(fs.mkdir);
+
+(async () => {
+  try {
+    const data = await readFile(indexFile, "utf-8");
+    const articleInfo = JSON.parse(await readFile(articlesInfoFile, "utf-8"));
+
+    const replaceTitle = (data, newTitle) =>
+      data.replace(/\*TITLE\*/g, newTitle);
+    const replaceContent = (data, newContent) =>
+      data.replace(/\*CONTENT\*/g, newContent);
+
+    await writeFile(
+      indexFile,
+      replaceContent(replaceTitle(data, WEBSITE_TITLE), "")
+    );
+
+    await Promise.all(
+      Object.entries(articleInfo.mapping).map(async ([key, value]) => {
+        console.log(`Generating ${key}`, value.id);
+        const newPath = path.resolve(`./build/article/${key}`);
+        await mkdir(newPath, {
+          recursive: true
+        });
+        const json = await readFile(
+          path.resolve(`./tmp/data/articles/${value.id}.json`),
+          "utf-8"
+        );
+
+        await writeFile(
+          path.resolve(`${newPath}/index.html`),
+          replaceContent(
+            replaceTitle(data, `${WEBSITE_TITLE} - ${value.text}`),
+            ReactDOMServer.renderToString(
+              <ParsedDoc article={JSON.parse(json)} />
+            )
+          )
+        );
+      })
+    );
+    console.log("generated all needed static files");
+  } catch (err) {
+    console.log(
+      err,
+      "you need to run `npm run build` and `npm run sync-data` first"
+    );
+  }
+})();

@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [10.x]
+        node-version: [14.x]
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
@@ -24,9 +24,10 @@ jobs:
       - run: npm run sync-data
         env:
           GOOGLE_API_CREDS: ${{ secrets.GOOGLE_API_CREDS }}
-      - run: mv tmp/data build/data
+      - run: cp -R tmp/data build/data
+      - run: npm run ssr
       - name: Setup - gcloud / gsutil
-        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        uses: google-github-actions/setup-gcloud@master
         with:
           service_account_key: ${{ secrets.GOOGLE_API_CREDS }}
           project_id: ${{ secrets.GCS_PROJECT }}

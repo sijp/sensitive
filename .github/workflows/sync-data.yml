@@ -1,11 +1,9 @@
 name: Sync-Data-Stage
 on:
-  schedule:
-    - cron: "0 * * * *"
   push:
     branches:
-      - deploy
-      - master
+      - deploy-legacy
+
 jobs:
   data-sync:
     name: Synchronize Google Drive Data

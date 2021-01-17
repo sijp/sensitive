@@ -23,12 +23,15 @@ import store, { syncAllStores } from "./store";
 import AppRouter from "./app-router";
 import NavBar from "./components/nav-bar";
 import { NAVIGATION_LINKS } from "./config/config";
+import MetaTagsUpdater from "./components/meta-tags-updater";
 
 const history = createBrowserHistory();
 
 const path = (/#!(\/.*)$/.exec(window.location.hash) || [])[1];
 if (path) {
   history.replace(path);
+} else {
+  history.replace(window.location.pathname.replace("/index.html", ""));
 }
 
 delete L.Icon.Default.prototype._getIconUrl;
@@ -65,6 +68,7 @@ function App() {
             </NavBar>
           </StylesProvider>
         </ThemeProvider>
+        <MetaTagsUpdater />
       </Provider>
     </Router>
   );

@@ -40,7 +40,7 @@ function ExpandableListItem({ text, articles = [], ...props }) {
               key={`article-link-entry-${article.id}`}
               icon={faCircle}
               text={article.text}
-              url={`/article/${article.text}`}
+              url={`/article/${article.resource || article.text}`}
               style={{ ...props.style, paddingRight: theme.spacing(4) }}
               {...props}
             />
@@ -51,17 +51,20 @@ function ExpandableListItem({ text, articles = [], ...props }) {
   );
 }
 
-function ArticlesLinkEntry({ articles, loading, ...props }) {
-  if (loading || !articles || !Array.isArray(articles.categories)) return <></>;
+function ArticlesLinkEntry({ information, loading, ...props }) {
+  if (loading || !information || !Array.isArray(information.categories))
+    return <></>;
 
   return (
     <>
-      {articles.categories.map(({ id, text, articles }) =>
+      {information.categories.map(({ text, articles }, index) =>
         articles ? (
           <ExpandableListItem
-            key={`expandable-list-item-${id}`}
+            key={`expandable-list-item-${index}`}
             text={text}
-            articles={articles}
+            articles={articles.map(
+              (articleId) => information.mapping[articleId]
+            )}
             {...props}
           />
         ) : null
@@ -72,7 +75,7 @@ function ArticlesLinkEntry({ articles, loading, ...props }) {
 
 function mapStateToProps(state) {
   return {
-    articles: state.articlesInfo.information,
+    information: state.articlesInfo.information,
     loading: state.articlesInfo.loading
   };
 }
