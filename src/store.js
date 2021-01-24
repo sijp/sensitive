@@ -7,13 +7,15 @@ import teamReducer, { actions as teamActions } from "./ducks/team";
 import articlesInfoReducer, {
   actions as articlesInfoActions
 } from "./ducks/articles-info";
+import titleReducer from "./ducks/title";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
   combineReducers({
     professionals: professionalReducer,
     team: teamReducer,
-    articlesInfo: articlesInfoReducer
+    articlesInfo: articlesInfoReducer,
+    title: titleReducer
   }),
   composeEnhancers(applyMiddleware(thunk))
 );

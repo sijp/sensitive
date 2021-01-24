@@ -10,6 +10,11 @@ function reducer(state = {}, action = {}) {
         ...state,
         information: rawData
       };
+    case types.SET_ARTICLE:
+      return {
+        ...state,
+        currentArticle: action.payload
+      };
     default:
       return state;
   }
@@ -21,6 +26,17 @@ const dataSyncDuck = createDataSyncDuck(
   "articles-info"
 );
 
-export const actions = dataSyncDuck.actions;
-export const types = dataSyncDuck.types;
+export const actions = {
+  setCurrentArticle(name) {
+    return {
+      type: types.SET_ARTICLE,
+      payload: name
+    };
+  },
+  ...dataSyncDuck.actions
+};
+export const types = {
+  SET_ARTICLE: "sensitive/articles-info/SET_ARTICLE",
+  ...dataSyncDuck.types
+};
 export default dataSyncDuck.reducer;

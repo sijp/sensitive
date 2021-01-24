@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function ({ about }) {
+export default function Home({ about }) {
   const classes = useStyles();
   const history = useHistory();
   const [mounted, setMounted] = useState(false);
@@ -70,7 +70,9 @@ export default function ({ about }) {
     if (mounted) history.push(trigger ? "/about" : "/");
   };
 
+  // eslint-disable-next-line
   useEffect(scrollToSection, [about]);
+  // eslint-disable-next-line
   useEffect(changeRoute, [trigger]);
 
   useEffect(() => () => window.scrollTo({ top: 0, behavior: "smooth" }), []);

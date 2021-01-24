@@ -36,74 +36,83 @@ function YoutubeEmbed({ link }) {
   );
 }
 
-function ParsedDoc({ article }) {
+export function ParsedDoc({ article }) {
   return article.map((data, paragraphIdx) => {
     const Paragraph = PARAGRAPH_TYPES[data.type] || DEFAULT_PARAGRAPH_TYPE;
-    
+    const MaybeBullet = data.bullet
+      ? ({ children }) => (
+          <ul>
+            <li>{children}</li>
+          </ul>
+        )
+      : ({ children }) => <>{children}</>;
+
     return (
       <Paragraph key={`paragraph-${paragraphIdx}`}>
-        {data.elements.map(
-          (
-            { interactive, image, text, underline, bold, italic, link },
-            elementIdx
-          ) => {
-            if (interactive === "youtube") {
-              return (
-                <div style={{ textAlign: "center" }}>
-                  <YoutubeEmbed link={link} />
-                </div>
-              );
+        <MaybeBullet>
+          {data.elements.map(
+            (
+              { interactive, image, text, underline, bold, italic, link },
+              elementIdx
+            ) => {
+              if (interactive === "youtube") {
+                return (
+                  <div style={{ textAlign: "center" }}>
+                    <YoutubeEmbed link={link} />
+                  </div>
+                );
+              }
+              if (text) {
+                return (
+                  <span
+                    key={`paragraph-${paragraphIdx}-${elementIdx}`}
+                    style={{
+                      fontWeight: bold ? "bold" : "normal",
+                      textDecoration: underline ? "underline" : "none",
+                      fontStyle: italic ? "italic" : "normal"
+                    }}
+                  >
+                    {link ? (
+                      <a
+                        href={link.url}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                      >
+                        {text}
+                      </a>
+                    ) : (
+                      text
+                    )}
+                  </span>
+                );
+              } else if (image) {
+                const Linkify = link
+                  ? ({ children }) => (
+                      <a
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {children}
+                      </a>
+                    )
+                  : ({ children }) => <>{children}</>;
+                return (
+                  <div style={{ textAlign: "center" }}>
+                    <Linkify>
+                      <img
+                        style={{ width: "50%" }}
+                        src={`${ARTICLES_URL}/${image}.jpg`}
+                        alt="No Alt"
+                      />
+                    </Linkify>
+                  </div>
+                );
+              }
+              return <></>;
             }
-            if (text) {
-              return (
-                <span
-                  key={`paragraph-${paragraphIdx}-${elementIdx}`}
-                  style={{
-                    fontWeight: bold ? "bold" : "normal",
-                    textDecoration: underline ? "underline" : "none",
-                    fontStyle: italic ? "italic" : "normal"
-                  }}
-                >
-                  {link ? (
-                    <a
-                      href={link.url}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      {text}
-                    </a>
-                  ) : (
-                    text
-                  )}
-                </span>
-              );
-            } else if (image) {
-              const Linkify = link
-                ? ({ children }) => (
-                    <a
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {children}
-                    </a>
-                  )
-                : ({ children }) => <>{children}</>;
-              return (
-                <div style={{ textAlign: "center" }}>
-                  <Linkify>
-                    <img
-                      style={{ width: "50%" }}
-                      src={`${ARTICLES_URL}/${image}.jpg`}
-                      alt="No Alt"
-                    />
-                  </Linkify>
-                </div>
-              );
-            }
-            return <></>;
-          }
-        )}
+          )}
+        </MaybeBullet>
       </Paragraph>
     );
   });
@@ -121,10 +130,10 @@ function ArticleSkeleton() {
   );
 }
 
-function Article({ name, articleNameMapping, loading }) {
+function Article({ name, articleNameMapping }) {
   const [article, setArticle] = useState(null);
 
-  const id = articleNameMapping[name];
+  const id = articleNameMapping[name]?.id;
 
   const getArticle = () => {
     if (!id) return;
@@ -139,7 +148,6 @@ function Article({ name, articleNameMapping, loading }) {
 
 function mapStateToProps(state) {
   return {
-    loading: state.articlesInfo.loading,
     articleNameMapping: state.articlesInfo.information?.mapping || []
   };
 }

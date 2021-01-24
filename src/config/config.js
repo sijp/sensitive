@@ -18,6 +18,8 @@ import {
 
 import { faFacebookF } from "@fortawesome/free-brands-svg-icons";
 
+export const WEBSITE_TITLE = "אינדקס התמיכה לבעלי כלבים רגישים";
+
 export const PROFESSIONALS_DB_URL =
   process.env.REACT_APP_PROFESSIONALS_DB_URL ||
   "http://localhost:5000/professionals";
