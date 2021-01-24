@@ -23,10 +23,12 @@ const mkdir = promisify(fs.mkdir);
       data.replace(/\*TITLE\*/g, newTitle);
     const replaceContent = (data, newContent) =>
       data.replace(/\*CONTENT\*/g, newContent);
+    const replaceUrlPath = (data, newUrlPath) =>
+      data.replace(/\*URL_PATH\*/, newUrlPath);
 
     await writeFile(
       indexFile,
-      replaceContent(replaceTitle(data, WEBSITE_TITLE), "")
+      replaceUrlPath(replaceContent(replaceTitle(data, WEBSITE_TITLE), ""), "")
     );
 
     await Promise.all(
@@ -43,11 +45,14 @@ const mkdir = promisify(fs.mkdir);
 
         await writeFile(
           path.resolve(`${newPath}/index.html`),
-          replaceContent(
-            replaceTitle(data, `${WEBSITE_TITLE} - ${value.text}`),
-            ReactDOMServer.renderToString(
-              <ParsedDoc article={JSON.parse(json)} />
-            )
+          replaceUrlPath(
+            replaceContent(
+              replaceTitle(data, `${WEBSITE_TITLE} - ${value.text}`),
+              ReactDOMServer.renderToString(
+                <ParsedDoc article={JSON.parse(json)} />
+              )
+            ),
+            `/article/${key}`
           )
         );
       })
