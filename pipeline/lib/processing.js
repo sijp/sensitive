@@ -53,7 +53,6 @@ function processDocs(docs) {
     docTree.reduce((mappings, doc) => {
       if (doc.folder && doc.docs)
         return { ...mappings, ...buildMapping(doc.docs) };
-      if (doc.description === undefined) console.log(doc);
       const metadata = {
         text: doc.name,
         id: doc.internalId,
