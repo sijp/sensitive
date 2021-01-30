@@ -18,6 +18,7 @@ const mkdir = promisify(fs.mkdir);
   try {
     const data = await readFile(indexFile, "utf-8");
     const articleInfo = JSON.parse(await readFile(articlesInfoFile, "utf-8"));
+    const urls = [];
 
     const replaceTitle = (data, newTitle) =>
       data.replace(/\*TITLE\*/g, newTitle);
@@ -43,11 +44,13 @@ const mkdir = promisify(fs.mkdir);
           "utf-8"
         );
 
+        urls.push(`http://www.sensitive-dogs.co.il/article/${key}`);
+
         await writeFile(
           path.resolve(`${newPath}/index.html`),
           replaceUrlPath(
             replaceContent(
-              replaceTitle(data, `${WEBSITE_TITLE} - ${value.text}`),
+              replaceTitle(data, `${value.text} - ${WEBSITE_TITLE}`),
               ReactDOMServer.renderToString(
                 <ParsedDoc article={JSON.parse(json)} />
               )
@@ -57,7 +60,21 @@ const mkdir = promisify(fs.mkdir);
         );
       })
     );
-    console.log("generated all needed static files");
+    console.log("rendered all articles");
+    await writeFile(
+      path.resolve("./build/sitemap.xml"),
+      '<?xml version="1.0" encoding="UTF-8"?>' +
+        ReactDOMServer.renderToString(
+          <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+            {urls.map((url) => (
+              <url>
+                <loc>{url}</loc>
+              </url>
+            ))}
+          </urlset>
+        )
+    );
+    console.log("generated sitemap.xml");
   } catch (err) {
     console.log(
       err,
