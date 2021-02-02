@@ -44,7 +44,7 @@ const mkdir = promisify(fs.mkdir);
           "utf-8"
         );
 
-        urls.push(`http://www.sensitive-dogs.co.il/article/${key}`);
+        urls.push(`http://www.sensitive-dogs.co.il/article/${key}/index.html`);
 
         await writeFile(
           path.resolve(`${newPath}/index.html`),
