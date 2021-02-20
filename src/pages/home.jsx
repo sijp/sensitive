@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { Container, useScrollTrigger } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
-import TeamList from "../components/team-list";
-import Article from "../components/article";
 import Cover from "../components/cover";
+import HomeArticle from "../components/home-article";
 import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
+import FooterArticle from "../components/footer-article";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -84,13 +84,14 @@ export default function Home({ about }) {
       <Container
         maxWidth="lg"
         id="about"
-        style={{ marginTop: 64, minHeight: "100vh" }}
+        style={{
+          marginTop: 64,
+          minHeight: "100vh"
+        }}
       >
-        <Article name={process.env.REACT_APP_ABOUT_PAGE_ID1} />
-        <TeamList type="admins" />
-        <Article name={process.env.REACT_APP_ABOUT_PAGE_ID2} />
-        <TeamList type="moderators" />
+        <HomeArticle />
       </Container>
+      <FooterArticle />
     </div>
   );
 }
