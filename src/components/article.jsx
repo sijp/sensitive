@@ -36,81 +36,77 @@ function YoutubeEmbed({ link }) {
   );
 }
 
-export function ParsedDoc({ article }) {
+export function defaultElementParser(
+  { interactive, image, text, underline, bold, italic, link, paragraphIdx },
+  elementIdx
+) {
+  if (interactive === "youtube") {
+    return (
+      <div style={{ textAlign: "center" }}>
+        <YoutubeEmbed link={link} />
+      </div>
+    );
+  }
+  if (text) {
+    return (
+      <span
+        key={`paragraph-${paragraphIdx}-${elementIdx}`}
+        style={{
+          fontWeight: bold ? "bold" : "normal",
+          textDecoration: underline ? "underline" : "none",
+          fontStyle: italic ? "italic" : "normal"
+        }}
+      >
+        {link ? (
+          <a href={link.url} rel="noopener noreferrer" target="_blank">
+            {text}
+          </a>
+        ) : (
+          text
+        )}
+      </span>
+    );
+  } else if (image) {
+    const Linkify = link
+      ? ({ children }) => (
+          <a href={link.url} target="_blank" rel="noopener noreferrer">
+            {children}
+          </a>
+        )
+      : ({ children }) => <>{children}</>;
+    return (
+      <div style={{ textAlign: "center" }}>
+        <Linkify>
+          <img
+            style={{ width: "50%" }}
+            src={`${ARTICLES_URL}/${image}.jpg`}
+            alt="No Alt"
+          />
+        </Linkify>
+      </div>
+    );
+  }
+  return <></>;
+}
+
+export function ParsedDoc({ article, elementParser = defaultElementParser }) {
   return article.map((data, paragraphIdx) => {
     const Paragraph = PARAGRAPH_TYPES[data.type] || DEFAULT_PARAGRAPH_TYPE;
+    const IdComponent = ({ children }) => <>{children}</>;
+
     const MaybeBullet = data.bullet
       ? ({ children }) => (
           <ul>
             <li>{children}</li>
           </ul>
         )
-      : ({ children }) => <>{children}</>;
+      : IdComponent;
 
     return (
       <Paragraph key={`paragraph-${paragraphIdx}`}>
         <MaybeBullet>
-          {data.elements.map(
-            (
-              { interactive, image, text, underline, bold, italic, link },
-              elementIdx
-            ) => {
-              if (interactive === "youtube") {
-                return (
-                  <div style={{ textAlign: "center" }}>
-                    <YoutubeEmbed link={link} />
-                  </div>
-                );
-              }
-              if (text) {
-                return (
-                  <span
-                    key={`paragraph-${paragraphIdx}-${elementIdx}`}
-                    style={{
-                      fontWeight: bold ? "bold" : "normal",
-                      textDecoration: underline ? "underline" : "none",
-                      fontStyle: italic ? "italic" : "normal"
-                    }}
-                  >
-                    {link ? (
-                      <a
-                        href={link.url}
-                        rel="noopener noreferrer"
-                        target="_blank"
-                      >
-                        {text}
-                      </a>
-                    ) : (
-                      text
-                    )}
-                  </span>
-                );
-              } else if (image) {
-                const Linkify = link
-                  ? ({ children }) => (
-                      <a
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {children}
-                      </a>
-                    )
-                  : ({ children }) => <>{children}</>;
-                return (
-                  <div style={{ textAlign: "center" }}>
-                    <Linkify>
-                      <img
-                        style={{ width: "50%" }}
-                        src={`${ARTICLES_URL}/${image}.jpg`}
-                        alt="No Alt"
-                      />
-                    </Linkify>
-                  </div>
-                );
-              }
-              return <></>;
-            }
+          {data.elements.map((element) =>
+            elementParser({ paragraphIdx, ...element })
           )}
         </MaybeBullet>
       </Paragraph>
