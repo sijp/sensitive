@@ -15,6 +15,7 @@ const PARAGRAPH_TYPES = {
     <Typography
       {...props}
       variant="body1"
+      component="div"
       style={{ fontSize: "1.2em", marginTop: 2, marginBottom: 10 }}
     />
   )
@@ -42,7 +43,10 @@ export function defaultElementParser(
 ) {
   if (interactive === "youtube") {
     return (
-      <div style={{ textAlign: "center" }}>
+      <div
+        style={{ textAlign: "center" }}
+        key={`paragraph-${paragraphIdx}-${elementIdx}`}
+      >
         <YoutubeEmbed link={link} />
       </div>
     );
@@ -89,28 +93,87 @@ export function defaultElementParser(
   return <></>;
 }
 
+function ListParagraph({ bulletType, ...restProps }) {
+  const ListElement =
+    bulletType === "ol"
+      ? (props) => <ol {...props} />
+      : (props) => <ul {...props} />;
+
+  return <ListElement {...restProps} />;
+}
+
 export function ParsedDoc({ article, elementParser = defaultElementParser }) {
-  return article.map((data, paragraphIdx) => {
-    const Paragraph = PARAGRAPH_TYPES[data.type] || DEFAULT_PARAGRAPH_TYPE;
-    const IdComponent = ({ children }) => <>{children}</>;
+  const sections = article.reduce(
+    (memo, data, idx) => {
+      const { bullet } = data;
+      const { map, list } = memo;
+      if (!bullet) {
+        map[idx] = { data };
+        list.push(map[idx]);
+      } else if (map[bullet]) {
+        map[bullet].bullets.push(data);
+      } else {
+        map[bullet] = { bullets: [data] };
+        list.push(map[bullet]);
+      }
+      return memo;
+    },
+    { map: {}, list: [] }
+  );
 
-    const MaybeBullet = data.bullet
-      ? ({ children }) => (
-          <ul>
-            <li>{children}</li>
-          </ul>
-        )
-      : IdComponent;
-
-    return (
-      <Paragraph key={`paragraph-${paragraphIdx}`}>
-        <MaybeBullet>
-          {data.elements.map((element) =>
-            elementParser({ paragraphIdx, ...element })
+  return sections.list.map(({ data, bullets }, paragraphIdx) => {
+    if (data) {
+      const Paragraph = PARAGRAPH_TYPES[data?.type] || DEFAULT_PARAGRAPH_TYPE;
+      return (
+        <Paragraph key={`paragraph-${paragraphIdx}`}>
+          {data.elements.map((element, elementIdx) =>
+            elementParser({ paragraphIdx, ...element }, elementIdx)
           )}
-        </MaybeBullet>
-      </Paragraph>
-    );
+        </Paragraph>
+      );
+    }
+    if (bullets) {
+      console.log("zzzz", bullets[0].bullet);
+      return (
+        <ListParagraph
+          key={`paragraph-${paragraphIdx}`}
+          bulletType={bullets[0]?.bulletType}
+        >
+          {bullets.map((bullet, bulletIdx) => (
+            <li
+              key={`list-paragraph-${paragraphIdx}-${bullet.bullet}-${bulletIdx}`}
+            >
+              <DEFAULT_PARAGRAPH_TYPE>
+                {bullet.elements.map((element, elementIdx) =>
+                  elementParser(
+                    {
+                      paragraphIdx: `list-paragraph-${element.bullet}-${bulletIdx}`,
+                      ...element
+                    },
+                    elementIdx
+                  )
+                )}
+              </DEFAULT_PARAGRAPH_TYPE>
+            </li>
+          ))}
+        </ListParagraph>
+      );
+    }
+    return <></>;
+    // const Paragraph = PARAGRAPH_TYPES[data?.type] || DEFAULT_PARAGRAPH_TYPE;
+    // const Section = bullets
+    //   ? (props) => (
+    //       <ListParagraph {...props} bulletType={bullets[0]?.bulletType} />
+    //     )
+    //   : Paragraph;
+
+    // return (
+    //   <Section key={`paragraph-${paragraphIdx}`}>
+    //     {(data.elements).map((element) =>
+    //       elementParser({ paragraphIdx, ...element })
+    //     )}
+    //   </Section>
+    // );
   });
 }
 
