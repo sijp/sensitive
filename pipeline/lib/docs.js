@@ -30,13 +30,21 @@ async function getGoogleDoc(auth, id) {
 }
 
 function parseDocument(doc) {
+  const { lists = {} } = doc;
   const paragraphs = doc.body.content.map(({ paragraph }) => {
     if (paragraph) {
       const { elements, paragraphStyle, bullet = {} } = paragraph;
+      const listProperties =
+        lists[bullet.listId]?.listProperties?.nestingLevels[0];
 
       return {
         type: paragraphStyle.namedStyleType,
         bullet: bullet.listId,
+        bulletType: listProperties?.glyphSymbol
+          ? "ul"
+          : listProperties?.glyphType
+          ? "ol"
+          : undefined,
         elements: elements.map(
           ({
             textRun = { textStyle: {} },
