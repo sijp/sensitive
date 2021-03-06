@@ -71,6 +71,7 @@ export const PROFESSIONAL_PRIORITY = {
 
 export const PROFESSIONALS_DB_CACHE_VALIDITY = 5 * 60; // 5 minutes
 export const DB_CACHE_VALIDITY = 5 * 60; // 5 minutes
+export { default as PROFESSIONALS_CITY_LIST_POLYGONS } from "./professionals-city-list";
 export const PROFESSIONALS_CITY_LIST = {
   "Tel Aviv": { position: [32.06, 34.77], label: "תל אביב" },
   Rehovot: { position: [31.896797, 34.811554], label: "רחובות והסביבה" },

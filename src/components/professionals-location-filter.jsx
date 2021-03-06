@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 
-import { Map, TileLayer, Marker, Tooltip } from "react-leaflet";
+import { Map, TileLayer, Polygon, Tooltip } from "react-leaflet";
 
 import { actions } from "../ducks/professionals";
 
@@ -36,10 +36,14 @@ const useStyles = makeStyles((theme) => ({
 
 function DynamicMarker({ permanent, cityData, onclick }) {
   const [hovered, setHovered] = useState(false);
+
   return (
-    <Marker
+    <Polygon
       interactive={true}
-      position={cityData.position}
+      positions={cityData.coordinates.map(([long, lat]) => [lat, long])}
+      // pathOptions={{ color: cityData.lineColor, fillColor: cityData.fillColor }}
+      color={cityData.lineColor || "blue"}
+      fillColor={cityData.fillColor || "blue"}
       onclick={onclick}
       onmouseover={() => setHovered(true)}
       onmouseout={() => setHovered(false)}
@@ -49,7 +53,7 @@ function DynamicMarker({ permanent, cityData, onclick }) {
           {cityData.label}
         </Tooltip>
       )}
-    </Marker>
+    </Polygon>
   );
 }
 
@@ -127,18 +131,18 @@ function ProfessionalsMap({
       {showMap && (
         <div className={classes.mapGridCell}>
           <Map
-            key={
-              city
-                ? `professional-map-set-${key}`
-                : `professional-map-unset-${key}`
-            }
+            key={`professional-map-${key}`}
             style={{
               height: "100%",
               width: "100%",
               direction: "ltr"
             }}
             zoom={zoom}
-            center={city ? cityList[city]?.position : [32, 34.9]}
+            center={
+              city
+                ? cityList[city]?.coordinates[0].slice().reverse()
+                : [32, 34.9]
+            }
             onzoomend={(event) => setZoom(event.target.getZoom())}
           >
             <TileLayer

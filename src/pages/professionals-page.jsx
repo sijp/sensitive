@@ -157,7 +157,7 @@ function ProfessionalsPage({
           <ResponsiveResultsGrid
             item
             xs={showResults ? 8 : 12}
-            className={showResults && classes.results}
+            className={showResults ? classes.results : undefined}
           >
             <div
               className={showResults ? classes.filters : classes.filtersInMap}
