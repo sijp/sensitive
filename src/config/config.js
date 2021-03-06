@@ -3,7 +3,6 @@ import {
   faWalking,
   faHome,
   faCut,
-  //faNewspaper,
   faPaw,
   faStar,
   faSearchLocation,
@@ -34,7 +33,8 @@ export const ARTICLES_URL =
   process.env.REACT_APP_ARTICLES_URL || "http://localhost:5000/articles";
 
 export const PROFESSIONALS_DB_TYPES = {
-  trainers: { label: "אימון כלבים", icon: faDog },
+  trainers: { label: "אימון כלבים רגישים", icon: faDog },
+  puppies: { label: "אימון גורים", icon: faPaw },
   walkers: { label: "הולכת כלבים", icon: faWalking },
   sitters: { label: "פנסיון ודוג סיטינג", icon: faHome },
   groomers: { label: "טיפוח כלבים", icon: faCut },
@@ -60,12 +60,12 @@ export const PROFESSIONAL_PRIORITY = {
   moderator: {
     icon: faUserShield,
     order: 3,
-    label: "מגשרת"
+    label: "מגשר/ת"
   },
   admin: {
     icon: faShieldAlt,
     order: 4,
-    label: "מנהלת"
+    label: "מנהל/ת"
   }
 };
 
