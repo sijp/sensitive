@@ -1,13 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
-import MetaTags from "react-meta-tags";
+// import MetaTags from "react-meta-tags";
 
 function MetaTagsUpdater({ title }) {
   return (
-    <MetaTags>
-      <title>{title}</title>
-      <meta property="og:title" content={title} />
-    </MetaTags>
+    <></>
+    // <MetaTags>
+    //   <title>{title}</title>
+    //   <meta property="og:title" content={title} />
+    // </MetaTags>
   );
 }
 

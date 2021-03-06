@@ -127,13 +127,16 @@ function ProfessinoalsResultDetails({
   useEffect(() => {
     if (!result.facebookPage) return;
 
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       setFaceBookPageStyle({});
       setFaceBookSkeletonProps({
         facebookSkeletonStyle: { display: "none" },
         facebookSkeletonAnimation: false
       });
     }, 1000);
+    return () => {
+      clearTimeout(timeout);
+    };
   }, [setFaceBookPageStyle, setFaceBookSkeletonProps, result]);
   return (
     <Box style={{ width }}>

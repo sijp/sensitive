@@ -18,7 +18,11 @@ import { Skeleton } from "@material-ui/lab";
 import { connect } from "react-redux";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLaptopHouse, faSadTear } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHouseUser,
+  faLaptopHouse,
+  faSadTear
+} from "@fortawesome/free-solid-svg-icons";
 
 import ProfessionalsResultDetails from "./professionals-result-details";
 
@@ -123,12 +127,19 @@ function PriorityBadge({ className, result, theme, children }) {
   );
 }
 
-function RemoteBadge({ children, result, className, theme, invisible }) {
+function RemoteBadge({
+  children,
+  result,
+  className,
+  theme,
+  invisible,
+  title = "שירות מקוון"
+}) {
   return (
     <Badge
       className={className}
       badgeContent={
-        <Tooltip title="שירות מקוון" arrow placement="top">
+        <Tooltip title={title} arrow placement="top">
           <div>
             <FontAwesomeIcon icon={faLaptopHouse} />
           </div>
@@ -160,79 +171,85 @@ function ProfessionalsResults({
   const [selected, setSelected] = useState();
   const isMobile = useMediaQuery("@media only screen and (max-width: 640px)");
   const resultsLabels = [
-    undefined,
+    <>
+      <FontAwesomeIcon icon={faHouseUser} /> שירות פיזי לאיזור המסומן
+    </>,
     <>
       <FontAwesomeIcon icon={faLaptopHouse} /> שירות מקוון בלבד לאיזור המסומן
     </>
   ];
 
-  const renderResults = (subResults, index) => (
-    <React.Fragment key={`sub-results-${index}`}>
-      {resultsLabels[index] && (
-        <>
-          <Divider component="li" className={classes.divider} />
-          <li>
-            <Typography
-              className={classes.dividerText}
-              color="textSecondary"
-              display="block"
-              variant="caption"
-            >
-              {resultsLabels[index]}
-            </Typography>
-          </li>
-        </>
-      )}
-      <ListItem className={classes.resultsFlex}>
-        {subResults
-          .map((result) => {
-            const resultType = result.pinned
-              ? "star"
-              : moderators
-                  .map((mod) => mod.name)
-                  .includes(`${result.firstName} ${result.lastName}`)
-              ? "moderator"
-              : admins
-                  .map((admin) => admin.name)
-                  .includes(`${result.firstName} ${result.lastName}`)
-              ? "admin"
-              : "regular";
-            return { ...result, ...PROFESSIONAL_PRIORITY[resultType] };
-          })
-          .sort((result1, result2) => result2.order - result1.order)
-          .map((result) => (
-            <PriorityBadge
-              className={classes.cardBadge}
-              result={result}
-              theme={theme}
-              key={`professional-${result.id}`}
-            >
-              <RemoteBadge
-                className={classes.cardRemoteBadge}
+  const renderResults = (subResults, index) => {
+    if (subResults.length === 0) return null;
+    return (
+      <React.Fragment key={`sub-results-${index}`}>
+        {resultsLabels[index] && (
+          <>
+            <Divider component="li" className={classes.divider} />
+            <li>
+              <Typography
+                className={classes.dividerText}
+                color="textSecondary"
+                display="block"
+                variant="caption"
+              >
+                {resultsLabels[index]}
+              </Typography>
+            </li>
+          </>
+        )}
+        <ListItem className={classes.resultsFlex}>
+          {subResults
+            .map((result) => {
+              const resultType = result.pinned
+                ? "star"
+                : moderators
+                    .map((mod) => mod.name)
+                    .includes(`${result.firstName} ${result.lastName}`)
+                ? "moderator"
+                : admins
+                    .map((admin) => admin.name)
+                    .includes(`${result.firstName} ${result.lastName}`)
+                ? "admin"
+                : "regular";
+              return { ...result, ...PROFESSIONAL_PRIORITY[resultType] };
+            })
+            .sort((result1, result2) => result2.order - result1.order)
+            .map((result) => (
+              <PriorityBadge
+                className={classes.cardBadge}
                 result={result}
                 theme={theme}
-                invisible={!showingRemote}
+                key={`professional-${result.id}`}
               >
-                <Card
-                  className={classes.card}
-                  variant="outlined"
-                  onClick={() => setSelected(result)}
+                <RemoteBadge
+                  className={classes.cardRemoteBadge}
+                  result={result}
+                  theme={theme}
+                  invisible={!showingRemote}
+                  title={index === 0 ? "גם שירות מקוון לאיזור" : undefined}
                 >
-                  <ProfessionalsResultDetails
-                    result={result}
-                    cardHeaderClass={classes.cardHeader}
-                    cardContentClass={classes.cardContent}
-                    width={isMobile ? MOBILE_CARD_WIDTH : DEFAULT_CARD_WIDTH}
-                    filterTypes={filterTypes}
-                    cityList={cityList}
-                  />
-                </Card>
-              </RemoteBadge>
-            </PriorityBadge>
-          ))}
-      </ListItem>
-    </React.Fragment>
-  );
+                  <Card
+                    className={classes.card}
+                    variant="outlined"
+                    onClick={() => setSelected(result)}
+                  >
+                    <ProfessionalsResultDetails
+                      result={result}
+                      cardHeaderClass={classes.cardHeader}
+                      cardContentClass={classes.cardContent}
+                      width={isMobile ? MOBILE_CARD_WIDTH : DEFAULT_CARD_WIDTH}
+                      filterTypes={filterTypes}
+                      cityList={cityList}
+                    />
+                  </Card>
+                </RemoteBadge>
+              </PriorityBadge>
+            ))}
+        </ListItem>
+      </React.Fragment>
+    );
+  };
   const renderNoResults = () => (
     <>
       <Typography variant="h2" className={classes.noResults}>
@@ -298,7 +315,17 @@ function ProfessionalsResults({
       {loading ? (
         <Box className={classes.resultsFlex}>{renderSkeletons()}</Box>
       ) : results.length > 0 ? (
-        <List>{resultsGroups.map(renderResults)}</List>
+        <>
+          <Typography
+            variant="body2"
+            color="secondary"
+            component="div"
+            align="center"
+          >
+            {results.length} תוצאות
+          </Typography>
+          <List>{resultsGroups.map(renderResults)}</List>
+        </>
       ) : (
         renderNoResults()
       )}

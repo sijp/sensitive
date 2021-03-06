@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 
-import { Map, TileLayer, Marker, Tooltip } from "react-leaflet";
+import { Map, TileLayer, Polygon, Tooltip } from "react-leaflet";
 
-import { actions } from "../ducks/professionals";
+import { professionalActions as actions } from "../store";
 
 import { v4 as uuidv4 } from "uuid";
 
 import {
   makeStyles,
-  Select,
   InputLabel,
   FormControl,
-  Grid
+  Grid,
+  NativeSelect
 } from "@material-ui/core";
 import ProfessionalsRemoteSwitch from "./professionals-remote-switch";
 
@@ -34,22 +34,41 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function DynamicMarker({ permanent, cityData, onclick }) {
-  const [hovered, setHovered] = useState(false);
+function getCenter(coordinates) {
+  const Xs = coordinates.map(([x, _]) => x);
+  const Ys = coordinates.map(([_, y]) => y);
+
+  return [
+    Xs.reduce((sum, x) => sum + x, 0) / coordinates.length,
+    Ys.reduce((sum, y) => sum + y) / coordinates.length
+  ];
+}
+
+function DynamicMarker({ permanent, selected = false, cityData, onclick }) {
   return (
-    <Marker
+    <Polygon
       interactive={true}
-      position={cityData.position}
+      positions={cityData.coordinates.map(([long, lat]) => [lat, long])}
+      // pathOptions={{ color: cityData.lineColor, fillColor: cityData.fillColor }}
+      color={cityData.lineColor || "blue"}
+      fillColor={cityData.fillColor || "blue"}
       onclick={onclick}
-      onmouseover={() => setHovered(true)}
-      onmouseout={() => setHovered(false)}
     >
-      {(permanent || hovered) && (
-        <Tooltip interactive={true} permanent={true} direction="top">
+      {selected || permanent ? (
+        <Tooltip
+          direction="top"
+          permanent={true}
+          offset={[0, -15]}
+          key="permenant"
+        >
+          {cityData.label}
+        </Tooltip>
+      ) : (
+        <Tooltip direction="top" sticky={true} offset={[0, -15]} key="sticky">
           {cityData.label}
         </Tooltip>
       )}
-    </Marker>
+    </Polygon>
   );
 }
 
@@ -67,22 +86,21 @@ function LocationSelect({ cityList, city, className, variant, onChange }) {
       >
         סינון לפי איזור
       </InputLabel>
-      <Select
-        native
+      <NativeSelect
         variant={variant}
         inputProps={{ name: "city-list-select", id: "city-list-select" }}
-        value={city}
+        value={city || ""}
         onChange={(event) => {
           onChange(event.target.value);
         }}
       >
-        <option aria-label="None" value="" />,
+        <option aria-label="None" value="" />
         {cityListSorted.map(([cityId, cityData]) => (
           <option value={cityId} key={`city-option-${cityId}`}>
             {cityData.label}
           </option>
         ))}
-      </Select>
+      </NativeSelect>
     </FormControl>
   );
 }
@@ -92,11 +110,20 @@ function ProfessionalsMap({
   cityList,
   city,
   showMap,
-  showRemoteToggle
+  showRemoteToggle,
+  onChange,
+  isMobile = false
 }) {
   const [key] = useState(uuidv4());
   const [zoom, setZoom] = useState(10);
   const classes = useStyles();
+
+  const changeHandler = (city) => {
+    if (typeof onChange === "function") {
+      onChange(city);
+    }
+    setCity(city);
+  };
 
   return (
     <div style={{ height: "100%" }} className={classes.verticalGrid}>
@@ -116,7 +143,7 @@ function ProfessionalsMap({
           )}
           <Grid item xs={showRemoteToggle ? 8 : 12}>
             <LocationSelect
-              onChange={setCity}
+              onChange={changeHandler}
               city={city}
               cityList={cityList}
               variant={showMap ? "standard" : "outlined"}
@@ -127,18 +154,18 @@ function ProfessionalsMap({
       {showMap && (
         <div className={classes.mapGridCell}>
           <Map
-            key={
-              city
-                ? `professional-map-set-${key}`
-                : `professional-map-unset-${key}`
-            }
+            key={`professional-map-${key}`}
             style={{
               height: "100%",
               width: "100%",
               direction: "ltr"
             }}
             zoom={zoom}
-            center={city ? cityList[city]?.position : [32, 34.9]}
+            center={
+              city
+                ? getCenter(cityList[city]?.coordinates).reverse()
+                : [32, 34.9]
+            }
             onzoomend={(event) => setZoom(event.target.getZoom())}
           >
             <TileLayer
@@ -151,8 +178,9 @@ function ProfessionalsMap({
                 selectedCity={city}
                 cityId={cityId}
                 cityData={cityData}
-                permanent={cityId === city}
-                onclick={() => setCity(cityId)}
+                permanent={isMobile}
+                selected={city === cityId}
+                onclick={() => changeHandler(cityId)}
               />
             ))}
           </Map>

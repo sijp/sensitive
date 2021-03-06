@@ -7,15 +7,15 @@ import { Grid, makeStyles } from "@material-ui/core";
 const GRID_PROPS = {
   admins: {
     xs: 12,
-    sm: 6
+    sm: 4
   },
   moderators: {
     xs: 12,
-    sm: 4
+    sm: 3
   },
   all: {
     xs: 12,
-    sm: 4
+    sm: 3
   }
 };
 

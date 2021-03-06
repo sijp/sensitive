@@ -7,21 +7,19 @@ import {
   Container,
   makeStyles,
   CircularProgress,
-  Hidden,
   Fab,
-  Button,
-  Typography
+  useTheme,
+  useMediaQuery
 } from "@material-ui/core";
 
 import ProfessionalsMap from "../components/professionals-location-filter";
 import ProfessionalsFilters from "../components/professionals-filters";
-import ProfessionalsResults from "../components/professinoals-results";
+import ProfessionalsResults from "../components/professionals-results";
 
 import { faMapMarkedAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { actions } from "../ducks/professionals";
-import { Alert } from "@material-ui/lab";
+import { professionalActions as actions } from "../store";
 import QueryStringUpdater from "../components/query-string-updater";
 
 const useStyles = makeStyles((theme) => ({
@@ -45,10 +43,7 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 5
   },
   map: {
-    height: "95%",
-    "@media only screen and (max-width: 640px)": {
-      display: "none"
-    }
+    height: "95%"
   },
   mapSmaller: {
     height: "calc(70vh - 30px)",
@@ -86,19 +81,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function ResponsiveResultsGrid(props) {
-  return (
-    <>
-      <Hidden smUp>
-        <Grid {...props} xs={12} />
-      </Hidden>
-      <Hidden xsDown>
-        <Grid {...props} />
-      </Hidden>
-    </>
-  );
-}
-
 function ProfessionalsPage({
   cityList,
   city,
@@ -110,25 +92,20 @@ function ProfessionalsPage({
   synchronize
 }) {
   const classes = useStyles();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"), { noSsr: true });
 
   const [mounted, setMounted] = useState(false);
 
-  const showResults = !!(
-    city &&
-    activeFilters &&
-    Object.keys(activeFilters).length > 0
-  );
+  const [showMap, setShowMap] = useState(!isMobile);
 
-  const [showMap, setShowMap] = useState(showResults);
-
-  useEffect(
-    function () {
-      synchronize();
-    },
-    [synchronize]
-  );
+  useEffect(() => {
+    const timeout = setTimeout(synchronize, 100);
+    return () => clearTimeout(timeout);
+  }, [synchronize]);
   useEffect(function () {
-    setTimeout(() => setMounted(true), 500);
+    const timeout = setTimeout(() => setMounted(true), 500);
+    return () => clearTimeout(timeout);
   }, []);
 
   if (!mounted) {
@@ -141,67 +118,40 @@ function ProfessionalsPage({
   return (
     <>
       <Container maxWidth="xl">
-        {!showResults && (
-          <Alert severity="info" className={classes.alert}>
-            <Typography variant="h5">
-              כדי להתחיל, יש לסמן את סוג השירות המבוקש, ואת איזור המגורים. אם
-              איזור המגורים לא מופיע יש לבחור במפה את האיזור הקרוב ביותר
-            </Typography>
-          </Alert>
-        )}
-        <Grid
-          container
-          spacing={1}
-          className={`${classes.root} ${showResults ? "" : classes.rootNoCity}`}
-        >
-          <ResponsiveResultsGrid
-            item
-            xs={showResults ? 8 : 12}
-            className={showResults && classes.results}
-          >
-            <div
-              className={showResults ? classes.filters : classes.filtersInMap}
-            >
-              <ProfessionalsFilters />
-            </div>
-
-            {showResults && <ProfessionalsResults />}
-          </ResponsiveResultsGrid>
-
-          <Grid
-            item
-            xs={showResults ? 4 : 12}
-            className={`${showResults ? classes.map : classes.mapSmaller} ${
-              !showMap && classes.mapOnlyCombo
-            }`}
-          >
-            <ProfessionalsMap
-              showMap={showResults || showMap}
-              showRemoteToggle={showResults}
-            />
-            {!showMap && !showResults && (
-              <div style={{ textAlign: "left" }}>
-                <Button
-                  variant="contained"
-                  onClick={() => setShowMap(true)}
-                  startIcon={<FontAwesomeIcon icon={faMapMarkedAlt} />}
-                >
-                  מפה לבחירת עיר/איזור
-                </Button>
+        <Grid container spacing={1} className={classes.root}>
+          {(!isMobile || !showMap) && (
+            <Grid item xs={isMobile ? 12 : 8} className={classes.results}>
+              <div className={classes.filters}>
+                <ProfessionalsFilters />
               </div>
-            )}
-          </Grid>
+
+              <ProfessionalsResults />
+            </Grid>
+          )}
+
+          {(!isMobile || showMap) && (
+            <Grid item xs={isMobile ? 12 : 4} className={classes.map}>
+              <ProfessionalsMap
+                showMap={true}
+                showRemoteToggle={true}
+                isMobile={isMobile}
+                onChange={() => {
+                  setTimeout(() => {
+                    setShowMap(false);
+                  }, 250);
+                }}
+              />
+            </Grid>
+          )}
         </Grid>
       </Container>
 
-      {showResults && (
+      {(!isMobile || !showMap) && (
         <div className={classes.clearCityButtonContainer}>
           <Fab
             variant="extended"
             color="primary"
-            onClick={() => {
-              setCity(undefined);
-            }}
+            onClick={() => setShowMap(true)}
           >
             <FontAwesomeIcon icon={faMapMarkedAlt} style={{ padding: 4 }} />
             {cityList[city]?.label}
@@ -209,7 +159,7 @@ function ProfessionalsPage({
         </div>
       )}
       <QueryStringUpdater
-        filters={Object.keys(activeFilters)}
+        filters={activeFilters}
         city={city}
         remote={showingRemote}
         init={(queryParams) => {
