@@ -1,9 +1,16 @@
 import React from "react";
-import { Drawer, Divider, List, IconButton, Hidden } from "@material-ui/core";
+import {
+  Drawer,
+  Divider,
+  List,
+  IconButton,
+  Hidden,
+  useMediaQuery
+} from "@material-ui/core";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
@@ -15,12 +22,21 @@ import {
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
-    width: 240,
     flexShrink: 0,
-    direction: "ltr"
+    direction: "ltr",
+    width: 360,
+    [theme.breakpoints.down("sm")]: {
+      width: "100%"
+    }
   },
   drawerPaper: {
-    width: 240
+    [theme.breakpoints.down("sm")]: {
+      width: "100%"
+    },
+    width: 360,
+    display: "flex",
+    flexDirection: "column",
+    height: "100%"
   },
   drawerHeader: {
     display: "flex",
@@ -28,7 +44,11 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
-    justifyContent: "flex-end"
+    justifyContent: "flex-start"
+  },
+  drawerContent: {
+    flex: 1,
+    overflow: "auto"
   },
   drawerLink: {
     color: theme.palette.text.primary
@@ -56,6 +76,8 @@ function ResponsiveDrawer(props) {
 
 function NavDrawer({ onChange = () => {}, opened = false, links = [] }) {
   const classes = useStyles();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleClose = () => {
     onChange(false);
@@ -73,6 +95,7 @@ function NavDrawer({ onChange = () => {}, opened = false, links = [] }) {
         {...rest}
         linkClassName={classes.drawerLink}
         key={index}
+        onClick={isMobile ? handleClose : null}
       />
     );
   };
@@ -81,6 +104,7 @@ function NavDrawer({ onChange = () => {}, opened = false, links = [] }) {
     <ResponsiveDrawer
       anchor="left"
       open={opened}
+      onBackdropClick={handleClose}
       className={classes.drawer}
       classes={{
         paper: classes.drawerPaper
@@ -92,7 +116,9 @@ function NavDrawer({ onChange = () => {}, opened = false, links = [] }) {
         </IconButton>
       </div>
       <Divider />
-      <List>{links.map(createMenuEntry)}</List>
+      <div className={classes.drawerContent}>
+        <List>{links.map(createMenuEntry)}</List>
+      </div>
     </ResponsiveDrawer>
   );
 }
