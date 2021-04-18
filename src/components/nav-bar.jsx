@@ -100,6 +100,7 @@ export default function NavBar({ links = [], children }) {
                 to={url}
                 type={type}
                 startIcon={<FontAwesomeIcon icon={icon} />}
+                style={mobile ? { minWidth: 48 } : {}}
               >
                 {!mobile && text}
               </NavButtonLink>
