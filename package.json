@@ -69,5 +69,7 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/jest": "^26.0.23"
+  }
 }

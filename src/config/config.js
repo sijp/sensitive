@@ -48,6 +48,8 @@ export const PROFESSIONALS_DB_TYPES = {
   }
 };
 
+export const PROFESSIONALS_TYPES = PROFESSIONALS_DB_TYPES;
+
 export const PROFESSIONAL_PRIORITY = {
   regular: {
     order: 1
