@@ -168,7 +168,14 @@ function ProfessinoalsResultDetails({
       </Typography>
       <List className={cardContentClass}>
         <ListItemText>
-          <Typography variant="body1">
+          <Typography
+            variant="body1"
+            style={{
+              whiteSpace: "pre-line",
+              maxHeight: 300,
+              overflowY: "auto"
+            }}
+          >
             {showDetails
               ? result.description
               : `${result.description.substring(0, 80)}${
