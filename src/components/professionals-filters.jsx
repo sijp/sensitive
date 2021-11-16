@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import { Chip, Typography, Badge } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { actions } from "../ducks/professionals";
+import { professionalActions as actions } from "../store";
 import { faCircle, faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 
@@ -67,7 +67,7 @@ function ProfessionalFilters({
     ? 0
     : filtersEntries
         .slice(limitFilters)
-        .filter(([filterType]) => filters[filterType]).length;
+        .filter(([filterType]) => filters.includes(filterType)).length;
 
   return (
     <div style={style} className={classes.root}>
@@ -82,15 +82,17 @@ function ProfessionalFilters({
             <FancyIcon
               icon={filterData.icon}
               bgClassName={
-                filters[filterType] ? classes.iconBgEnabled : classes.iconBg
+                filters.includes(filterType)
+                  ? classes.iconBgEnabled
+                  : classes.iconBg
               }
             />
           }
-          color={filters[filterType] ? "primary" : "default"}
+          color={filters.includes(filterType) ? "primary" : "default"}
           key={filterType}
           label={filterData.label}
           onClick={() => {
-            filters[filterType]
+            filters.includes(filterType)
               ? removeFilter(filterType)
               : addFilter(filterType);
           }}

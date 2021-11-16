@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up("md")]: {
       marginRight: theme.spacing(8),
 
-      minHeight: `calc(90vh - ${
+      minHeight: `calc(min(700px, 90vh) - ${
         theme.mixins.toolbar.minHeight * 2 + theme.spacing(8)
       }px )`,
       display: "flex",

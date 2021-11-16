@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, compose, combineReducers } from "redux";
 import thunk from "redux-thunk";
 import professionalReducer, {
   actions as professionalActions
-} from "./ducks/professionals";
+} from "./ducks/professionals.v2";
 import teamReducer, { actions as teamActions } from "./ducks/team";
 import articlesInfoReducer, {
   actions as articlesInfoActions
@@ -25,5 +25,7 @@ export function syncAllStores() {
   store.dispatch(teamActions.synchronize());
   store.dispatch(articlesInfoActions.synchronize());
 }
+
+export { professionalActions, teamActions, articlesInfoActions };
 
 export default store;

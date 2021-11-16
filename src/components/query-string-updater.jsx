@@ -24,7 +24,11 @@ export default function QueryStringUpdater({ init, ...props }) {
     }
     const newParams = new URLSearchParams(queryString);
     Object.entries(props).forEach(([key, value]) => {
-      newParams.set(key, Array.isArray(value) ? value.join(",") : value);
+      if (value && value.length !== 0) {
+        newParams.set(key, Array.isArray(value) ? value.join(",") : value);
+      } else {
+        newParams.delete(key);
+      }
     });
     setQueryString(newParams);
     // eslint-disable-next-line

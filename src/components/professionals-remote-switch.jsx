@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { FormControlLabel, Switch, Tooltip } from "@material-ui/core";
 
-import { actions } from "../ducks/professionals";
+import { professionalActions as actions } from "../store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLaptopHouse } from "@fortawesome/free-solid-svg-icons";
 
