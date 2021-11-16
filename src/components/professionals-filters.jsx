@@ -5,7 +5,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Chip, Typography, Badge } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { professionalActions as actions } from "../store";
-import { faCircle, faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircle,
+  faPlus,
+  faMinus,
+  faFilter
+} from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
@@ -58,6 +63,7 @@ function ProfessionalFilters({
   const classes = useStyles();
   const defaultLimit = 3;
   const [limitFilters, setLimitFilters] = useState(defaultLimit);
+  const [showFilters, setShowFilters] = useState(filters.length > 0);
 
   const filtersEntries = Object.entries(filterTypes);
   const filtersToShow = limitFilters
@@ -71,53 +77,66 @@ function ProfessionalFilters({
 
   return (
     <div style={style} className={classes.root}>
-      <Typography variant="body1" color="secondary" component="span">
-        סינון לפי סוג שירות:
-        <br />
-      </Typography>
-      {filtersToShow.map(([filterType, filterData]) => (
+      {!showFilters ? (
         <Chip
           className={classes.chip}
-          icon={
-            <FancyIcon
-              icon={filterData.icon}
-              bgClassName={
-                filters.includes(filterType)
-                  ? classes.iconBgEnabled
-                  : classes.iconBg
-              }
-            />
-          }
-          color={filters.includes(filterType) ? "primary" : "default"}
-          key={filterType}
-          label={filterData.label}
-          onClick={() => {
-            filters.includes(filterType)
-              ? removeFilter(filterType)
-              : addFilter(filterType);
-          }}
-        ></Chip>
-      ))}
-      <Badge badgeContent={numberOfHiddenEnabledFilters} color="primary">
-        <Chip
-          className={classes.chipShowMore}
-          color="secondary"
-          label={limitFilters ? "עוד" : "פחות"}
-          classes={{ avatar: classes.HiddenFiltersIcon }}
-          icon={<FontAwesomeIcon icon={limitFilters ? faPlus : faMinus} />}
-          onClick={() => {
-            setLimitFilters(limitFilters ? undefined : defaultLimit);
-          }}
-        ></Chip>
-      </Badge>
-
-      {moreChips.map(({ className, ...chipProps }, index) => (
-        <Chip
-          key={index}
-          {...chipProps}
-          className={`${classes.chip} ${className}`}
+          label="סינון לפי סוג שירות"
+          color="primary"
+          icon={<FontAwesomeIcon icon={faFilter} />}
+          onClick={() => setShowFilters(true)}
         />
-      ))}
+      ) : (
+        <>
+          <Typography variant="body1" color="secondary" component="span">
+            סינון לפי סוג שירות:
+            <br />
+          </Typography>
+
+          {filtersToShow.map(([filterType, filterData]) => (
+            <Chip
+              className={classes.chip}
+              icon={
+                <FancyIcon
+                  icon={filterData.icon}
+                  bgClassName={
+                    filters.includes(filterType)
+                      ? classes.iconBgEnabled
+                      : classes.iconBg
+                  }
+                />
+              }
+              color={filters.includes(filterType) ? "primary" : "default"}
+              key={filterType}
+              label={filterData.label}
+              onClick={() => {
+                filters.includes(filterType)
+                  ? removeFilter(filterType)
+                  : addFilter(filterType);
+              }}
+            ></Chip>
+          ))}
+          <Badge badgeContent={numberOfHiddenEnabledFilters} color="primary">
+            <Chip
+              className={classes.chipShowMore}
+              color="secondary"
+              label={limitFilters ? "עוד" : "פחות"}
+              classes={{ avatar: classes.HiddenFiltersIcon }}
+              icon={<FontAwesomeIcon icon={limitFilters ? faPlus : faMinus} />}
+              onClick={() => {
+                setLimitFilters(limitFilters ? undefined : defaultLimit);
+              }}
+            ></Chip>
+          </Badge>
+
+          {moreChips.map(({ className, ...chipProps }, index) => (
+            <Chip
+              key={index}
+              {...chipProps}
+              className={`${classes.chip} ${className}`}
+            />
+          ))}
+        </>
+      )}
     </div>
   );
 }

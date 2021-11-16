@@ -35,7 +35,13 @@ const DEFAULT_CARD_WIDTH = 250;
 const useStyles = makeStyles((theme) => ({
   root: {
     overflowY: "auto",
-    overflowX: "hidden"
+    overflowX: "hidden",
+    direction: "rtl",
+    paddingLeft: theme.spacing(3)
+  },
+
+  flippedScrollBar: {
+    direction: "ltr"
   },
 
   resultsFlex: {
@@ -312,36 +318,38 @@ function ProfessionalsResults({
 
   return (
     <Box className={classes.root} style={style}>
-      {loading ? (
-        <Box className={classes.resultsFlex}>{renderSkeletons()}</Box>
-      ) : results.length > 0 ? (
-        <>
-          <Typography
-            variant="body2"
-            color="secondary"
-            component="div"
-            align="center"
-          >
-            {results.length} תוצאות
-          </Typography>
-          <List>{resultsGroups.map(renderResults)}</List>
-        </>
-      ) : (
-        renderNoResults()
-      )}
+      <Box className={classes.flippedScrollBar}>
+        {loading ? (
+          <Box className={classes.resultsFlex}>{renderSkeletons()}</Box>
+        ) : results.length > 0 ? (
+          <>
+            <Typography
+              variant="body2"
+              color="secondary"
+              component="div"
+              align="center"
+            >
+              {results.length} תוצאות
+            </Typography>
+            <List>{resultsGroups.map(renderResults)}</List>
+          </>
+        ) : (
+          renderNoResults()
+        )}
 
-      <Dialog
-        open={!!selected}
-        onClose={handleCloseDialog}
-        className={classes.modal}
-      >
-        {selected && renderModalContent()}
-        <DialogActions>
-          <Button autoFocus onClick={handleCloseDialog} color="secondary">
-            חזרה לתוצאות
-          </Button>
-        </DialogActions>
-      </Dialog>
+        <Dialog
+          open={!!selected}
+          onClose={handleCloseDialog}
+          className={classes.modal}
+        >
+          {selected && renderModalContent()}
+          <DialogActions>
+            <Button autoFocus onClick={handleCloseDialog} color="secondary">
+              חזרה לתוצאות
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
     </Box>
   );
 }

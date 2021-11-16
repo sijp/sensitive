@@ -133,7 +133,6 @@ export function ParsedDoc({ article, elementParser = defaultElementParser }) {
       );
     }
     if (bullets) {
-      console.log("zzzz", bullets[0].bullet);
       return (
         <ListParagraph
           key={`paragraph-${paragraphIdx}`}
