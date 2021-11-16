@@ -104,60 +104,12 @@ function ProfessionalsPage({
     return () => clearTimeout(timeout);
   }, [synchronize]);
   useEffect(function () {
-    const timeout = setTimeout(() => setMounted(true), 500);
+    const timeout = setTimeout(() => setMounted(true), 750);
     return () => clearTimeout(timeout);
   }, []);
 
-  if (!mounted) {
-    return (
-      <div className={classes.root} style={{ textAlign: "center" }}>
-        <CircularProgress color="secondary" size={120} />
-      </div>
-    );
-  }
   return (
     <>
-      <Container maxWidth="xl">
-        <Grid container spacing={1} className={classes.root}>
-          {(!isMobile || !showMap) && (
-            <Grid item xs={isMobile ? 12 : 8} className={classes.results}>
-              <div className={classes.filters}>
-                <ProfessionalsFilters />
-              </div>
-
-              <ProfessionalsResults />
-            </Grid>
-          )}
-
-          {(!isMobile || showMap) && (
-            <Grid item xs={isMobile ? 12 : 4} className={classes.map}>
-              <ProfessionalsMap
-                showMap={true}
-                showRemoteToggle={true}
-                isMobile={isMobile}
-                onChange={() => {
-                  setTimeout(() => {
-                    setShowMap(false);
-                  }, 250);
-                }}
-              />
-            </Grid>
-          )}
-        </Grid>
-      </Container>
-
-      {(!isMobile || !showMap) && (
-        <div className={classes.clearCityButtonContainer}>
-          <Fab
-            variant="extended"
-            color="primary"
-            onClick={() => setShowMap(true)}
-          >
-            <FontAwesomeIcon icon={faMapMarkedAlt} style={{ padding: 4 }} />
-            {cityList[city]?.label}
-          </Fab>
-        </div>
-      )}
       <QueryStringUpdater
         filters={activeFilters}
         city={city}
@@ -172,6 +124,56 @@ function ProfessionalsPage({
           if (remote) setShowRemote(remote === "true");
         }}
       />
+
+      {!mounted ? (
+        <div className={classes.root} style={{ textAlign: "center" }}>
+          <CircularProgress color="secondary" size={120} />
+        </div>
+      ) : (
+        <>
+          <Container maxWidth="xl">
+            <Grid container spacing={1} className={classes.root}>
+              {(!isMobile || !showMap) && (
+                <Grid item xs={isMobile ? 12 : 8} className={classes.results}>
+                  <div className={classes.filters}>
+                    <ProfessionalsFilters />
+                  </div>
+
+                  <ProfessionalsResults />
+                </Grid>
+              )}
+
+              {(!isMobile || showMap) && (
+                <Grid item xs={isMobile ? 12 : 4} className={classes.map}>
+                  <ProfessionalsMap
+                    showMap={true}
+                    showRemoteToggle={true}
+                    isMobile={isMobile}
+                    onChange={() => {
+                      setTimeout(() => {
+                        setShowMap(false);
+                      }, 250);
+                    }}
+                  />
+                </Grid>
+              )}
+            </Grid>
+          </Container>
+
+          {(!isMobile || !showMap) && (
+            <div className={classes.clearCityButtonContainer}>
+              <Fab
+                variant="extended"
+                color="primary"
+                onClick={() => setShowMap(true)}
+              >
+                <FontAwesomeIcon icon={faMapMarkedAlt} style={{ padding: 4 }} />
+                {cityList[city]?.label || "סינון לפי איזור"}
+              </Fab>
+            </div>
+          )}
+        </>
+      )}
     </>
   );
 }
