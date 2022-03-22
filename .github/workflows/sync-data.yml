@@ -23,7 +23,7 @@ jobs:
         env:
           GOOGLE_API_CREDS: ${{ secrets.GOOGLE_API_CREDS }}
       - name: Setup - gcloud / gsutil
-        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@v0
         with:
           service_account_key: ${{ secrets.GOOGLE_API_CREDS }}
           project_id: ${{ secrets.GCS_PROJECT }}
