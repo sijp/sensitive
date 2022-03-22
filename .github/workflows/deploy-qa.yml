@@ -27,7 +27,7 @@ jobs:
       - run: cp -R tmp/data build/data
       - run: npm run ssr
       - name: Setup - gcloud / gsutil
-        uses: google-github-actions/setup-gcloud@master
+        uses: google-github-actions/setup-gcloud@v0
         with:
           service_account_key: ${{ secrets.GOOGLE_API_CREDS }}
           project_id: ${{ secrets.GCS_PROJECT }}
