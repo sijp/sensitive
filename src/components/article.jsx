@@ -82,7 +82,7 @@ export function defaultElementParser(
       <div style={{ textAlign: "center" }}>
         <Linkify>
           <img
-            style={{ width: "50%" }}
+            style={{ width: "100%" }}
             src={`${ARTICLES_URL}/${image}.jpg`}
             alt="No Alt"
           />
