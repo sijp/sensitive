@@ -245,7 +245,7 @@ function ProfessinoalsResultDetails({
               <ContactLink
                 icon={faInstagram}
                 label="אינסטגרם"
-                style={{ backgroundColor: "#405DE6", color: "white" }}
+                style={{ backgroundColor: "#C13584", color: "white" }}
                 url={result.web}
               />
             )}
