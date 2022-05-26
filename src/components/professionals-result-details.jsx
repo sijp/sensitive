@@ -246,7 +246,7 @@ function ProfessinoalsResultDetails({
                 icon={faInstagram}
                 label="אינסטגרם"
                 style={{ backgroundColor: "#C13584", color: "white" }}
-                url={result.web}
+                url={result.instagram}
               />
             )}
             {result.phone && (
