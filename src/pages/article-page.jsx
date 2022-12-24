@@ -1,4 +1,4 @@
-import { Container, useTheme } from "@material-ui/core";
+import { Container } from "@material-ui/core";
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Article from "../components/article";
@@ -8,7 +8,6 @@ import { actions } from "../ducks/title";
 
 function ArticlePage({ articlesMapping, setTitle }) {
   const { name } = useParams();
-  const theme = useTheme();
   const currentArticle = articlesMapping[name];
   const updateCurrentArticle = () => {
     setTitle(currentArticle?.text);
@@ -21,12 +20,7 @@ function ArticlePage({ articlesMapping, setTitle }) {
   useEffect(updateCurrentArticle, [currentArticle]);
 
   return (
-    <Container
-      style={{
-        marginTop: theme.mixins.toolbar.minHeight,
-        marginBottom: theme.spacing(24)
-      }}
-    >
+    <Container>
       <Article name={name} />
     </Container>
   );

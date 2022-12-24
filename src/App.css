@@ -3,3 +3,7 @@
     "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif,
     -apple-system, BlinkMacSystemFont;
 }
+
+body {
+  overflow-x: hidden;
+}
