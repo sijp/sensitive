@@ -33,7 +33,12 @@ function parseDocument(doc) {
   const { lists = {} } = doc;
   const paragraphs = doc.body.content.map(({ paragraph }) => {
     if (paragraph) {
-      const { elements, paragraphStyle, bullet = {} } = paragraph;
+      const {
+        elements,
+        paragraphStyle,
+        bullet = {},
+        positionedObjectIds
+      } = paragraph;
       const listProperties =
         lists[bullet.listId]?.listProperties?.nestingLevels[0];
 
@@ -48,7 +53,8 @@ function parseDocument(doc) {
         elements: elements.map(
           ({
             textRun = { textStyle: {} },
-            inlineObjectElement = { textStyle: {} }
+            inlineObjectElement = { textStyle: {} },
+            horizontalRule
           }) => {
             const {
               content,
@@ -65,7 +71,9 @@ function parseDocument(doc) {
               underline,
               bold,
               link: textLink || imageLink,
-              image: inlineObjectId
+              image: inlineObjectId,
+              floatImages: positionedObjectIds,
+              horizontalLine: !!horizontalRule
             });
           }
         )
@@ -77,18 +85,31 @@ function parseDocument(doc) {
 }
 
 async function downloadEmbeddedImages(doc, folderPath) {
-  if (!doc.inlineObjects) return;
-  const imagesUris = Object.entries(doc.inlineObjects).map(
-    ([objectId, props]) => ({
-      id: objectId,
-      uri: _.getPath(props, [
-        "inlineObjectProperties",
-        "embeddedObject",
-        "imageProperties",
-        "contentUri"
-      ])
-    })
-  );
+  const inlineImagesUris = doc.inlineObjects
+    ? Object.entries(doc.inlineObjects).map(([objectId, props]) => ({
+        id: objectId,
+        uri: _.getPath(props, [
+          "inlineObjectProperties",
+          "embeddedObject",
+          "imageProperties",
+          "contentUri"
+        ])
+      }))
+    : [];
+
+  const positionedImageUris = doc.positionedObjects
+    ? Object.entries(doc.positionedObjects).map(([objectId, props]) => ({
+        id: objectId,
+        uri: _.getPath(props, [
+          "positionedObjectProperties",
+          "embeddedObject",
+          "imageProperties",
+          "contentUri"
+        ])
+      }))
+    : [];
+
+  const imagesUris = [...inlineImagesUris, ...positionedImageUris];
 
   imagesUris.forEach(({ id, uri }) => {
     const filePath = path.join(folderPath, `${id}.jpg`);

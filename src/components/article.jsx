@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Typography } from "@material-ui/core";
+import { makeStyles, Typography } from "@material-ui/core";
 import { useEffect } from "react";
 import Axios from "axios";
 import { ARTICLES_URL } from "../config/config";
@@ -8,15 +8,37 @@ import { connect } from "react-redux";
 
 const PARAGRAPH_TYPES = {
   HEADING_1: (props) => (
-    <Typography {...props} variant="h3" style={{ textAlign: "center" }} />
+    <Typography
+      {...props}
+      variant="h2"
+      style={{ ...props.style, textAlign: "center", clear: "both" }}
+    />
   ),
-  HEADING_2: (props) => <Typography {...props} variant="h4" />,
+  HEADING_2: (props) => (
+    <Typography
+      {...props}
+      variant="h4"
+      style={{ ...props.style, clear: "both" }}
+    />
+  ),
+  HEADING_3: (props) => (
+    <Typography
+      {...props}
+      variant="h5"
+      style={{ ...props.style, clear: "both" }}
+    />
+  ),
   NORMAL_TEXT: (props) => (
     <Typography
       {...props}
       variant="body1"
       component="div"
-      style={{ fontSize: "1.2em", marginTop: 2, marginBottom: 10 }}
+      style={{
+        ...props.style,
+        fontSize: "1.2em",
+        marginTop: 2,
+        marginBottom: 10
+      }}
     />
   )
 };
@@ -37,9 +59,36 @@ function YoutubeEmbed({ link }) {
   );
 }
 
+const useStyles = makeStyles((theme) => ({
+  fullWidth: {
+    marginLeft: "-50vw",
+    marginRight: "-50vw",
+    maxWidth: "100vw",
+    position: "relative",
+    width: "100vw",
+    right: "50%",
+    left: "50%"
+  },
+  header: {
+    marginTop: theme.mixins.toolbar.minHeight
+  }
+}));
+
 export function defaultElementParser(
-  { interactive, image, text, underline, bold, italic, link, paragraphIdx },
-  elementIdx
+  {
+    interactive,
+    image,
+    floatImages,
+    horizontalLine,
+    text,
+    underline,
+    bold,
+    italic,
+    link,
+    paragraphIdx
+  },
+  elementIdx,
+  styles
 ) {
   if (interactive === "youtube") {
     return (
@@ -51,7 +100,18 @@ export function defaultElementParser(
       </div>
     );
   }
-  if (text) {
+  if (horizontalLine) {
+    return (
+      <hr
+        style={{
+          height: 1,
+          border: 0,
+          borderTop: "1px solid #ccc",
+          margin: "1em 0"
+        }}
+      />
+    );
+  } else if (text) {
     return (
       <span
         key={`paragraph-${paragraphIdx}-${elementIdx}`}
@@ -61,6 +121,13 @@ export function defaultElementParser(
           fontStyle: italic ? "italic" : "normal"
         }}
       >
+        {floatImages
+          ? floatImages.map((image) => (
+              <div style={{ float: "right", margin: 16 }}>
+                <img src={`${ARTICLES_URL}/${image}.jpg`} alt="No Alt" />
+              </div>
+            ))
+          : null}
         {link ? (
           <a href={link.url} rel="noopener noreferrer" target="_blank">
             {text}
@@ -79,10 +146,10 @@ export function defaultElementParser(
         )
       : ({ children }) => <>{children}</>;
     return (
-      <div style={{ textAlign: "center" }}>
+      <div>
         <Linkify>
           <img
-            style={{ width: "100%" }}
+            className={styles.fullWidth}
             src={`${ARTICLES_URL}/${image}.jpg`}
             alt="No Alt"
           />
@@ -103,6 +170,7 @@ function ListParagraph({ bulletType, ...restProps }) {
 }
 
 export function ParsedDoc({ article, elementParser = defaultElementParser }) {
+  const styles = useStyles();
   const sections = article.reduce(
     (memo, data, idx) => {
       const { bullet } = data;
@@ -125,9 +193,9 @@ export function ParsedDoc({ article, elementParser = defaultElementParser }) {
     if (data) {
       const Paragraph = PARAGRAPH_TYPES[data?.type] || DEFAULT_PARAGRAPH_TYPE;
       return (
-        <Paragraph key={`paragraph-${paragraphIdx}`}>
+        <Paragraph key={`paragraph-${paragraphIdx}`} className={styles.header}>
           {data.elements.map((element, elementIdx) =>
-            elementParser({ paragraphIdx, ...element }, elementIdx)
+            elementParser({ paragraphIdx, ...element }, elementIdx, styles)
           )}
         </Paragraph>
       );
@@ -190,7 +258,6 @@ function ArticleSkeleton() {
 
 function Article({ name, articleNameMapping }) {
   const [article, setArticle] = useState(null);
-
   const id = articleNameMapping[name]?.id;
 
   const getArticle = () => {
