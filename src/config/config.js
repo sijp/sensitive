@@ -12,7 +12,8 @@ import {
   faBriefcaseMedical,
   faShoppingCart,
   faUserShield,
-  faShieldAlt
+  faShieldAlt,
+  faHotel
 } from "@fortawesome/free-solid-svg-icons";
 
 import { faFacebookF } from "@fortawesome/free-brands-svg-icons";
@@ -36,7 +37,8 @@ export const PROFESSIONALS_DB_TYPES = {
   trainers: { label: "אימון כלבים רגישים", icon: faDog },
   puppies: { label: "אימון גורים", icon: faPaw },
   walkers: { label: "הולכת כלבים", icon: faWalking },
-  sitters: { label: "פנסיון ודוג סיטינג", icon: faHome },
+  "dog hotels": { label: "פנסיון", icon: faHotel },
+  sitters: { label: "סיטינג", icon: faHome },
   groomers: { label: "טיפוח כלבים", icon: faCut },
   veterinarians: { label: "וטרינריה", icon: faBriefcaseMedical },
   Shops: { label: "חנויות", icon: faShoppingCart },
